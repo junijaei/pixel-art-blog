@@ -1,9 +1,9 @@
 export const demoPosts = [
   {
-    slug: "pixel-art-renaissance",
-    title: "The Pixel Art Renaissance in Modern Design",
+    slug: 'pixel-art-renaissance',
+    title: 'The Pixel Art Renaissance in Modern Design',
     excerpt:
-      "Exploring how pixel aesthetics have made a comeback in contemporary digital design, blending nostalgia with modern minimalism.",
+      'Exploring how pixel aesthetics have made a comeback in contemporary digital design, blending nostalgia with modern minimalism.',
     content: `
 The pixel art aesthetic, once a necessity born from technical limitations, has evolved into a deliberate design choice that carries both nostalgic weight and contemporary appeal.
 
@@ -35,14 +35,14 @@ The underlying grid of pixel art parallels the grid systems that form the backbo
 
 As we continue to push the boundaries of what's possible in digital design, the pixel remains a powerful tool for those who understand its potential.
     `,
-    date: "Jan 10, 2026",
-    category: "Design",
-    readTime: "5 min read",
+    date: 'Jan 10, 2026',
+    category: 'Design',
+    readTime: '5 min read',
   },
   {
-    slug: "minimalism-digital-age",
-    title: "Minimalism in the Digital Age",
-    excerpt: "How the principles of minimalism translate to interface design and why less continues to be more.",
+    slug: 'minimalism-digital-age',
+    title: 'Minimalism in the Digital Age',
+    excerpt: 'How the principles of minimalism translate to interface design and why less continues to be more.',
     content: `
 Minimalism isn't about having less—it's about making room for more of what matters.
 
@@ -74,14 +74,14 @@ Every element on a screen demands mental processing:
 
 Moving toward minimalism requires courage—the courage to remove, to say no, to trust that less will indeed be more.
     `,
-    date: "Jan 8, 2026",
-    category: "Philosophy",
-    readTime: "4 min read",
+    date: 'Jan 8, 2026',
+    category: 'Philosophy',
+    readTime: '4 min read',
   },
   {
-    slug: "monochrome-palette",
-    title: "The Power of Monochrome Palettes",
-    excerpt: "Why limiting your color palette can lead to more impactful and memorable designs.",
+    slug: 'monochrome-palette',
+    title: 'The Power of Monochrome Palettes',
+    excerpt: 'Why limiting your color palette can lead to more impactful and memorable designs.',
     content: `
 Color is one of the most powerful tools in a designer's arsenal. Paradoxically, sometimes the most powerful choice is to use less of it.
 
@@ -113,14 +113,14 @@ When you limit your palette:
 
 Not all grays are created equal. The temperature, saturation, and value of your chosen gray will define the entire feel of your design.
     `,
-    date: "Jan 5, 2026",
-    category: "Color Theory",
-    readTime: "3 min read",
+    date: 'Jan 5, 2026',
+    category: 'Color Theory',
+    readTime: '3 min read',
   },
   {
-    slug: "grid-systems-web",
-    title: "Grid Systems: The Foundation of Web Design",
-    excerpt: "Understanding how mathematical grids create visual harmony and improve user experience.",
+    slug: 'grid-systems-web',
+    title: 'Grid Systems: The Foundation of Web Design',
+    excerpt: 'Understanding how mathematical grids create visual harmony and improve user experience.',
     content: `
 Behind every well-designed website lies an invisible structure: the grid.
 
@@ -152,14 +152,14 @@ Modern CSS provides native support for complex layouts:
 
 Understanding grids is just the beginning. Mastery comes from knowing when to break them.
     `,
-    date: "Jan 3, 2026",
-    category: "Development",
-    readTime: "6 min read",
+    date: 'Jan 3, 2026',
+    category: 'Development',
+    readTime: '6 min read',
   },
   {
-    slug: "typography-digital",
-    title: "Typography in Digital Spaces",
-    excerpt: "Selecting and pairing typefaces for screens while maintaining readability and personality.",
+    slug: 'typography-digital',
+    title: 'Typography in Digital Spaces',
+    excerpt: 'Selecting and pairing typefaces for screens while maintaining readability and personality.',
     content: `
 Typography is the voice of design. In digital spaces, it must speak clearly across countless devices and contexts.
 
@@ -191,12 +191,12 @@ A common approach:
 
 The future of digital typography lies in variable fonts, offering infinite possibilities within a single file.
     `,
-    date: "Dec 28, 2025",
-    category: "Typography",
-    readTime: "4 min read",
+    date: 'Dec 28, 2025',
+    category: 'Typography',
+    readTime: '4 min read',
   },
-]
+];
 
 export function getPost(slug: string) {
-  return demoPosts.find((post) => post.slug === slug)
+  return demoPosts.find((post) => post.slug === slug);
 }

@@ -38,7 +38,7 @@ RETRO_MODERN_FUSION:
 VISUAL_HIERARCHY:
   pixel_elements: 15-20% of visual weight
   modern_elements: 80-85% of visual weight
-  
+
 USAGE_GUIDELINES:
   - Use pixel fonts for: labels, badges, navigation items, small headings
   - Use modern fonts for: body text, main headings, paragraphs
@@ -58,29 +58,29 @@ USAGE_GUIDELINES:
 
 :root {
   /* Background layers */
-  --background: oklch(0.985 0 0);     /* Near white, main canvas */
-  --card: oklch(1 0 0);               /* Pure white, elevated surfaces */
-  --secondary: oklch(0.96 0 0);       /* Subtle gray, hover states */
-  --muted: oklch(0.96 0 0);           /* Same as secondary */
-  --accent: oklch(0.92 0 0);          /* Slightly darker, emphasis areas */
-  
+  --background: oklch(0.985 0 0); /* Near white, main canvas */
+  --card: oklch(1 0 0); /* Pure white, elevated surfaces */
+  --secondary: oklch(0.96 0 0); /* Subtle gray, hover states */
+  --muted: oklch(0.96 0 0); /* Same as secondary */
+  --accent: oklch(0.92 0 0); /* Slightly darker, emphasis areas */
+
   /* Foreground colors */
-  --foreground: oklch(0.145 0 0);     /* Near black, primary text */
+  --foreground: oklch(0.145 0 0); /* Near black, primary text */
   --muted-foreground: oklch(0.48 0 0); /* Medium gray, secondary text */
-  
+
   /* Borders & Inputs */
-  --border: oklch(0.9 0 0);           /* Light gray borders */
-  --input: oklch(0.9 0 0);            /* Input backgrounds */
-  --ring: oklch(0.708 0 0);           /* Focus rings */
+  --border: oklch(0.9 0 0); /* Light gray borders */
+  --input: oklch(0.9 0 0); /* Input backgrounds */
+  --ring: oklch(0.708 0 0); /* Focus rings */
 }
 
 .dark {
-  --background: oklch(0.145 0 0);     /* Near black */
-  --card: oklch(0.205 0 0);           /* Slightly lighter */
-  --secondary: oklch(0.27 0 0);       /* Dark gray */
-  --foreground: oklch(0.985 0 0);     /* Near white */
+  --background: oklch(0.145 0 0); /* Near black */
+  --card: oklch(0.205 0 0); /* Slightly lighter */
+  --secondary: oklch(0.27 0 0); /* Dark gray */
+  --foreground: oklch(0.985 0 0); /* Near white */
   --muted-foreground: oklch(0.708 0 0); /* Light gray */
-  --border: oklch(0.27 0 0);          /* Dark borders */
+  --border: oklch(0.27 0 0); /* Dark borders */
 }
 ```
 
@@ -111,32 +111,32 @@ OPACITY_PATTERNS:
 
 ```css
 @theme inline {
-  --font-sans: "Geist", "Geist Fallback", sans-serif;     /* Primary: body, headings */
-  --font-mono: "Geist Mono", "Geist Mono Fallback", monospace;  /* Code blocks */
-  --font-pixel: "Silkscreen", cursive;                     /* Accent: labels, badges */
+  --font-sans: 'Geist', 'Geist Fallback', sans-serif; /* Primary: body, headings */
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace; /* Code blocks */
+  --font-pixel: 'Silkscreen', cursive; /* Accent: labels, badges */
 }
 ```
 
 ### Font Loading (Next.js)
 
 ```tsx
-import { Geist, Geist_Mono, Silkscreen } from "next/font/google"
+import { Geist, Geist_Mono, Silkscreen } from 'next/font/google';
 
 const geistSans = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
-})
+  subsets: ['latin'],
+  variable: '--font-geist-sans',
+});
 
 const geistMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-geist-mono",
-})
+  subsets: ['latin'],
+  variable: '--font-geist-mono',
+});
 
 const silkscreen = Silkscreen({
-  weight: ["400", "700"],
-  subsets: ["latin"],
-  variable: "--font-silkscreen",
-})
+  weight: ['400', '700'],
+  subsets: ['latin'],
+  variable: '--font-silkscreen',
+});
 
 // Apply in body className:
 // `${geistSans.variable} ${geistMono.variable} ${silkscreen.variable} font-sans antialiased`
@@ -193,7 +193,7 @@ CONTAINER_WIDTHS:
 HORIZONTAL_PADDING:
   px-6: Standard page padding (24px)
   px-8: Featured cards internal padding (32px)
-  
+
 VERTICAL_SPACING:
   py-4:  Header/navigation (16px)
   py-12: Footer sections (48px)
@@ -237,7 +237,7 @@ GAP_PATTERNS:
 ```
 RADIUS_SCALE:
   --radius: 0.625rem (10px) - Base value
-  
+
 USAGE:
   rounded-lg:  Cards, large containers (var(--radius))
   rounded-xl:  Featured cards, hero elements (var(--radius) + 4px)
@@ -260,22 +260,22 @@ interface CardProps {
 
 /* Standard Card */
 <div className="
-  bg-card 
-  border border-border 
-  rounded-xl 
-  p-6 
-  hover:border-muted-foreground/30 
+  bg-card
+  border border-border
+  rounded-xl
+  p-6
+  hover:border-muted-foreground/30
   transition-all duration-300
 ">
 
 /* Featured Card */
 <div className="
   relative
-  bg-card 
-  border border-border 
-  rounded-xl 
-  p-8 
-  hover:border-muted-foreground/30 
+  bg-card
+  border border-border
+  rounded-xl
+  p-8
+  hover:border-muted-foreground/30
   transition-all duration-300
 ">
   <DotDecoration variant="corner" className="absolute top-4 right-4 opacity-50" />
@@ -286,11 +286,11 @@ interface CardProps {
 ```tsx
 /* Primary Badge (pixel font) */
 <span className="
-  text-[10px] 
-  px-3 py-1.5 
-  bg-foreground text-background 
-  rounded-md 
-  tracking-wider 
+  text-[10px]
+  px-3 py-1.5
+  bg-foreground text-background
+  rounded-md
+  tracking-wider
   font-[family-name:var(--font-silkscreen)]
 ">
   FEATURED
@@ -298,9 +298,9 @@ interface CardProps {
 
 /* Secondary Badge */
 <span className="
-  text-xs 
-  px-2 py-1 
-  bg-secondary text-secondary-foreground 
+  text-xs
+  px-2 py-1
+  bg-secondary text-secondary-foreground
   rounded-md
 ">
   Category
@@ -310,13 +310,8 @@ interface CardProps {
 ### Navigation Item
 
 ```tsx
-<Link className="
-  flex items-center gap-2 
-  text-sm text-muted-foreground 
-  hover:text-foreground 
-  transition-colors
-">
-  <PixelIcon className="w-4 h-4" />
+<Link className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors">
+  <PixelIcon className="h-4 w-4" />
   <span className="hidden sm:inline">Label</span>
 </Link>
 ```
@@ -324,12 +319,8 @@ interface CardProps {
 ### Header Structure
 
 ```tsx
-<header className="
-  border-b border-border 
-  bg-card/50 backdrop-blur-sm 
-  sticky top-0 z-50
-">
-  <div className="max-w-6xl mx-auto px-6 py-4">
+<header className="border-border bg-card/50 sticky top-0 z-50 border-b backdrop-blur-sm">
+  <div className="mx-auto max-w-6xl px-6 py-4">
     <nav className="flex items-center justify-between">
       {/* Logo with dots */}
       {/* Navigation links */}
@@ -402,17 +393,13 @@ OPACITY_HIERARCHY:
 ```tsx
 /* Centered dot divider */
 <div className="flex items-center gap-3">
-  <div className="flex-1 h-px bg-border" />
+  <div className="bg-border h-px flex-1" />
   <div className="flex gap-1.5">
     {[...Array(5)].map((_, i) => (
-      <PixelDot 
-        className={`w-1.5 h-1.5 ${
-          i === 2 ? "text-foreground" : "text-muted-foreground/30"
-        }`}
-      />
+      <PixelDot className={`h-1.5 w-1.5 ${i === 2 ? 'text-foreground' : 'text-muted-foreground/30'}`} />
     ))}
   </div>
-  <div className="flex-1 h-px bg-border" />
+  <div className="bg-border h-px flex-1" />
 </div>
 ```
 
@@ -461,7 +448,7 @@ SIZES:
   w-2.5 h-2.5: Small metadata icons
   w-3 h-3:   Card metadata, small labels
   w-4 h-4:   Navigation icons, standard buttons
-  
+
 ALWAYS use currentColor for fill to inherit text color
 ```
 
@@ -576,20 +563,20 @@ hover:bg-secondary          /* Background highlight */
 ### Complete Card Implementation
 
 ```tsx
-import Link from "next/link"
-import { PixelFile, PixelClock, PixelTag, PixelArrow } from "./pixel-icons"
-import { DotDecoration } from "./dot-decoration"
+import Link from 'next/link';
+import { PixelFile, PixelClock, PixelTag, PixelArrow } from './pixel-icons';
+import { DotDecoration } from './dot-decoration';
 
 interface PostCardProps {
   post: {
-    slug: string
-    title: string
-    excerpt: string
-    date: string
-    category: string
-    readTime: string
-  }
-  featured?: boolean
+    slug: string;
+    title: string;
+    excerpt: string;
+    date: string;
+    category: string;
+    readTime: string;
+  };
+  featured?: boolean;
 }
 
 export function PostCard({ post, featured = false }: PostCardProps) {
@@ -597,117 +584,110 @@ export function PostCard({ post, featured = false }: PostCardProps) {
     return (
       <Link
         href={`/posts/${post.slug}`}
-        className="group block relative bg-card border border-border rounded-xl p-8 hover:border-muted-foreground/30 transition-all duration-300"
+        className="group bg-card border-border hover:border-muted-foreground/30 relative block rounded-xl border p-8 transition-all duration-300"
       >
         <DotDecoration variant="corner" className="absolute top-4 right-4 opacity-50" />
 
-        <div className="flex items-center gap-4 mb-4">
-          <span className="text-[10px] px-3 py-1.5 bg-foreground text-background rounded-md tracking-wider font-[family-name:var(--font-silkscreen)]">
+        <div className="mb-4 flex items-center gap-4">
+          <span className="bg-foreground text-background rounded-md px-3 py-1.5 font-[family-name:var(--font-silkscreen)] text-[10px] tracking-wider">
             FEATURED
           </span>
-          <div className="flex items-center gap-2 text-muted-foreground">
-            <PixelTag className="w-3 h-3" />
+          <div className="text-muted-foreground flex items-center gap-2">
+            <PixelTag className="h-3 w-3" />
             <span className="text-xs">{post.category}</span>
           </div>
         </div>
 
-        <h2 className="text-2xl font-semibold mb-3 group-hover:text-muted-foreground transition-colors leading-relaxed">
+        <h2 className="group-hover:text-muted-foreground mb-3 text-2xl leading-relaxed font-semibold transition-colors">
           {post.title}
         </h2>
 
-        <p className="text-muted-foreground mb-6 leading-relaxed line-clamp-2">
-          {post.excerpt}
-        </p>
+        <p className="text-muted-foreground mb-6 line-clamp-2 leading-relaxed">{post.excerpt}</p>
 
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <div className="text-muted-foreground flex items-center gap-4 text-sm">
             <div className="flex items-center gap-1.5">
-              <PixelClock className="w-3 h-3" />
+              <PixelClock className="h-3 w-3" />
               <span>{post.date}</span>
             </div>
             <span>·</span>
             <span>{post.readTime}</span>
           </div>
 
-          <div className="flex items-center gap-2 text-sm font-medium group-hover:gap-3 transition-all">
+          <div className="flex items-center gap-2 text-sm font-medium transition-all group-hover:gap-3">
             <span>Read</span>
-            <PixelArrow className="w-4 h-4" />
+            <PixelArrow className="h-4 w-4" />
           </div>
         </div>
       </Link>
-    )
+    );
   }
 
   return (
     <Link
       href={`/posts/${post.slug}`}
-      className="group block bg-card border border-border rounded-xl p-6 hover:border-muted-foreground/30 transition-all duration-300"
+      className="group bg-card border-border hover:border-muted-foreground/30 block rounded-xl border p-6 transition-all duration-300"
     >
-      <div className="flex items-start justify-between mb-3">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <PixelFile className="w-3 h-3" />
+      <div className="mb-3 flex items-start justify-between">
+        <div className="text-muted-foreground flex items-center gap-2">
+          <PixelFile className="h-3 w-3" />
           <span className="text-xs">{post.category}</span>
         </div>
         <div className="flex gap-1">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="w-1 h-1 rounded-full bg-muted-foreground/30" />
+            <div key={i} className="bg-muted-foreground/30 h-1 w-1 rounded-full" />
           ))}
         </div>
       </div>
 
-      <h3 className="text-lg font-medium mb-2 group-hover:text-muted-foreground transition-colors leading-relaxed">
+      <h3 className="group-hover:text-muted-foreground mb-2 text-lg leading-relaxed font-medium transition-colors">
         {post.title}
       </h3>
 
-      <p className="text-sm text-muted-foreground mb-4 leading-relaxed line-clamp-2">
-        {post.excerpt}
-      </p>
+      <p className="text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed">{post.excerpt}</p>
 
-      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+      <div className="text-muted-foreground flex items-center gap-3 text-xs">
         <div className="flex items-center gap-1">
-          <PixelClock className="w-2.5 h-2.5" />
+          <PixelClock className="h-2.5 w-2.5" />
           <span>{post.date}</span>
         </div>
         <span>·</span>
         <span>{post.readTime}</span>
       </div>
     </Link>
-  )
+  );
 }
 ```
 
 ### Hero Section Pattern
 
 ```tsx
-<section className="py-20 px-6">
-  <div className="max-w-6xl mx-auto">
+<section className="px-6 py-20">
+  <div className="mx-auto max-w-6xl">
     {/* Decorative intro */}
-    <div className="flex items-center gap-4 mb-6">
+    <div className="mb-6 flex items-center gap-4">
       <DotDecoration variant="horizontal" />
-      <span className="text-[10px] tracking-widest text-muted-foreground uppercase font-[family-name:var(--font-silkscreen)]">
+      <span className="text-muted-foreground font-[family-name:var(--font-silkscreen)] text-[10px] tracking-widest uppercase">
         Personal Blog
       </span>
     </div>
 
     {/* Main headline - Modern font */}
-    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 leading-tight text-balance">
+    <h1 className="mb-6 text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl">
       Thoughts on design,
       <br />
       <span className="text-muted-foreground">pixels & minimalism</span>
     </h1>
 
     {/* Description - Readable font */}
-    <p className="text-lg text-muted-foreground max-w-xl leading-relaxed mb-8">
+    <p className="text-muted-foreground mb-8 max-w-xl text-lg leading-relaxed">
       Exploring the intersection of pixel aesthetics and modern design principles.
     </p>
 
     {/* Decorative dots */}
     <div className="flex items-center gap-2">
       {[...Array(8)].map((_, i) => (
-        <PixelDot 
-          key={i} 
-          className={`w-2 h-2 ${i < 3 ? "text-foreground" : "text-muted-foreground/30"}`} 
-        />
+        <PixelDot key={i} className={`h-2 w-2 ${i < 3 ? 'text-foreground' : 'text-muted-foreground/30'}`} />
       ))}
     </div>
   </div>
@@ -720,13 +700,13 @@ export function PostCard({ post, featured = false }: PostCardProps) {
 
 This design system creates a harmonious blend of retro pixel aesthetics with modern web design:
 
-| Element | Retro/Pixel | Modern |
-|---------|-------------|--------|
-| Fonts | Labels, badges, tiny headings | Body text, main headings, articles |
-| Icons | Custom 16x16 SVG pixel icons | - |
-| Decorations | Dot patterns, grid accents | Clean borders, subtle shadows |
-| Colors | - | Pure achromatic oklch palette |
-| Layout | - | Flexbox, responsive grids, max-width containers |
-| Interactions | - | Smooth transitions, micro-animations |
+| Element      | Retro/Pixel                   | Modern                                          |
+| ------------ | ----------------------------- | ----------------------------------------------- |
+| Fonts        | Labels, badges, tiny headings | Body text, main headings, articles              |
+| Icons        | Custom 16x16 SVG pixel icons  | -                                               |
+| Decorations  | Dot patterns, grid accents    | Clean borders, subtle shadows                   |
+| Colors       | -                             | Pure achromatic oklch palette                   |
+| Layout       | -                             | Flexbox, responsive grids, max-width containers |
+| Interactions | -                             | Smooth transitions, micro-animations            |
 
 **Key Principle**: Pixel/dot elements provide character and nostalgia; modern design provides usability and readability.

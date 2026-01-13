@@ -15,7 +15,7 @@ export function PixelHome({ className }: { className?: string }) {
       <rect x="9" y="13" width="2" height="2" />
       <rect x="7" y="11" width="2" height="4" />
     </svg>
-  )
+  );
 }
 
 export function PixelFile({ className }: { className?: string }) {
@@ -31,7 +31,7 @@ export function PixelFile({ className }: { className?: string }) {
       <rect x="5" y="8" width="6" height="1" />
       <rect x="5" y="10" width="4" height="1" />
     </svg>
-  )
+  );
 }
 
 export function PixelUser({ className }: { className?: string }) {
@@ -48,7 +48,7 @@ export function PixelUser({ className }: { className?: string }) {
       <rect x="3" y="12" width="2" height="3" />
       <rect x="11" y="12" width="2" height="3" />
     </svg>
-  )
+  );
 }
 
 export function PixelSearch({ className }: { className?: string }) {
@@ -64,7 +64,7 @@ export function PixelSearch({ className }: { className?: string }) {
       <rect x="10" y="11" width="2" height="2" />
       <rect x="12" y="13" width="2" height="2" />
     </svg>
-  )
+  );
 }
 
 export function PixelArrow({ className }: { className?: string }) {
@@ -78,7 +78,7 @@ export function PixelArrow({ className }: { className?: string }) {
       <rect x="10" y="10" width="2" height="2" />
       <rect x="8" y="12" width="2" height="2" />
     </svg>
-  )
+  );
 }
 
 export function PixelTag({ className }: { className?: string }) {
@@ -96,7 +96,7 @@ export function PixelTag({ className }: { className?: string }) {
       <rect x="3" y="9" width="2" height="2" />
       <rect x="5" y="11" width="2" height="2" />
     </svg>
-  )
+  );
 }
 
 export function PixelClock({ className }: { className?: string }) {
@@ -111,7 +111,7 @@ export function PixelClock({ className }: { className?: string }) {
       <rect x="7" y="4" width="2" height="4" />
       <rect x="9" y="6" width="2" height="2" />
     </svg>
-  )
+  );
 }
 
 export function PixelDot({ className }: { className?: string }) {
@@ -119,7 +119,7 @@ export function PixelDot({ className }: { className?: string }) {
     <svg className={className} viewBox="0 0 8 8" fill="currentColor">
       <rect x="2" y="2" width="4" height="4" />
     </svg>
-  )
+  );
 }
 
 export function PixelMenu({ className }: { className?: string }) {
@@ -129,7 +129,7 @@ export function PixelMenu({ className }: { className?: string }) {
       <rect x="2" y="7" width="12" height="2" />
       <rect x="2" y="11" width="12" height="2" />
     </svg>
-  )
+  );
 }
 
 export function PixelFolder({ className }: { className?: string }) {
@@ -141,7 +141,7 @@ export function PixelFolder({ className }: { className?: string }) {
       <rect x="13" y="7" width="2" height="6" />
       <rect x="3" y="11" width="10" height="2" />
     </svg>
-  )
+  );
 }
 
 export function PixelFolderOpen({ className }: { className?: string }) {
@@ -156,7 +156,7 @@ export function PixelFolderOpen({ className }: { className?: string }) {
       <rect x="3" y="11" width="2" height="2" />
       <rect x="13" y="11" width="2" height="2" />
     </svg>
-  )
+  );
 }
 
 export function PixelChevron({ className }: { className?: string }) {
@@ -168,5 +168,5 @@ export function PixelChevron({ className }: { className?: string }) {
       <rect x="6" y="9" width="2" height="2" />
       <rect x="4" y="11" width="2" height="2" />
     </svg>
-  )
+  );
 }

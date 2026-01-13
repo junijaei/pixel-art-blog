@@ -1,48 +1,48 @@
-import Link from "next/link"
-import { PixelHome, PixelFile, PixelSearch, PixelUser, PixelDot } from "./pixel-icons"
+import Link from 'next/link';
+import { PixelHome, PixelFile, PixelSearch, PixelUser, PixelDot } from './pixel-icons';
 
 export function BlogHeader() {
   return (
-    <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-6 py-4">
+    <header className="border-border bg-card/50 sticky top-0 z-50 border-b backdrop-blur-sm">
+      <div className="mx-auto max-w-6xl px-6 py-4">
         <nav className="flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-3 group">
+          <Link href="/" className="group flex items-center gap-3">
             <div className="flex items-center gap-1">
-              <PixelDot className="w-2 h-2 text-foreground" />
-              <PixelDot className="w-2 h-2 text-muted-foreground/60" />
-              <PixelDot className="w-2 h-2 text-muted-foreground/30" />
+              <PixelDot className="text-foreground h-2 w-2" />
+              <PixelDot className="text-muted-foreground/60 h-2 w-2" />
+              <PixelDot className="text-muted-foreground/30 h-2 w-2" />
             </div>
-            <span className="text-sm tracking-wider font-medium font-[family-name:var(--font-silkscreen)]">PIXEL</span>
+            <span className="font-[family-name:var(--font-silkscreen)] text-sm font-medium tracking-wider">PIXEL</span>
           </Link>
 
           <div className="flex items-center gap-6">
             <Link
               href="/"
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
             >
-              <PixelHome className="w-4 h-4" />
+              <PixelHome className="h-4 w-4" />
               <span className="hidden sm:inline">Home</span>
             </Link>
             <Link
               href="/posts"
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
             >
-              <PixelFile className="w-4 h-4" />
+              <PixelFile className="h-4 w-4" />
               <span className="hidden sm:inline">Posts</span>
             </Link>
             <Link
               href="/about"
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
             >
-              <PixelUser className="w-4 h-4" />
+              <PixelUser className="h-4 w-4" />
               <span className="hidden sm:inline">About</span>
             </Link>
-            <button className="p-2 rounded-lg hover:bg-secondary transition-colors">
-              <PixelSearch className="w-4 h-4 text-muted-foreground" />
+            <button className="hover:bg-secondary rounded-lg p-2 transition-colors">
+              <PixelSearch className="text-muted-foreground h-4 w-4" />
             </button>
           </div>
         </nav>
       </div>
     </header>
-  )
+  );
 }
