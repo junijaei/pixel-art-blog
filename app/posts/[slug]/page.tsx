@@ -1,10 +1,10 @@
-import { BlogHeader } from '@/components/blog-header';
 import { BlogFooter } from '@/components/blog-footer';
+import { BlogHeader } from '@/components/blog-header';
 import { DotDecoration } from '@/components/dot-decoration';
-import { PixelClock, PixelTag, PixelArrow, PixelDot } from '@/components/pixel-icons';
-import { getPost, demoPosts } from '@/lib/demo-posts';
-import { notFound } from 'next/navigation';
+import { PixelArrow, PixelClock, PixelDot, PixelTag } from '@/components/pixel-icons';
+import { demoPosts, getPost } from '@/lib/demo-posts';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 export function generateStaticParams() {
   return demoPosts.map((post) => ({
@@ -98,7 +98,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                   <ul key={index} className="my-4 space-y-2">
                     {items.map((item, i) => (
                       <li key={i} className="text-foreground/90 flex items-start gap-3">
-                        <PixelDot className="text-muted-foreground/60 mt-2 h-1.5 w-1.5 flex-shrink-0" />
+                        <PixelDot className="text-muted-foreground/60 mt-2 h-1.5 w-1.5 shrink-0" />
                         <span className="leading-relaxed">{item.replace('- ', '').replace(/\*\*/g, '')}</span>
                       </li>
                     ))}
@@ -112,7 +112,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                   <ol key={index} className="my-4 space-y-2">
                     {items.map((item, i) => (
                       <li key={i} className="text-foreground/90 flex items-start gap-3">
-                        <span className="text-muted-foreground mt-1 w-4 font-[family-name:var(--font-silkscreen)] text-[10px]">
+                        <span className="text-muted-foreground mt-1 w-4 font-(family-name:--font-silkscreen) text-[10px]">
                           {i + 1}
                         </span>
                         <span className="leading-relaxed">{item.replace(/^\d+\.\s*/, '')}</span>
@@ -140,7 +140,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 <DotDecoration variant="corner" />
                 <span className="text-muted-foreground text-sm">Thanks for reading</span>
               </div>
-
               <Link
                 href="/posts"
                 className="hover:text-muted-foreground group flex items-center gap-2 text-sm transition-colors"
