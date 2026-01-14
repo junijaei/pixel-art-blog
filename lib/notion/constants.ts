@@ -1,0 +1,6 @@
+export const NOTION_LIMITS = {
+  MAX_PAGE_SIZE: 100,
+  DEFAULT_PAGE_SIZE: 50,
+  MAX_DEPTH: 2,
+  RATE_LIMIT_PER_SECOND: 3,
+} as const;
