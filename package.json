@@ -17,6 +17,7 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@notionhq/client": "^5.6.0",
     "@hookform/resolvers": "^3.10.0",
     "@notionhq/client": "^5.6.0",
     "@tanstack/react-query": "^5.90.16",
@@ -50,6 +51,7 @@
     "@storybook/addon-docs": "^10.1.11",
     "@storybook/addon-onboarding": "^10.1.11",
     "@storybook/addon-vitest": "^10.1.11",
+    "@storybook/nextjs": "^10.1.11",
     "@storybook/nextjs-vite": "^10.1.11",
     "@tailwindcss/postcss": "^4.1.9",
     "@testing-library/jest-dom": "^6.9.1",
@@ -65,7 +67,11 @@
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.1.1",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-storybook": "^10.1.11",
+    "eslint-plugin-no-relative-import-paths": "^1.6.1",
+    "eslint-plugin-prettier": "^5.5.4",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.22",
+    "eslint-plugin-storybook": "^10.1.0",
     "jsdom": "^27.4.0",
     "playwright": "^1.57.0",
     "postcss": "^8.5",

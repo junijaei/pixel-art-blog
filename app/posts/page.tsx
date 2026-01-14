@@ -1,8 +1,8 @@
-import { BlogHeader } from '@/components/blog-header';
 import { BlogFooter } from '@/components/blog-footer';
-import { PostCard } from '@/components/post-card';
+import { BlogHeader } from '@/components/blog-header';
 import { DotDecoration } from '@/components/dot-decoration';
 import { PixelDot } from '@/components/pixel-icons';
+import { PostCard } from '@/components/post-card';
 import { demoPosts } from '@/lib/demo-posts';
 
 export default function PostsPage() {
@@ -16,7 +16,7 @@ export default function PostsPage() {
           <div className="mb-12">
             <div className="mb-4 flex items-center gap-4">
               <DotDecoration variant="horizontal" />
-              <span className="text-muted-foreground font-[family-name:var(--font-silkscreen)] text-[10px] tracking-widest uppercase">
+              <span className="text-muted-foreground font-(family-name:--font-silkscreen) text-[10px] tracking-widest uppercase">
                 Archive
               </span>
             </div>

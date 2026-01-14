@@ -10,7 +10,12 @@
       "Bash(tree:*)",
       "Bash(find:*)",
       "Bash(pnpm type-check:*)",
-      "Bash(wc:*)"
+      "Bash(wc:*)",
+      "Bash(ls:*)",
+      "Bash(code:*)",
+      "Bash(pnpm storybook:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)"
     ]
   }
 }
