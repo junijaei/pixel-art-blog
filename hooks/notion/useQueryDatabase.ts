@@ -3,8 +3,8 @@ import type { UseQueryResult, UseInfiniteQueryResult } from '@tanstack/react-que
 import { notionKeys, createDatabaseQueryKey } from '@/lib/query/queryKeys';
 import { notionQueryConfig } from '@/lib/query/queryClient';
 import type { QueryOptions, InfiniteQueryOptions } from '@/lib/query/types';
-import type { QueryDatabaseParameters } from '@/types/notion/query';
-import type { QueryDatabaseResponse, DatabasePage } from '@/types/notion/response';
+import type { QueryDatabaseParameters } from '@/types/notion';
+import type { QueryDatabaseResponse, DatabasePage } from '@/types/notion';
 
 /**
  * Hook for querying a Notion database (single page)

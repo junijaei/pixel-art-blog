@@ -1,8 +1,8 @@
-/* =====================================
- * Database
- ===================================== */
+/**
+ * Database Schema Types
+ */
 
-import { RichText, UUID, ISODate } from '../index';
+import type { RichText, UUID, ISODate } from '@/types/notion';
 
 export interface NotionDatabase {
   object: 'database';
@@ -13,19 +13,11 @@ export interface NotionDatabase {
   data_sources: NotionDataSource[];
 }
 
-/* =====================================
-  * Data Source
-  ===================================== */
-
 export interface NotionDataSource {
   id: UUID;
   name: string;
   properties: Record<string, DatabaseProperty>;
 }
-
-/* =====================================
-  * Property Schema
-  ===================================== */
 
 export type DatabaseProperty =
   | TitleSchema

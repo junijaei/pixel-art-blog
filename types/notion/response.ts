@@ -1,4 +1,9 @@
-import type { NotionObject } from './base';
+/**
+ * Notion API Response Types
+ */
+
+import type { NotionObject, UUID, ISODate, NotionUser, NotionColor } from './base';
+import type { RichText } from './content';
 
 export interface PaginatedResponse<T extends NotionObject> {
   object: 'list';
@@ -9,20 +14,12 @@ export interface PaginatedResponse<T extends NotionObject> {
   page_or_database?: Record<string, unknown>;
 }
 
-export type QueryDatabaseResponse = PaginatedResponse<DatabasePage>;
-
 export interface DatabasePage extends NotionObject {
   object: 'page';
-  created_time: string;
-  last_edited_time: string;
-  created_by: {
-    object: 'user';
-    id: string;
-  };
-  last_edited_by: {
-    object: 'user';
-    id: string;
-  };
+  created_time: ISODate;
+  last_edited_time: ISODate;
+  created_by: NotionUser;
+  last_edited_by: NotionUser;
   cover: {
     type: string;
     [key: string]: unknown;
@@ -33,13 +30,15 @@ export interface DatabasePage extends NotionObject {
   } | null;
   parent: {
     type: 'database_id';
-    database_id: string;
+    database_id: UUID;
   };
   archived: boolean;
   properties: Record<string, PropertyValue>;
   url: string;
   public_url: string | null;
 }
+
+export type QueryDatabaseResponse = PaginatedResponse<DatabasePage>;
 
 export type PropertyValue =
   | TitlePropertyValue
@@ -61,29 +60,22 @@ export type PropertyValue =
   | CreatedByPropertyValue
   | LastEditedTimePropertyValue
   | LastEditedByPropertyValue
-  | StatusPropertyValue;
+  | StatusPropertyValue
+  | UniqueIdPropertyValue;
 
-export interface BasePropertyValue {
-  id: string;
+interface BasePropertyValue {
+  id: UUID;
   type: string;
 }
 
 export interface TitlePropertyValue extends BasePropertyValue {
   type: 'title';
-  title: Array<{
-    type: 'text';
-    text: { content: string; link: { url: string } | null };
-    plain_text: string;
-  }>;
+  title: RichText[];
 }
 
 export interface RichTextPropertyValue extends BasePropertyValue {
   type: 'rich_text';
-  rich_text: Array<{
-    type: 'text';
-    text: { content: string; link: { url: string } | null };
-    plain_text: string;
-  }>;
+  rich_text: RichText[];
 }
 
 export interface NumberPropertyValue extends BasePropertyValue {
@@ -99,36 +91,33 @@ export interface CheckboxPropertyValue extends BasePropertyValue {
 export interface SelectPropertyValue extends BasePropertyValue {
   type: 'select';
   select: {
-    id: string;
+    id: UUID;
     name: string;
-    color: string;
+    color: NotionColor;
   } | null;
 }
 
 export interface MultiSelectPropertyValue extends BasePropertyValue {
   type: 'multi_select';
   multi_select: Array<{
-    id: string;
+    id: UUID;
     name: string;
-    color: string;
+    color: NotionColor;
   }>;
 }
 
 export interface DatePropertyValue extends BasePropertyValue {
   type: 'date';
   date: {
-    start: string;
-    end: string | null;
+    start: ISODate;
+    end: ISODate | null;
     time_zone: string | null;
   } | null;
 }
 
 export interface PeoplePropertyValue extends BasePropertyValue {
   type: 'people';
-  people: Array<{
-    object: 'user';
-    id: string;
-  }>;
+  people: NotionUser[];
 }
 
 export interface FilesPropertyValue extends BasePropertyValue {
@@ -136,7 +125,7 @@ export interface FilesPropertyValue extends BasePropertyValue {
   files: Array<{
     name: string;
     type: 'file' | 'external';
-    file?: { url: string; expiry_time: string };
+    file?: { url: string; expiry_time: ISODate };
     external?: { url: string };
   }>;
 }
@@ -162,12 +151,12 @@ export interface FormulaPropertyValue extends BasePropertyValue {
     | { type: 'string'; string: string | null }
     | { type: 'number'; number: number | null }
     | { type: 'boolean'; boolean: boolean }
-    | { type: 'date'; date: { start: string; end: string | null } | null };
+    | { type: 'date'; date: { start: ISODate; end: ISODate | null } | null };
 }
 
 export interface RelationPropertyValue extends BasePropertyValue {
   type: 'relation';
-  relation: Array<{ id: string }>;
+  relation: Array<{ id: UUID }>;
   has_more?: boolean;
 }
 
@@ -175,41 +164,43 @@ export interface RollupPropertyValue extends BasePropertyValue {
   type: 'rollup';
   rollup:
     | { type: 'number'; number: number | null; function: string }
-    | { type: 'date'; date: { start: string; end: string | null } | null; function: string }
+    | { type: 'date'; date: { start: ISODate; end: ISODate | null } | null; function: string }
     | { type: 'array'; array: PropertyValue[]; function: string };
 }
 
 export interface CreatedTimePropertyValue extends BasePropertyValue {
   type: 'created_time';
-  created_time: string;
+  created_time: ISODate;
 }
 
 export interface CreatedByPropertyValue extends BasePropertyValue {
   type: 'created_by';
-  created_by: {
-    object: 'user';
-    id: string;
-  };
+  created_by: NotionUser;
 }
 
 export interface LastEditedTimePropertyValue extends BasePropertyValue {
   type: 'last_edited_time';
-  last_edited_time: string;
+  last_edited_time: ISODate;
 }
 
 export interface LastEditedByPropertyValue extends BasePropertyValue {
   type: 'last_edited_by';
-  last_edited_by: {
-    object: 'user';
-    id: string;
-  };
+  last_edited_by: NotionUser;
 }
 
 export interface StatusPropertyValue extends BasePropertyValue {
   type: 'status';
   status: {
-    id: string;
+    id: UUID;
     name: string;
-    color: string;
+    color: NotionColor;
   } | null;
+}
+
+export interface UniqueIdPropertyValue extends BasePropertyValue {
+  type: 'unique_id';
+  unique_id: {
+    number: number;
+    prefix: string | null;
+  };
 }

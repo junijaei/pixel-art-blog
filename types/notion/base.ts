@@ -1,21 +1,28 @@
+/**
+ * Notion API Base Types
+ */
+
+export type UUID = string;
+export type ISODate = string;
+
 export type NotionObjectType = 'database' | 'page' | 'block' | 'list';
 
 export interface NotionObject {
   object: NotionObjectType;
-  id: string;
+  id: UUID;
 }
 
 export interface NotionParent {
   type: 'database_id' | 'page_id' | 'workspace' | 'block_id';
-  database_id?: string;
-  page_id?: string;
+  database_id?: UUID;
+  page_id?: UUID;
   workspace?: true;
-  block_id?: string;
+  block_id?: UUID;
 }
 
 export interface NotionUser {
   object: 'user';
-  id: string;
+  id: UUID;
   type?: 'person' | 'bot';
   name?: string;
   avatar_url?: string;
@@ -26,8 +33,8 @@ export interface NotionUser {
 }
 
 export interface NotionDate {
-  start: string;
-  end: string | null;
+  start: ISODate;
+  end: ISODate | null;
   time_zone: string | null;
 }
 
@@ -35,7 +42,7 @@ export interface NotionFile {
   type: 'file' | 'external';
   file?: {
     url: string;
-    expiry_time: string;
+    expiry_time: ISODate;
   };
   external?: {
     url: string;
@@ -43,29 +50,5 @@ export interface NotionFile {
   name?: string;
 }
 
-export interface NotionRichText {
-  type: 'text' | 'mention' | 'equation';
-  text?: {
-    content: string;
-    link: {
-      url: string;
-    } | null;
-  };
-  mention?: {
-    type: string;
-    [key: string]: unknown;
-  };
-  equation?: {
-    expression: string;
-  };
-  annotations: {
-    bold: boolean;
-    italic: boolean;
-    strikethrough: boolean;
-    underline: boolean;
-    code: boolean;
-    color: string;
-  };
-  plain_text: string;
-  href: string | null;
-}
+type NotionColorBase = 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'red';
+export type NotionColor = 'default' | NotionColorBase | `${NotionColorBase}_background`;

@@ -1,4 +1,4 @@
-import type { QueryDatabaseParameters, Filter, Sorts } from '@/types/notion/query';
+import type { QueryDatabaseParameters, Filter, Sorts } from '@/types/notion';
 import { queryClient } from './queryClient';
 
 /**

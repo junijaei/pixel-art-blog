@@ -1,8 +1,8 @@
-import type { NotionColor, NotionUserRef, UUID } from '../index';
+/**
+ * Rich Text Types
+ */
 
-/* =====================================================
- * Rich Text
- ===================================================== */
+import type { NotionColor, NotionUser, UUID } from '@/types/notion/base';
 
 export interface RichTextAnnotations {
   bold: boolean;
@@ -35,7 +35,7 @@ export interface RichTextEquation extends RichTextBase {
 export interface RichTextMention extends RichTextBase {
   type: 'mention';
   mention:
-    | { type: 'user'; user: NotionUserRef }
+    | { type: 'user'; user: NotionUser }
     | { type: 'page'; page: { id: UUID } }
     | { type: 'database'; database: { id: UUID } }
     | { type: 'date'; date: { start: string; end: string | null } }

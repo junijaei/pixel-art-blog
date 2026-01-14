@@ -5,8 +5,8 @@
 
 import { notionClient } from './client';
 import { NOTION_LIMITS } from './constants';
-import type { QueryDatabaseParameters } from '@/types/notion/query';
-import type { DatabasePage, QueryDatabaseResponse } from '@/types/notion/response';
+import type { QueryDatabaseParameters } from '@/types/notion';
+import type { DatabasePage, QueryDatabaseResponse } from '@/types/notion';
 
 /**
  * 데이터베이스의 모든 페이지를 가져오기 (자동 페이지네이션)

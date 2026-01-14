@@ -1,3 +1,7 @@
+/**
+ * Notion API Error Types
+ */
+
 export interface NotionErrorResponse {
   object: 'error';
   status: number;

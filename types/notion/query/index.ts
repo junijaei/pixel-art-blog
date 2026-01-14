@@ -1,3 +1,7 @@
+/**
+ * Notion Query Types
+ */
+
 import type { Filter } from './filter';
 import type { Sorts } from './sort';
 
