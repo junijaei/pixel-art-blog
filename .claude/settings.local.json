@@ -15,7 +15,10 @@
       "Bash(code:*)",
       "Bash(pnpm storybook:*)",
       "Bash(lsof:*)",
-      "Bash(xargs kill:*)"
+      "Bash(xargs kill:*)",
+      "Bash(pnpm build-storybook:*)",
+      "Bash(pnpm tsc:*)",
+      "Bash(pnpm exec tsc:*)"
     ]
   }
 }
