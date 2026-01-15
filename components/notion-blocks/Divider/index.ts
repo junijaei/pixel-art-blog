@@ -1,2 +1,5 @@
 export { Divider } from './Divider';
-export type { DividerProps } from './types';
+
+export interface DividerProps {
+  className?: string;
+}

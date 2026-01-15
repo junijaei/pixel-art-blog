@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Quote } from './Quote';
-import type { QuoteBlock } from './types';
+import type { QuoteBlock } from '@/types/notion';
 
 describe('Quote', () => {
   it('renders plain text', () => {

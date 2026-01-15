@@ -1,2 +1,10 @@
+import type { ToDoBlock } from '@/types/notion';
+import { ReactNode } from 'react';
+
 export { ToDo } from './ToDo';
-export type { ToDoProps } from './types';
+export type { ToDoBlock };
+
+export interface ToDoProps {
+  block: ToDoBlock;
+  children?: ReactNode;
+}

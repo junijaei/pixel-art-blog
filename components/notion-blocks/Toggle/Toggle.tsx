@@ -1,11 +1,12 @@
 'use client';
 
-import { useState } from 'react';
 import { renderRichText } from '@/lib/notion/rich-text-renderer';
-import type { ToggleProps } from './types';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
+import type { ToggleProps } from './index';
 
-export function Toggle({ richText, has_children, children }: ToggleProps) {
+export function Toggle({ block, children }: ToggleProps) {
+  const { rich_text } = block.toggle;
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -13,18 +14,13 @@ export function Toggle({ richText, has_children, children }: ToggleProps) {
       <button
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          'w-full flex items-start gap-2 text-left py-1 px-2 -mx-2 rounded-lg',
+          '-mx-2 flex w-full items-start gap-2 rounded-lg px-2 py-1 text-left',
           'hover:bg-muted/50 transition-colors'
         )}
         type="button"
       >
         {/* Arrow icon */}
-        <span
-          className={cn(
-            'flex-shrink-0 mt-0.5 transition-transform duration-200',
-            isOpen && 'rotate-90'
-          )}
-        >
+        <span className={cn('mt-0.5 shrink-0 transition-transform duration-200', isOpen && 'rotate-90')}>
           <svg
             width="16"
             height="16"
@@ -44,13 +40,11 @@ export function Toggle({ richText, has_children, children }: ToggleProps) {
         </span>
 
         {/* Content */}
-        <span className="flex-1 leading-relaxed">{renderRichText(richText)}</span>
+        <span className="flex-1 leading-relaxed">{renderRichText(rich_text)}</span>
       </button>
 
       {/* Expandable children */}
-      {isOpen && has_children && children && (
-        <div className="ml-6 mt-1 space-y-1">{children}</div>
-      )}
+      {isOpen && children && <div className="mt-1 ml-6 space-y-1">{children}</div>}
     </div>
   );
 }

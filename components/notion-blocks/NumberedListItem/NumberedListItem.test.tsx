@@ -1,11 +1,11 @@
-import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 import { NumberedListItem } from './NumberedListItem';
-import type { NumberedListItemBlock } from './types';
+import type { NumberedListBlock } from '@/types/notion';
 
 describe('NumberedListItem', () => {
   it('renders plain text', () => {
-    const block: NumberedListItemBlock = {
+    const block: NumberedListBlock = {
       type: 'numbered_list_item',
       numbered_list_item: {
         rich_text: [
@@ -37,7 +37,7 @@ describe('NumberedListItem', () => {
   });
 
   it('renders with flex layout and number', () => {
-    const block: NumberedListItemBlock = {
+    const block: NumberedListBlock = {
       type: 'numbered_list_item',
       numbered_list_item: {
         rich_text: [
@@ -70,7 +70,7 @@ describe('NumberedListItem', () => {
   });
 
   it('renders with bold annotation', () => {
-    const block: NumberedListItemBlock = {
+    const block: NumberedListBlock = {
       type: 'numbered_list_item',
       numbered_list_item: {
         rich_text: [
@@ -102,7 +102,7 @@ describe('NumberedListItem', () => {
   });
 
   it('handles empty rich_text', () => {
-    const block: NumberedListItemBlock = {
+    const block: NumberedListBlock = {
       type: 'numbered_list_item',
       numbered_list_item: {
         rich_text: [],
@@ -118,7 +118,7 @@ describe('NumberedListItem', () => {
   });
 
   it('applies correct color class', () => {
-    const block: NumberedListItemBlock = {
+    const block: NumberedListBlock = {
       type: 'numbered_list_item',
       numbered_list_item: {
         rich_text: [
@@ -145,6 +145,6 @@ describe('NumberedListItem', () => {
 
     const { container } = render(<NumberedListItem block={block} index={0} />);
     const li = container.querySelector('li');
-    expect(li).toHaveClass('text-blue-600');
+    expect(li).toHaveClass('text-blue-700');
   });
 });

@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { CalloutBlock, NotionColor, RichText } from '@/types/notion';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Callout } from './Callout';
-import type { RichTextItem } from '@/types/notion';
 
 const meta = {
   title: 'Notion Blocks/Callout',
@@ -14,7 +14,47 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const sampleRichText: RichTextItem[] = [
+const createRichText = (content: string, bold = false): RichText[] => [
+  {
+    type: 'text',
+    text: { content, link: null },
+    annotations: {
+      bold,
+      italic: false,
+      strikethrough: false,
+      underline: false,
+      code: false,
+      color: 'default',
+    },
+    plain_text: content,
+    href: null,
+  },
+];
+
+const createCalloutBlock = (
+  richText: RichText[],
+  icon: { emoji: string } | null = null,
+  color: NotionColor = 'default',
+): CalloutBlock => ({
+  object: 'block',
+  id: 'callout-block-1',
+  type: 'callout',
+  created_time: '2026-01-14T00:00:00.000Z',
+  last_edited_time: '2026-01-14T00:00:00.000Z',
+  created_by: { object: 'user', id: 'user-1' },
+  last_edited_by: { object: 'user', id: 'user-1' },
+  has_children: false,
+  archived: false,
+  in_trash: false,
+  parent: { type: 'page_id', page_id: 'page-1' },
+  callout: {
+    rich_text: richText,
+    icon: icon ? { emoji: icon.emoji } : null,
+    color,
+  },
+});
+
+const sampleRichText: RichText[] = [
   {
     type: 'text',
     text: { content: 'This is an important callout message. ', link: null },
@@ -27,6 +67,7 @@ const sampleRichText: RichTextItem[] = [
       color: 'default',
     },
     plain_text: 'This is an important callout message. ',
+    href: null,
   },
   {
     type: 'text',
@@ -40,144 +81,65 @@ const sampleRichText: RichTextItem[] = [
       color: 'default',
     },
     plain_text: 'Pay attention!',
+    href: null,
   },
 ];
 
 export const Default: Story = {
   args: {
-    richText: sampleRichText,
+    block: createCalloutBlock(sampleRichText),
   },
 };
 
 export const WithEmojiIcon: Story = {
   args: {
-    richText: sampleRichText,
-    icon: { type: 'emoji', emoji: '💡' },
+    block: createCalloutBlock(sampleRichText, { emoji: '💡' }),
   },
 };
 
 export const WithDifferentEmojis: Story = {
+  args: {
+    block: createCalloutBlock(createRichText(''), null),
+  },
   render: () => (
     <div className="space-y-4">
+      <Callout block={createCalloutBlock(createRichText('Information callout'), { emoji: 'ℹ️' })} />
       <Callout
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Information callout', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Information callout',
-          },
-        ]}
-        icon={{ type: 'emoji', emoji: 'ℹ️' }}
+        block={createCalloutBlock(createRichText('Warning callout'), { emoji: '⚠️' }, 'orange')}
       />
       <Callout
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Warning callout', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Warning callout',
-          },
-        ]}
-        icon={{ type: 'emoji', emoji: '⚠️' }}
-        color="orange"
-      />
-      <Callout
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Success callout', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Success callout',
-          },
-        ]}
-        icon={{ type: 'emoji', emoji: '✅' }}
-        color="green"
+        block={createCalloutBlock(createRichText('Success callout'), { emoji: '✅' }, 'green')}
       />
     </div>
   ),
 };
 
 export const ColorVariants: Story = {
+  args: {
+    block: createCalloutBlock(createRichText(''), null),
+  },
   render: () => (
     <div className="space-y-4">
       <Callout
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Gray background', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Gray background',
-          },
-        ]}
-        color="gray_background"
-        icon={{ type: 'emoji', emoji: '📝' }}
+        block={createCalloutBlock(
+          createRichText('Gray background'),
+          { emoji: '📝' },
+          'gray_background',
+        )}
       />
       <Callout
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Blue background', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Blue background',
-          },
-        ]}
-        color="blue_background"
-        icon={{ type: 'emoji', emoji: '💙' }}
+        block={createCalloutBlock(
+          createRichText('Blue background'),
+          { emoji: '💙' },
+          'blue_background',
+        )}
       />
       <Callout
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Yellow background', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Yellow background',
-          },
-        ]}
-        color="yellow_background"
-        icon={{ type: 'emoji', emoji: '💛' }}
+        block={createCalloutBlock(
+          createRichText('Yellow background'),
+          { emoji: '💛' },
+          'yellow_background',
+        )}
       />
     </div>
   ),
@@ -185,25 +147,12 @@ export const ColorVariants: Story = {
 
 export const WithChildren: Story = {
   args: {
-    richText: [
-      {
-        type: 'text',
-        text: { content: 'Parent callout with nested content', link: null },
-        annotations: {
-          bold: false,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: 'Parent callout with nested content',
-      },
-    ],
-    icon: { type: 'emoji', emoji: '📦' },
-    has_children: true,
+    block: {
+      ...createCalloutBlock(createRichText('Parent callout with nested content'), { emoji: '📦' }),
+      has_children: true,
+    },
     children: (
-      <div className="space-y-2 text-sm text-muted-foreground">
+      <div className="text-muted-foreground space-y-2 text-sm">
         <p>• Nested item 1</p>
         <p>• Nested item 2</p>
         <p>• Nested item 3</p>

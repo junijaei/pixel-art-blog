@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Paragraph } from './Paragraph';
-import type { ParagraphBlock } from './types';
+import type { ParagraphBlock } from '@/types/notion';
 
 describe('Paragraph', () => {
   it('renders plain text', () => {
@@ -193,6 +193,6 @@ describe('Paragraph', () => {
 
     const { container } = render(<Paragraph block={block} />);
     const paragraph = container.querySelector('p');
-    expect(paragraph).toHaveClass('text-blue-600');
+    expect(paragraph).toHaveClass('text-blue-700');
   });
 });

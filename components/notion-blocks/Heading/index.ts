@@ -1,2 +1,8 @@
+import type { HeadingBlock } from '@/types/notion';
+
 export { Heading } from './Heading';
-export type { HeadingProps, HeadingBlock } from './types';
+export type { HeadingBlock };
+
+export interface HeadingProps {
+  block: HeadingBlock;
+}

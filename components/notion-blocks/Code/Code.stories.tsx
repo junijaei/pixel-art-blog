@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { RichText, CodeBlock } from '@/types/notion';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Code } from './Code';
-import type { RichTextItem } from '@/types/notion';
 
 const meta = {
   title: 'Notion Blocks/Code',
@@ -14,16 +14,11 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const javascriptCode: RichTextItem[] = [
+const createRichText = (content: string): RichText[] => [
   {
     type: 'text',
     text: {
-      content: `function fibonacci(n) {
-  if (n <= 1) return n;
-  return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
-console.log(fibonacci(10));`,
+      content,
       link: null,
     },
     annotations: {
@@ -34,169 +29,143 @@ console.log(fibonacci(10));`,
       code: false,
       color: 'default',
     },
-    plain_text: `function fibonacci(n) {
-  if (n <= 1) return n;
-  return fibonacci(n - 1) + fibonacci(n - 2);
-}
-
-console.log(fibonacci(10));`,
+    plain_text: content,
+    href: null,
   },
 ];
 
-const pythonCode: RichTextItem[] = [
-  {
-    type: 'text',
-    text: {
-      content: `def hello_world():
-    print("Hello, World!")
-    
-if __name__ == "__main__":
-    hello_world()`,
-      link: null,
-    },
-    annotations: {
-      bold: false,
-      italic: false,
-      strikethrough: false,
-      underline: false,
-      code: false,
-      color: 'default',
-    },
-    plain_text: `def hello_world():
-    print("Hello, World!")
-    
-if __name__ == "__main__":
-    hello_world()`,
+const createCodeBlock = (code: string, language: string, caption: RichText[] = []): CodeBlock => ({
+  object: 'block',
+  id: 'code-block-1',
+  type: 'code',
+  created_time: '2026-01-14T00:00:00.000Z',
+  last_edited_time: '2026-01-14T00:00:00.000Z',
+  created_by: { object: 'user', id: 'user-1' },
+  last_edited_by: { object: 'user', id: 'user-1' },
+  has_children: false,
+  archived: false,
+  in_trash: false,
+  parent: { type: 'page_id', page_id: 'page-1' },
+  code: {
+    rich_text: createRichText(code),
+    language,
+    caption,
   },
-];
-
-const sampleCaption: RichTextItem[] = [
-  {
-    type: 'text',
-    text: { content: 'Example code implementation', link: null },
-    annotations: {
-      bold: false,
-      italic: true,
-      strikethrough: false,
-      underline: false,
-      code: false,
-      color: 'default',
-    },
-    plain_text: 'Example code implementation',
-  },
-];
+});
 
 export const JavaScript: Story = {
   args: {
-    richText: javascriptCode,
-    language: 'javascript',
+    block: createCodeBlock(
+      `function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log(fibonacci(10));`,
+      'javascript'
+    ),
   },
 };
 
 export const Python: Story = {
   args: {
-    richText: pythonCode,
-    language: 'python',
+    block: createCodeBlock(
+      `def hello_world():
+    print("Hello, World!")
+
+if __name__ == "__main__":
+    hello_world()`,
+      'python'
+    ),
   },
 };
 
 export const WithCaption: Story = {
   args: {
-    richText: javascriptCode,
-    language: 'javascript',
-    caption: sampleCaption,
+    block: createCodeBlock(
+      `function fibonacci(n) {
+  if (n <= 1) return n;
+  return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+console.log(fibonacci(10));`,
+      'javascript',
+      [
+        {
+          type: 'text',
+          text: { content: 'Example code implementation', link: null },
+          annotations: {
+            bold: false,
+            italic: true,
+            strikethrough: false,
+            underline: false,
+            code: false,
+            color: 'default',
+          },
+          plain_text: 'Example code implementation',
+          href: null,
+        },
+      ]
+    ),
   },
 };
 
 export const PlainText: Story = {
   args: {
-    richText: [
-      {
-        type: 'text',
-        text: { content: 'This is plain text code without syntax highlighting', link: null },
-        annotations: {
-          bold: false,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: 'This is plain text code without syntax highlighting',
-      },
-    ],
-    language: 'plain text',
+    block: createCodeBlock('This is plain text code without syntax highlighting', 'plain text'),
   },
 };
 
-export const MultipleLanguages: Story = {
-  render: () => (
-    <div className="space-y-6">
-      <Code
-        richText={[
-          {
-            type: 'text',
-            text: { content: '<div className="container">\n  <h1>Hello</h1>\n</div>', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: '<div className="container">\n  <h1>Hello</h1>\n</div>',
-          },
-        ]}
-        language="jsx"
-      />
-      <Code
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'SELECT * FROM users WHERE age > 18;', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'SELECT * FROM users WHERE age > 18;',
-          },
-        ]}
-        language="sql"
-      />
-      <Code
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'git commit -m "Initial commit"\ngit push origin main', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'git commit -m "Initial commit"\ngit push origin main',
-          },
-        ]}
-        language="bash"
-      />
-    </div>
-  ),
+export const TypeScript: Story = {
+  args: {
+    block: createCodeBlock(
+      `interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const users: User[] = [
+  { id: 1, name: 'Alice', email: 'alice@example.com' },
+  { id: 2, name: 'Bob', email: 'bob@example.com' },
+];`,
+      'typescript'
+    ),
+  },
+};
+
+export const JSX: Story = {
+  args: {
+    block: createCodeBlock(
+      `<div className="container">
+  <h1>Hello</h1>
+  <p>This is JSX</p>
+</div>`,
+      'jsx'
+    ),
+  },
+};
+
+export const SQL: Story = {
+  args: {
+    block: createCodeBlock('SELECT * FROM users WHERE age > 18;', 'sql'),
+  },
+};
+
+export const Bash: Story = {
+  args: {
+    block: createCodeBlock(
+      `git commit -m "Initial commit"
+git push origin main`,
+      'bash'
+    ),
+  },
 };
 
 export const LongCode: Story = {
   args: {
-    richText: [
-      {
-        type: 'text',
-        text: {
-          content: `const veryLongLineOfCodeThatExceedsTheNormalWidthOfACodeBlock = "This demonstrates horizontal scrolling";
+    block: createCodeBlock(
+      `const veryLongLineOfCodeThatExceedsTheNormalWidthOfACodeBlock = "This demonstrates horizontal scrolling";
 
 function complexFunction(param1, param2, param3, param4, param5) {
   const result = param1 + param2 + param3 + param4 + param5;
@@ -205,27 +174,33 @@ function complexFunction(param1, param2, param3, param4, param5) {
 
 // More code...
 const anotherVeryLongVariableNameThatDemonstratesHorizontalScrolling = true;`,
-          link: null,
-        },
-        annotations: {
-          bold: false,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: `const veryLongLineOfCodeThatExceedsTheNormalWidthOfACodeBlock = "This demonstrates horizontal scrolling";
-
-function complexFunction(param1, param2, param3, param4, param5) {
-  const result = param1 + param2 + param3 + param4 + param5;
-  return result;
-}
-
-// More code...
-const anotherVeryLongVariableNameThatDemonstratesHorizontalScrolling = true;`,
-      },
-    ],
-    language: 'typescript',
+      'typescript'
+    ),
   },
+};
+
+export const MultipleCodeBlocks: Story = {
+  args: {
+    block: createCodeBlock('', 'javascript'), // Required by type but not used
+  },
+  render: () => (
+    <div className="space-y-6">
+      <Code
+        block={createCodeBlock(
+          `<div className="container">
+  <h1>Hello</h1>
+</div>`,
+          'jsx'
+        )}
+      />
+      <Code block={createCodeBlock('SELECT * FROM users WHERE age > 18;', 'sql')} />
+      <Code
+        block={createCodeBlock(
+          `git commit -m "Initial commit"
+git push origin main`,
+          'bash'
+        )}
+      />
+    </div>
+  ),
 };

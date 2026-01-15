@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { RichText, ToggleBlock } from '@/types/notion';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Toggle } from './Toggle';
-import type { RichTextItem } from '@/types/notion';
 
 const meta = {
   title: 'Notion Blocks/Toggle',
@@ -14,26 +14,44 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const sampleRichText: RichTextItem[] = [
+const createRichText = (content: string, bold = false): RichText[] => [
   {
     type: 'text',
-    text: { content: 'Click to expand this section', link: null },
+    text: { content, link: null },
     annotations: {
-      bold: false,
+      bold,
       italic: false,
       strikethrough: false,
       underline: false,
       code: false,
       color: 'default',
     },
-    plain_text: 'Click to expand this section',
+    plain_text: content,
+    href: null,
   },
 ];
 
+const createToggleBlock = (richText: RichText[], has_children = true): ToggleBlock => ({
+  object: 'block',
+  id: 'toggle-block-1',
+  type: 'toggle',
+  created_time: '2026-01-14T00:00:00.000Z',
+  last_edited_time: '2026-01-14T00:00:00.000Z',
+  created_by: { object: 'user', id: 'user-1' },
+  last_edited_by: { object: 'user', id: 'user-1' },
+  has_children,
+  archived: false,
+  in_trash: false,
+  parent: { type: 'page_id', page_id: 'page-1' },
+  toggle: {
+    rich_text: richText,
+    color: 'default',
+  },
+});
+
 export const Default: Story = {
   args: {
-    richText: sampleRichText,
-    has_children: true,
+    block: createToggleBlock(createRichText('Click to expand this section')),
     children: (
       <div className="space-y-2">
         <p>This is the hidden content that appears when you click the toggle.</p>
@@ -45,22 +63,7 @@ export const Default: Story = {
 
 export const WithBoldText: Story = {
   args: {
-    richText: [
-      {
-        type: 'text',
-        text: { content: 'Important Information', link: null },
-        annotations: {
-          bold: true,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: 'Important Information',
-      },
-    ],
-    has_children: true,
+    block: createToggleBlock(createRichText('Important Information', true)),
     children: <div>This section contains important details you should read.</div>,
   },
 };
@@ -68,51 +71,17 @@ export const WithBoldText: Story = {
 export const FAQ: Story = {
   render: () => (
     <div className="space-y-2">
-      <Toggle
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'What is this project about?', link: null },
-            annotations: {
-              bold: true,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'What is this project about?',
-          },
-        ]}
-        has_children
-      >
+      <Toggle block={createToggleBlock(createRichText('What is this project about?', true))}>
         <p>
-          This is a personal blog project built with Next.js and Notion as a CMS.
-          It combines modern design with retro pixel aesthetics.
+          This is a personal blog project built with Next.js and Notion as a CMS. It combines
+          modern design with retro pixel aesthetics.
         </p>
       </Toggle>
 
-      <Toggle
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'How do I get started?', link: null },
-            annotations: {
-              bold: true,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'How do I get started?',
-          },
-        ]}
-        has_children
-      >
+      <Toggle block={createToggleBlock(createRichText('How do I get started?', true))}>
         <div className="space-y-2">
           <p>Follow these steps:</p>
-          <ol className="list-decimal list-inside space-y-1">
+          <ol className="list-inside list-decimal space-y-1">
             <li>Clone the repository</li>
             <li>Install dependencies with pnpm install</li>
             <li>Run pnpm dev to start the development server</li>
@@ -120,25 +89,8 @@ export const FAQ: Story = {
         </div>
       </Toggle>
 
-      <Toggle
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'What technologies are used?', link: null },
-            annotations: {
-              bold: true,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'What technologies are used?',
-          },
-        ]}
-        has_children
-      >
-        <ul className="list-disc list-inside space-y-1">
+      <Toggle block={createToggleBlock(createRichText('What technologies are used?', true))}>
+        <ul className="list-inside list-disc space-y-1">
           <li>Next.js 16</li>
           <li>TypeScript</li>
           <li>Tailwind CSS v4</li>
@@ -152,45 +104,11 @@ export const FAQ: Story = {
 
 export const NestedToggles: Story = {
   render: () => (
-    <Toggle
-      richText={[
-        {
-          type: 'text',
-          text: { content: 'Level 1: Parent Toggle', link: null },
-          annotations: {
-            bold: true,
-            italic: false,
-            strikethrough: false,
-            underline: false,
-            code: false,
-            color: 'default',
-          },
-          plain_text: 'Level 1: Parent Toggle',
-        },
-      ]}
-      has_children
-    >
+    <Toggle block={createToggleBlock(createRichText('Level 1: Parent Toggle', true))}>
       <div className="space-y-2">
         <p>This is the first level content.</p>
 
-        <Toggle
-          richText={[
-            {
-              type: 'text',
-              text: { content: 'Level 2: Nested Toggle', link: null },
-              annotations: {
-                bold: false,
-                italic: false,
-                strikethrough: false,
-                underline: false,
-                code: false,
-                color: 'default',
-              },
-              plain_text: 'Level 2: Nested Toggle',
-            },
-          ]}
-          has_children
-        >
+        <Toggle block={createToggleBlock(createRichText('Level 2: Nested Toggle'))}>
           <p>This is nested content inside another toggle.</p>
         </Toggle>
       </div>
@@ -200,46 +118,16 @@ export const NestedToggles: Story = {
 
 export const WithoutChildren: Story = {
   args: {
-    richText: [
-      {
-        type: 'text',
-        text: { content: 'This toggle has no children', link: null },
-        annotations: {
-          bold: false,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: 'This toggle has no children',
-      },
-    ],
-    has_children: false,
+    block: createToggleBlock(createRichText('This toggle has no children'), false),
   },
 };
 
 export const CodeExample: Story = {
   args: {
-    richText: [
-      {
-        type: 'text',
-        text: { content: 'Show code example', link: null },
-        annotations: {
-          bold: false,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: 'Show code example',
-      },
-    ],
-    has_children: true,
+    block: createToggleBlock(createRichText('Show code example')),
     children: (
-      <pre className="p-4 bg-muted/30 rounded-lg overflow-x-auto">
-        <code className="text-sm font-mono">
+      <pre className="bg-muted/30 overflow-x-auto rounded-lg p-4">
+        <code className="font-mono text-sm">
           {`function example() {
   console.log("Hello, World!");
   return true;

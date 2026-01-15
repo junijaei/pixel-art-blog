@@ -1,6 +1,7 @@
 import React from 'react';
 import { renderRichText } from '@/lib/notion/rich-text-renderer';
-import type { NumberedListItemProps } from './types';
+import { getColorClass } from '@/lib/notion/color-utils';
+import type { NumberedListItemProps } from './index';
 
 /**
  * Notion NumberedListItem 블록을 렌더링하는 컴포넌트
@@ -8,8 +9,7 @@ import type { NumberedListItemProps } from './types';
  */
 export function NumberedListItem({ block, children, index = 0 }: NumberedListItemProps) {
   const { rich_text, color } = block.numbered_list_item;
-
-  const colorClass = color && color !== 'default' ? getColorClass(color) : '';
+  const colorClass = getColorClass(color);
 
   return (
     <li className={`flex items-start gap-3 mb-2 ${colorClass}`.trim()}>
@@ -22,20 +22,4 @@ export function NumberedListItem({ block, children, index = 0 }: NumberedListIte
       </span>
     </li>
   );
-}
-
-function getColorClass(color: string): string {
-  const colorMap: Record<string, string> = {
-    gray: 'text-gray-600 dark:text-gray-400',
-    brown: 'text-amber-700 dark:text-amber-400',
-    orange: 'text-orange-600 dark:text-orange-400',
-    yellow: 'text-yellow-600 dark:text-yellow-400',
-    green: 'text-green-600 dark:text-green-400',
-    blue: 'text-blue-600 dark:text-blue-400',
-    purple: 'text-purple-600 dark:text-purple-400',
-    pink: 'text-pink-600 dark:text-pink-400',
-    red: 'text-red-600 dark:text-red-400',
-  };
-
-  return colorMap[color] || '';
 }

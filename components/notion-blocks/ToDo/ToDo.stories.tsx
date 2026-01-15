@@ -1,6 +1,7 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { RichText, ToDoBlock } from '@/types/notion';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import type { ReactNode } from 'react';
 import { ToDo } from './ToDo';
-import type { RichTextItem } from '@/types/notion';
 
 const meta = {
   title: 'Notion Blocks/ToDo',
@@ -14,322 +15,146 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const sampleRichText: RichTextItem[] = [
+const createRichText = (content: string, bold = false): RichText[] => [
   {
     type: 'text',
-    text: { content: 'Complete the project documentation', link: null },
+    text: { content, link: null },
     annotations: {
-      bold: false,
+      bold,
       italic: false,
       strikethrough: false,
       underline: false,
       code: false,
       color: 'default',
     },
-    plain_text: 'Complete the project documentation',
+    plain_text: content,
+    href: null,
   },
 ];
 
+const createToDoBlock = (
+  richText: RichText[],
+  checked: boolean,
+  id = 'todo-1',
+): ToDoBlock => ({
+  object: 'block',
+  id,
+  type: 'to_do',
+  created_time: '2026-01-14T00:00:00.000Z',
+  last_edited_time: '2026-01-14T00:00:00.000Z',
+  created_by: { object: 'user', id: 'user-1' },
+  last_edited_by: { object: 'user', id: 'user-1' },
+  has_children: false,
+  archived: false,
+  in_trash: false,
+  parent: { type: 'page_id', page_id: 'page-1' },
+  to_do: {
+    rich_text: richText,
+    color: 'default',
+    checked,
+  },
+});
+
 export const Unchecked: Story = {
   args: {
-    richText: sampleRichText,
-    checked: false,
+    block: createToDoBlock(createRichText('Complete the project documentation'), false),
   },
 };
 
 export const Checked: Story = {
   args: {
-    richText: sampleRichText,
-    checked: true,
+    block: createToDoBlock(createRichText('Complete the project documentation'), true),
   },
 };
 
 export const WithBoldText: Story = {
   args: {
-    richText: [
-      {
-        type: 'text',
-        text: { content: 'Important: ', link: null },
-        annotations: {
-          bold: true,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: 'Important: ',
-      },
-      {
-        type: 'text',
-        text: { content: 'Review code before merging', link: null },
-        annotations: {
-          bold: false,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: 'Review code before merging',
-      },
-    ],
-    checked: false,
+    block: createToDoBlock(
+      [
+        ...createRichText('Important: ', true),
+        ...createRichText('Review code before merging'),
+      ],
+      false,
+    ),
   },
 };
 
 export const WithLink: Story = {
   args: {
-    richText: [
-      {
-        type: 'text',
-        text: { content: 'Read the ', link: null },
-        annotations: {
-          bold: false,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
+    block: createToDoBlock(
+      [
+        ...createRichText('Read the '),
+        {
+          type: 'text',
+          text: { content: 'documentation', link: { url: 'https://example.com' } },
+          annotations: {
+            bold: false,
+            italic: false,
+            strikethrough: false,
+            underline: false,
+            code: false,
+            color: 'default',
+          },
+          plain_text: 'documentation',
+          href: 'https://example.com',
         },
-        plain_text: 'Read the ',
-      },
-      {
-        type: 'text',
-        text: { content: 'documentation', link: { url: 'https://example.com' } },
-        annotations: {
-          bold: false,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: 'documentation',
-      },
-    ],
-    checked: false,
+      ],
+      false,
+    ),
   },
 };
 
 export const TaskList: Story = {
+  args: {
+    block: createToDoBlock(createRichText(''), false, 'dummy'),
+  },
   render: () => (
     <div className="space-y-1">
       <ToDo
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Set up development environment', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Set up development environment',
-          },
-        ]}
-        checked={true}
+        block={createToDoBlock(createRichText('Set up development environment'), true, 'task-1')}
       />
-      <ToDo
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Write unit tests', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Write unit tests',
-          },
-        ]}
-        checked={true}
-      />
-      <ToDo
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Deploy to production', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Deploy to production',
-          },
-        ]}
-        checked={false}
-      />
-      <ToDo
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Update documentation', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Update documentation',
-          },
-        ]}
-        checked={false}
-      />
+      <ToDo block={createToDoBlock(createRichText('Write unit tests'), true, 'task-2')} />
+      <ToDo block={createToDoBlock(createRichText('Deploy to production'), false, 'task-3')} />
+      <ToDo block={createToDoBlock(createRichText('Update documentation'), false, 'task-4')} />
     </div>
   ),
 };
 
 export const WithChildren: Story = {
   args: {
-    richText: [
-      {
-        type: 'text',
-        text: { content: 'Complete frontend tasks', link: null },
-        annotations: {
-          bold: true,
-          italic: false,
-          strikethrough: false,
-          underline: false,
-          code: false,
-          color: 'default',
-        },
-        plain_text: 'Complete frontend tasks',
-      },
-    ],
-    checked: false,
-    has_children: true,
+    block: {
+      ...createToDoBlock(createRichText('Complete frontend tasks', true), false, 'parent'),
+      has_children: true,
+    },
     children: (
       <div className="space-y-1">
+        <ToDo block={createToDoBlock(createRichText('Build component library'), true, 'child-1')} />
         <ToDo
-          richText={[
-            {
-              type: 'text',
-              text: { content: 'Build component library', link: null },
-              annotations: {
-                bold: false,
-                italic: false,
-                strikethrough: false,
-                underline: false,
-                code: false,
-                color: 'default',
-              },
-              plain_text: 'Build component library',
-            },
-          ]}
-          checked={true}
-        />
-        <ToDo
-          richText={[
-            {
-              type: 'text',
-              text: { content: 'Create responsive layouts', link: null },
-              annotations: {
-                bold: false,
-                italic: false,
-                strikethrough: false,
-                underline: false,
-                code: false,
-                color: 'default',
-              },
-              plain_text: 'Create responsive layouts',
-            },
-          ]}
-          checked={false}
+          block={createToDoBlock(createRichText('Create responsive layouts'), false, 'child-2')}
         />
       </div>
-    ),
+    ) as ReactNode,
   },
 };
 
 export const NestedTasks: Story = {
+  args: {
+    block: createToDoBlock(createRichText(''), false, 'dummy'),
+  },
   render: () => (
     <div>
       <ToDo
-        richText={[
-          {
-            type: 'text',
-            text: { content: 'Project Setup', link: null },
-            annotations: {
-              bold: true,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Project Setup',
-          },
-        ]}
-        checked={false}
-        has_children
+        block={{
+          ...createToDoBlock(createRichText('Project Setup', true), false, 'nested-parent'),
+          has_children: true,
+        }}
       >
         <div className="space-y-1">
           <ToDo
-            richText={[
-              {
-                type: 'text',
-                text: { content: 'Install dependencies', link: null },
-                annotations: {
-                  bold: false,
-                  italic: false,
-                  strikethrough: false,
-                  underline: false,
-                  code: false,
-                  color: 'default',
-                },
-                plain_text: 'Install dependencies',
-              },
-            ]}
-            checked={true}
+            block={createToDoBlock(createRichText('Install dependencies'), true, 'nested-1')}
           />
-          <ToDo
-            richText={[
-              {
-                type: 'text',
-                text: { content: 'Configure linting', link: null },
-                annotations: {
-                  bold: false,
-                  italic: false,
-                  strikethrough: false,
-                  underline: false,
-                  code: false,
-                  color: 'default',
-                },
-                plain_text: 'Configure linting',
-              },
-            ]}
-            checked={true}
-          />
-          <ToDo
-            richText={[
-              {
-                type: 'text',
-                text: { content: 'Set up CI/CD', link: null },
-                annotations: {
-                  bold: false,
-                  italic: false,
-                  strikethrough: false,
-                  underline: false,
-                  code: false,
-                  color: 'default',
-                },
-                plain_text: 'Set up CI/CD',
-              },
-            ]}
-            checked={false}
-          />
+          <ToDo block={createToDoBlock(createRichText('Configure linting'), true, 'nested-2')} />
+          <ToDo block={createToDoBlock(createRichText('Set up CI/CD'), false, 'nested-3')} />
         </div>
       </ToDo>
     </div>

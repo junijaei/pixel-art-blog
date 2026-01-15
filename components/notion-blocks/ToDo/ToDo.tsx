@@ -1,16 +1,17 @@
 import { renderRichText } from '@/lib/notion/rich-text-renderer';
-import type { ToDoProps } from './types';
 import { cn } from '@/lib/utils';
+import type { ToDoProps } from './index';
 
-export function ToDo({ richText, checked, has_children, children }: ToDoProps) {
+export function ToDo({ block, children }: ToDoProps) {
+  const { rich_text, checked } = block.to_do;
   return (
     <div className="my-1">
-      <div className="flex gap-2 items-start">
+      <div className="flex items-start gap-2">
         {/* Checkbox */}
-        <div className="flex-shrink-0 mt-0.5">
+        <div className="mt-0.5 shrink-0">
           <div
             className={cn(
-              'w-4 h-4 rounded border border-border flex items-center justify-center',
+              'border-border flex h-4 w-4 items-center justify-center rounded border',
               checked ? 'bg-foreground' : 'bg-background'
             )}
           >
@@ -36,20 +37,13 @@ export function ToDo({ richText, checked, has_children, children }: ToDoProps) {
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
-          <div
-            className={cn(
-              'leading-relaxed',
-              checked && 'line-through text-muted-foreground'
-            )}
-          >
-            {renderRichText(richText)}
+        <div className="min-w-0 flex-1">
+          <div className={cn('leading-relaxed', checked && 'text-muted-foreground line-through')}>
+            {renderRichText(rich_text)}
           </div>
 
           {/* Nested children */}
-          {has_children && children && (
-            <div className="ml-6 mt-1 space-y-1">{children}</div>
-          )}
+          {children && <div className="mt-1 ml-6 space-y-1">{children}</div>}
         </div>
       </div>
     </div>

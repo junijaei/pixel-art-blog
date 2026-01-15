@@ -1,2 +1,8 @@
+import type { QuoteBlock } from '@/types/notion';
+
 export { Quote } from './Quote';
-export type { QuoteProps, QuoteBlock } from './types';
+export type { QuoteBlock };
+
+export interface QuoteProps {
+  block: QuoteBlock;
+}

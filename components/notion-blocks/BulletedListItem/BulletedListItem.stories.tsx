@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { BulletedListBlock, NotionColor, RichText } from '@/types/notion';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { BulletedListItem } from './BulletedListItem';
-import type { BulletedListItemBlock } from './types';
 
 const meta = {
   title: 'Notion Blocks/BulletedListItem',
@@ -21,35 +21,57 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const createRichText = (
+  content: string,
+  bold = false,
+  color: NotionColor = 'default',
+  linkUrl?: string,
+): RichText[] => [
+  {
+    type: 'text',
+    text: { content, link: linkUrl ? { url: linkUrl } : null },
+    annotations: {
+      bold,
+      italic: false,
+      strikethrough: false,
+      underline: false,
+      code: false,
+      color,
+    },
+    plain_text: content,
+    href: linkUrl || null,
+  },
+];
+
+const createBulletedListBlock = (
+  richText: RichText[],
+  color: NotionColor = 'default',
+  has_children = false,
+  id = 'bulleted-1',
+): BulletedListBlock => ({
+  object: 'block',
+  id,
+  type: 'bulleted_list_item',
+  created_time: '2026-01-14T00:00:00.000Z',
+  last_edited_time: '2026-01-14T00:00:00.000Z',
+  created_by: { object: 'user', id: 'user-1' },
+  last_edited_by: { object: 'user', id: 'user-1' },
+  has_children,
+  archived: false,
+  in_trash: false,
+  parent: { type: 'page_id', page_id: 'page-1' },
+  bulleted_list_item: {
+    rich_text: richText,
+    color,
+  },
+});
+
 /**
  * 기본 불릿 리스트 아이템
  */
 export const Default: Story = {
   args: {
-    block: {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'This is a bulleted list item', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'This is a bulleted list item',
-            href: null,
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    } as BulletedListItemBlock,
+    block: createBulletedListBlock(createRichText('This is a bulleted list item')),
   },
 };
 
@@ -58,30 +80,7 @@ export const Default: Story = {
  */
 export const WithBold: Story = {
   args: {
-    block: {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Bold list item', link: null },
-            annotations: {
-              bold: true,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Bold list item',
-            href: null,
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    } as BulletedListItemBlock,
+    block: createBulletedListBlock(createRichText('Bold list item', true)),
   },
 };
 
@@ -90,44 +89,10 @@ export const WithBold: Story = {
  */
 export const WithLink: Story = {
   args: {
-    block: {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Check out ', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Check out ',
-            href: null,
-          },
-          {
-            type: 'text',
-            text: { content: 'this link', link: { url: 'https://example.com' } },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'this link',
-            href: 'https://example.com',
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    } as BulletedListItemBlock,
+    block: createBulletedListBlock([
+      ...createRichText('Check out '),
+      ...createRichText('this link', false, 'default', 'https://example.com'),
+    ]),
   },
 };
 
@@ -136,30 +101,7 @@ export const WithLink: Story = {
  */
 export const WithColor: Story = {
   args: {
-    block: {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Blue colored list item', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'blue',
-            },
-            plain_text: 'Blue colored list item',
-            href: null,
-          },
-        ],
-        color: 'blue',
-        children: [],
-      },
-      has_children: false,
-    } as BulletedListItemBlock,
+    block: createBulletedListBlock(createRichText('Blue colored list item', false, 'blue'), 'blue'),
   },
 };
 
@@ -167,91 +109,17 @@ export const WithColor: Story = {
  * 여러 아이템이 있는 리스트
  */
 export const MultipleItems: Story = {
-  render: () => (
+  args: {
+    block: createBulletedListBlock(createRichText('First item'), 'default', false, 'bullet-1'),
+  },
+  render: (args) => (
     <ul>
+      <BulletedListItem {...args} />
       <BulletedListItem
-        block={
-          {
-            type: 'bulleted_list_item',
-            bulleted_list_item: {
-              rich_text: [
-                {
-                  type: 'text',
-                  text: { content: 'First item', link: null },
-                  annotations: {
-                    bold: false,
-                    italic: false,
-                    strikethrough: false,
-                    underline: false,
-                    code: false,
-                    color: 'default',
-                  },
-                  plain_text: 'First item',
-                  href: null,
-                },
-              ],
-              color: 'default',
-              children: [],
-            },
-            has_children: false,
-          } as BulletedListItemBlock
-        }
+        block={createBulletedListBlock(createRichText('Second item'), 'default', false, 'bullet-2')}
       />
       <BulletedListItem
-        block={
-          {
-            type: 'bulleted_list_item',
-            bulleted_list_item: {
-              rich_text: [
-                {
-                  type: 'text',
-                  text: { content: 'Second item', link: null },
-                  annotations: {
-                    bold: false,
-                    italic: false,
-                    strikethrough: false,
-                    underline: false,
-                    code: false,
-                    color: 'default',
-                  },
-                  plain_text: 'Second item',
-                  href: null,
-                },
-              ],
-              color: 'default',
-              children: [],
-            },
-            has_children: false,
-          } as BulletedListItemBlock
-        }
-      />
-      <BulletedListItem
-        block={
-          {
-            type: 'bulleted_list_item',
-            bulleted_list_item: {
-              rich_text: [
-                {
-                  type: 'text',
-                  text: { content: 'Third item', link: null },
-                  annotations: {
-                    bold: false,
-                    italic: false,
-                    strikethrough: false,
-                    underline: false,
-                    code: false,
-                    color: 'default',
-                  },
-                  plain_text: 'Third item',
-                  href: null,
-                },
-              ],
-              color: 'default',
-              children: [],
-            },
-            has_children: false,
-          } as BulletedListItemBlock
-        }
+        block={createBulletedListBlock(createRichText('Third item'), 'default', false, 'bullet-3')}
       />
     </ul>
   ),
@@ -261,93 +129,27 @@ export const MultipleItems: Story = {
  * 중첩된 리스트 (Nested List)
  */
 export const NestedList: Story = {
-  render: () => (
-    <ul>
-      <BulletedListItem
-        block={
-          {
-            type: 'bulleted_list_item',
-            bulleted_list_item: {
-              rich_text: [
-                {
-                  type: 'text',
-                  text: { content: 'Parent item', link: null },
-                  annotations: {
-                    bold: false,
-                    italic: false,
-                    strikethrough: false,
-                    underline: false,
-                    code: false,
-                    color: 'default',
-                  },
-                  plain_text: 'Parent item',
-                  href: null,
-                },
-              ],
-              color: 'default',
-              children: [],
-            },
-            has_children: true,
-          } as BulletedListItemBlock
-        }
-      >
+  args: {
+    block: createBulletedListBlock(createRichText('Parent item'), 'default', true),
+    children: (
+      <>
         <BulletedListItem
-          block={
-            {
-              type: 'bulleted_list_item',
-              bulleted_list_item: {
-                rich_text: [
-                  {
-                    type: 'text',
-                    text: { content: 'Nested item 1', link: null },
-                    annotations: {
-                      bold: false,
-                      italic: false,
-                      strikethrough: false,
-                      underline: false,
-                      code: false,
-                      color: 'default',
-                    },
-                    plain_text: 'Nested item 1',
-                    href: null,
-                  },
-                ],
-                color: 'default',
-                children: [],
-              },
-              has_children: false,
-            } as BulletedListItemBlock
-          }
+          block={createBulletedListBlock(
+            createRichText('Nested item 1'),
+            'default',
+            false,
+            'nested-1',
+          )}
         />
         <BulletedListItem
-          block={
-            {
-              type: 'bulleted_list_item',
-              bulleted_list_item: {
-                rich_text: [
-                  {
-                    type: 'text',
-                    text: { content: 'Nested item 2', link: null },
-                    annotations: {
-                      bold: false,
-                      italic: false,
-                      strikethrough: false,
-                      underline: false,
-                      code: false,
-                      color: 'default',
-                    },
-                    plain_text: 'Nested item 2',
-                    href: null,
-                  },
-                ],
-                color: 'default',
-                children: [],
-              },
-              has_children: false,
-            } as BulletedListItemBlock
-          }
+          block={createBulletedListBlock(
+            createRichText('Nested item 2'),
+            'default',
+            false,
+            'nested-2',
+          )}
         />
-      </BulletedListItem>
-    </ul>
-  ),
+      </>
+    ),
+  },
 };

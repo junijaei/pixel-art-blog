@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Paragraph } from './Paragraph';
-import type { ParagraphBlock } from './types';
+import type { ParagraphBlock } from '@/types/notion';
 
 const meta = {
   title: 'Notion Blocks/Paragraph',

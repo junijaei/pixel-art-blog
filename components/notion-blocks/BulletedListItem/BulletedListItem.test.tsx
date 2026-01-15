@@ -1,11 +1,11 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BulletedListItem } from './BulletedListItem';
-import type { BulletedListItemBlock } from './types';
+import type { BulletedListBlock } from '@/types/notion';
 
 describe('BulletedListItem', () => {
   it('renders plain text', () => {
-    const block: BulletedListItemBlock = {
+    const block: BulletedListBlock = {
       type: 'bulleted_list_item',
       bulleted_list_item: {
         rich_text: [
@@ -37,7 +37,7 @@ describe('BulletedListItem', () => {
   });
 
   it('renders with flex layout and dot icon', () => {
-    const block: BulletedListItemBlock = {
+    const block: BulletedListBlock = {
       type: 'bulleted_list_item',
       bulleted_list_item: {
         rich_text: [
@@ -69,7 +69,7 @@ describe('BulletedListItem', () => {
   });
 
   it('renders with bold annotation', () => {
-    const block: BulletedListItemBlock = {
+    const block: BulletedListBlock = {
       type: 'bulleted_list_item',
       bulleted_list_item: {
         rich_text: [
@@ -101,7 +101,7 @@ describe('BulletedListItem', () => {
   });
 
   it('handles empty rich_text', () => {
-    const block: BulletedListItemBlock = {
+    const block: BulletedListBlock = {
       type: 'bulleted_list_item',
       bulleted_list_item: {
         rich_text: [],
@@ -117,7 +117,7 @@ describe('BulletedListItem', () => {
   });
 
   it('handles has_children flag', () => {
-    const block: BulletedListItemBlock = {
+    const block: BulletedListBlock = {
       type: 'bulleted_list_item',
       bulleted_list_item: {
         rich_text: [
@@ -149,7 +149,7 @@ describe('BulletedListItem', () => {
   });
 
   it('applies correct color class', () => {
-    const block: BulletedListItemBlock = {
+    const block: BulletedListBlock = {
       type: 'bulleted_list_item',
       bulleted_list_item: {
         rich_text: [
@@ -176,6 +176,6 @@ describe('BulletedListItem', () => {
 
     const { container } = render(<BulletedListItem block={block} />);
     const li = container.querySelector('li');
-    expect(li).toHaveClass('text-blue-600');
+    expect(li).toHaveClass('text-blue-700');
   });
 });

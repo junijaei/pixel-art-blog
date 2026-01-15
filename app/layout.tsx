@@ -1,8 +1,8 @@
-import type React from 'react';
+import { FileExplorer } from '@/components/file-explorer';
 import type { Metadata, Viewport } from 'next';
 import { Geist, Geist_Mono, Silkscreen } from 'next/font/google';
+import { ReactNode } from 'react';
 import './globals.css';
-import { FileExplorer } from '@/components/file-explorer';
 
 const geistSans = Geist({
   subsets: ['latin'],
@@ -33,7 +33,7 @@ export const viewport: Viewport = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">

@@ -1,4 +1,4 @@
-import type { NotionParent, ISODate, NotionUserRef, RichText, NotionColor, NotionFile, UUID } from '../index';
+import type { ISODate, NotionColor, NotionFile, NotionParent, NotionUser, RichText, UUID } from '../index';
 
 /* =====================================================
  * Block Base
@@ -10,11 +10,12 @@ export interface BlockBase {
   parent: NotionParent;
   created_time: ISODate;
   last_edited_time: ISODate;
-  created_by?: NotionUserRef;
-  last_edited_by?: NotionUserRef;
+  created_by?: NotionUser;
+  last_edited_by?: NotionUser;
   has_children: boolean;
   archived: boolean;
   in_trash?: boolean;
+  children?: Block[];
 }
 
 /* =====================================================
@@ -24,7 +25,6 @@ export interface BlockBase {
 interface TextBlockContent {
   rich_text: RichText[];
   color: NotionColor;
-  children?: Block[];
 }
 
 /* =====================================================
@@ -184,7 +184,12 @@ export interface LinkPreviewBlock extends BlockBase {
 
 export interface TemplateBlock extends BlockBase {
   type: 'template';
-  template: { rich_text: RichText[]; children?: Block[] };
+  template: { rich_text: RichText[] };
+}
+
+export interface DividerBlock extends BlockBase {
+  type: 'divider';
+  divider: Record<string, never>;
 }
 
 export interface UnsupportedBlock extends BlockBase {
@@ -206,6 +211,7 @@ export type Block =
   | QuoteBlock
   | CalloutBlock
   | CodeBlock
+  | DividerBlock
   | ImageBlock
   | VideoBlock
   | AudioBlock

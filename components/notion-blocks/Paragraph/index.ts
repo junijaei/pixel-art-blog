@@ -1,2 +1,8 @@
+import type { ParagraphBlock } from '@/types/notion';
+
 export { Paragraph } from './Paragraph';
-export type { ParagraphProps, ParagraphBlock } from './types';
+export type { ParagraphBlock };
+
+export interface ParagraphProps {
+  block: ParagraphBlock;
+}

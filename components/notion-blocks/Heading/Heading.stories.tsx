@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Heading } from './Heading';
-import type { HeadingBlock } from './types';
+import type { HeadingBlock } from '@/types/notion';
 
 const meta = {
   title: 'Notion Blocks/Heading',
@@ -284,6 +284,15 @@ export const WithMultipleStyles: Story = {
  * 모든 헤딩 레벨 비교
  */
 export const AllLevels: Story = {
+  args: {
+    block: {
+      type: 'heading_1',
+      heading_1: {
+        rich_text: [],
+        color: 'default',
+      },
+    } as HeadingBlock,
+  },
   render: () => (
     <div className="space-y-4">
       <Heading

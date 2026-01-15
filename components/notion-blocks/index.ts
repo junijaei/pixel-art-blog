@@ -1,29 +1,32 @@
 export { Paragraph } from './Paragraph';
-export type { ParagraphProps, ParagraphBlock } from './Paragraph';
+export type { ParagraphBlock, ParagraphProps } from './Paragraph';
 
 export { Heading } from './Heading';
-export type { HeadingProps, HeadingBlock } from './Heading';
+export type { HeadingBlock, HeadingProps } from './Heading';
 
 export { BulletedListItem } from './BulletedListItem';
-export type { BulletedListItemProps, BulletedListItemBlock } from './BulletedListItem';
+export type { BulletedListItemBlock, BulletedListItemProps } from './BulletedListItem';
 
 export { NumberedListItem } from './NumberedListItem';
-export type { NumberedListItemProps, NumberedListItemBlock } from './NumberedListItem';
+export type { NumberedListBlock, NumberedListItemProps } from './NumberedListItem';
 
 export { Quote } from './Quote';
-export type { QuoteProps, QuoteBlock } from './Quote';
+export type { QuoteBlock, QuoteProps } from './Quote';
 
 export { Callout } from './Callout';
-export type { CalloutProps, CalloutBlock } from './Callout';
+export type { CalloutBlock, CalloutProps } from './Callout';
 
 export { Code } from './Code';
-export type { CodeProps, CodeBlock } from './Code';
+export type { CodeBlock, CodeProps } from './Code';
 
 export { ToDo } from './ToDo';
-export type { ToDoProps, ToDoBlock } from './ToDo';
+export type { ToDoBlock, ToDoProps } from './ToDo';
 
 export { Toggle } from './Toggle';
-export type { ToggleProps, ToggleBlock } from './Toggle';
+export type { ToggleBlock, ToggleProps } from './Toggle';
 
 export { Divider } from './Divider';
-export type { DividerProps, DividerBlock } from './Divider';
+export type { DividerProps } from './Divider';
+
+export { BlockRenderer } from './BlockRenderer';
+export type { BlockRendererProps } from './BlockRenderer';
