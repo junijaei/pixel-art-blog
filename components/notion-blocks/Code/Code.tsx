@@ -1,12 +1,17 @@
 'use client';
 
-import React from 'react';
 import { renderRichText } from '@/lib/notion/rich-text-renderer';
-import type { CodeProps } from './types';
+import { highlightCode } from '@/lib/notion/shiki-highlighter';
+import { useTheme } from 'next-themes';
+import { useEffect, useState } from 'react';
+import type { CodeBlock, CodeProps } from './index';
 
-export function Code({ richText, language = 'plain text', caption }: CodeProps) {
-  const codeText = richText.map((item) => item.plain_text).join('');
-  const [isCopied, setIsCopied] = React.useState(false);
+export function Code({ block }: CodeProps) {
+  const { rich_text, language, caption } = block.code as CodeBlock['code'];
+  const codeText = rich_text.map((item) => item.plain_text).join('');
+  const [isCopied, setIsCopied] = useState(false);
+  const [highlightedHtml, setHighlightedHtml] = useState<string>('');
+  const { theme } = useTheme();
 
   const copyToClipboard = async () => {
     try {
@@ -18,48 +23,54 @@ export function Code({ richText, language = 'plain text', caption }: CodeProps) 
     }
   };
 
+  useEffect(() => {
+    let isMounted = true;
+
+    async function highlight() {
+      const isDark = theme === 'dark';
+      const html = await highlightCode(codeText, language, isDark);
+      if (isMounted) {
+        setHighlightedHtml(html);
+      }
+    }
+
+    highlight();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [codeText, language, theme]);
+
   return (
     <div className="my-6">
-      <div className="rounded-xl border border-border bg-muted/30 overflow-hidden">
-        {/* Header with language and copy button */}
-        <div className="px-4 py-2 border-b border-border bg-muted/50 flex items-center justify-between">
-          <span className="text-xs font-(family-name:--font-geist-mono) text-muted-foreground tracking-wider">
+      <div className="border-border bg-muted/30 overflow-hidden rounded-xl border">
+        <div className="border-border bg-muted/50 flex items-center justify-between border-b px-4 py-2">
+          <span className="text-muted-foreground font-(family-name:--font-geist-mono) text-xs tracking-wider">
             {language}
           </span>
           <button
             onClick={copyToClipboard}
-            className="px-2 py-1 text-xs text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-muted/50"
+            className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-2 py-1 text-xs transition-colors"
             aria-label={isCopied ? 'Copied!' : 'Copy code'}
           >
             {isCopied ? 'Copied!' : 'Copy'}
           </button>
         </div>
 
-        {/* Code content with line numbers */}
-        <div className="flex">
-          {/* Line numbers */}
-          <div className="px-4 py-4 border-r border-border bg-muted/50 select-none">
-            <pre className="text-sm font-(family-name:--font-geist-mono) text-muted-foreground/60 text-right leading-relaxed">
-              {codeText.split('\n').map((_, i) => (
-                <div key={i}>{i + 1}</div>
-              ))}
-            </pre>
-          </div>
-
-          {/* Code content */}
-          <pre className="p-4 overflow-x-auto flex-1">
-            <code className="text-sm font-(family-name:--font-geist-mono) leading-relaxed">
-              {codeText}
-            </code>
+        {highlightedHtml ? (
+          <div
+            className="shiki-code-block [&_code]:font-(family-name:--font-geist-mono) [&_code]:text-sm [&_code]:leading-relaxed [&_pre]:m-0 [&_pre]:overflow-x-auto [&_pre]:!bg-transparent [&_pre]:p-4"
+            dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+          />
+        ) : (
+          <pre className="flex-1 overflow-x-auto p-4">
+            <code className="font-(family-name:--font-geist-mono) text-sm leading-relaxed">{codeText}</code>
           </pre>
-        </div>
+        )}
       </div>
 
-      {/* Caption */}
       {caption && caption.length > 0 && (
-        <div className="mt-2 text-sm text-muted-foreground text-center">
-          {renderRichText(caption)}
-        </div>
+        <div className="text-muted-foreground mt-2 text-center text-sm">{renderRichText(caption)}</div>
       )}
     </div>
   );
