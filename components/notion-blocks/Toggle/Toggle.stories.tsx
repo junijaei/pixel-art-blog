@@ -1,6 +1,6 @@
-import type { RichText, ToggleBlock } from '@/types/notion';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Toggle } from './Toggle';
+import { createToggleBlock, createRichText } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/Toggle',
@@ -13,41 +13,6 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
-
-const createRichText = (content: string, bold = false): RichText[] => [
-  {
-    type: 'text',
-    text: { content, link: null },
-    annotations: {
-      bold,
-      italic: false,
-      strikethrough: false,
-      underline: false,
-      code: false,
-      color: 'default',
-    },
-    plain_text: content,
-    href: null,
-  },
-];
-
-const createToggleBlock = (richText: RichText[], has_children = true): ToggleBlock => ({
-  object: 'block',
-  id: 'toggle-block-1',
-  type: 'toggle',
-  created_time: '2026-01-14T00:00:00.000Z',
-  last_edited_time: '2026-01-14T00:00:00.000Z',
-  created_by: { object: 'user', id: 'user-1' },
-  last_edited_by: { object: 'user', id: 'user-1' },
-  has_children,
-  archived: false,
-  in_trash: false,
-  parent: { type: 'page_id', page_id: 'page-1' },
-  toggle: {
-    rich_text: richText,
-    color: 'default',
-  },
-});
 
 export const Default: Story = {
   args: {
@@ -63,22 +28,25 @@ export const Default: Story = {
 
 export const WithBoldText: Story = {
   args: {
-    block: createToggleBlock(createRichText('Important Information', true)),
+    block: createToggleBlock(createRichText('Important Information', { bold: true })),
     children: <div>This section contains important details you should read.</div>,
   },
 };
 
 export const FAQ: Story = {
+  args: {
+    block: createToggleBlock(createRichText('What is this project about?', { bold: true })),
+  },
   render: () => (
     <div className="space-y-2">
-      <Toggle block={createToggleBlock(createRichText('What is this project about?', true))}>
+      <Toggle block={createToggleBlock(createRichText('What is this project about?', { bold: true }))}>
         <p>
           This is a personal blog project built with Next.js and Notion as a CMS. It combines
           modern design with retro pixel aesthetics.
         </p>
       </Toggle>
 
-      <Toggle block={createToggleBlock(createRichText('How do I get started?', true))}>
+      <Toggle block={createToggleBlock(createRichText('How do I get started?', { bold: true }))}>
         <div className="space-y-2">
           <p>Follow these steps:</p>
           <ol className="list-inside list-decimal space-y-1">
@@ -89,7 +57,7 @@ export const FAQ: Story = {
         </div>
       </Toggle>
 
-      <Toggle block={createToggleBlock(createRichText('What technologies are used?', true))}>
+      <Toggle block={createToggleBlock(createRichText('What technologies are used?', { bold: true }))}>
         <ul className="list-inside list-disc space-y-1">
           <li>Next.js 16</li>
           <li>TypeScript</li>
@@ -103,8 +71,11 @@ export const FAQ: Story = {
 };
 
 export const NestedToggles: Story = {
+  args: {
+    block: createToggleBlock(createRichText('Level 1: Parent Toggle', { bold: true })),
+  },
   render: () => (
-    <Toggle block={createToggleBlock(createRichText('Level 1: Parent Toggle', true))}>
+    <Toggle block={createToggleBlock(createRichText('Level 1: Parent Toggle', { bold: true }))}>
       <div className="space-y-2">
         <p>This is the first level content.</p>
 
@@ -118,7 +89,9 @@ export const NestedToggles: Story = {
 
 export const WithoutChildren: Story = {
   args: {
-    block: createToggleBlock(createRichText('This toggle has no children'), false),
+    block: createToggleBlock(createRichText('This toggle has no children'), 'default', {
+      has_children: false,
+    }),
   },
 };
 

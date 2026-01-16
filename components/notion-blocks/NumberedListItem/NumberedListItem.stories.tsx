@@ -1,6 +1,10 @@
-import type { NumberedListBlock, RichText } from '@/types/notion';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { NumberedListItem } from './NumberedListItem';
+import {
+  createNumberedListBlock,
+  createRichText,
+  combineRichText,
+} from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/NumberedListItem',
@@ -21,41 +25,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const createRichText = (content: string, bold = false): RichText[] => [
-  {
-    type: 'text',
-    text: { content, link: null },
-    annotations: {
-      bold,
-      italic: false,
-      strikethrough: false,
-      underline: false,
-      code: false,
-      color: 'default',
-    },
-    plain_text: content,
-    href: null,
-  },
-];
-
-const createNumberedListBlock = (richText: RichText[], id = 'numbered-1'): NumberedListBlock => ({
-  object: 'block',
-  id,
-  type: 'numbered_list_item',
-  created_time: '2026-01-14T00:00:00.000Z',
-  last_edited_time: '2026-01-14T00:00:00.000Z',
-  created_by: { object: 'user', id: 'user-1' },
-  last_edited_by: { object: 'user', id: 'user-1' },
-  has_children: false,
-  archived: false,
-  in_trash: false,
-  parent: { type: 'page_id', page_id: 'page-1' },
-  numbered_list_item: {
-    rich_text: richText,
-    color: 'default',
-  },
-});
-
 export const Default: Story = {
   args: {
     block: createNumberedListBlock(createRichText('This is a numbered list item')),
@@ -63,16 +32,77 @@ export const Default: Story = {
   },
 };
 
-export const MultipleItems: Story = {
+export const WithBold: Story = {
   args: {
-    block: createNumberedListBlock(createRichText(''), 'dummy'),
+    block: createNumberedListBlock(createRichText('Bold numbered item', { bold: true })),
     index: 0,
   },
+};
+
+export const WithLink: Story = {
+  args: {
+    block: createNumberedListBlock(
+      combineRichText(
+        createRichText('Check out '),
+        createRichText('this link', { link: 'https://example.com' }),
+      ),
+    ),
+    index: 0,
+  },
+};
+
+export const WithColor: Story = {
+  args: {
+    block: createNumberedListBlock(
+      createRichText('Blue colored item', { color: 'blue' }),
+      'blue',
+    ),
+    index: 0,
+  },
+};
+
+export const MultipleItems: Story = {
+  args: {
+    block: createNumberedListBlock(createRichText('First step')),
+    index: 0,
+  },
+  decorators: [],
   render: () => (
     <ol>
-      <NumberedListItem block={createNumberedListBlock(createRichText('First step'), 'num-1')} index={0} />
-      <NumberedListItem block={createNumberedListBlock(createRichText('Second step'), 'num-2')} index={1} />
-      <NumberedListItem block={createNumberedListBlock(createRichText('Third step'), 'num-3')} index={2} />
+      <NumberedListItem
+        block={createNumberedListBlock(createRichText('First step'), 'default', { id: 'num-1' })}
+        index={0}
+      />
+      <NumberedListItem
+        block={createNumberedListBlock(createRichText('Second step'), 'default', { id: 'num-2' })}
+        index={1}
+      />
+      <NumberedListItem
+        block={createNumberedListBlock(createRichText('Third step'), 'default', { id: 'num-3' })}
+        index={2}
+      />
     </ol>
   ),
+};
+
+export const NestedList: Story = {
+  args: {
+    block: createNumberedListBlock(createRichText('Parent item'), 'default', {
+      id: 'parent',
+      has_children: true,
+    }),
+    index: 0,
+    children: (
+      <ol>
+        <NumberedListItem
+          block={createNumberedListBlock(createRichText('Nested item 1'), 'default', { id: 'nested-1' })}
+          index={0}
+        />
+        <NumberedListItem
+          block={createNumberedListBlock(createRichText('Nested item 2'), 'default', { id: 'nested-2' })}
+          index={1}
+        />
+      </ol>
+    ),
+  },
 };
