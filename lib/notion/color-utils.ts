@@ -2,27 +2,43 @@
  * Notion 블록 색상을 Tailwind CSS 클래스로 변환하는 유틸리티
  *
  * 디자인 원칙:
- * - 낮은 채도의 차분한 색상 사용
- * - 모노크롬 중심 디자인 유지
- * - 다크모드 완전 지원
+ * - Token-Driven Development: 하드코딩된 색상 대신 Notion 토큰 사용
+ * - WCAG AA 접근성 준수: 모든 색상 조합이 4.5:1 대비율 충족
+ * - 테마 자동 전환: CSS 변수를 통해 Light/Dark 모드 자동 지원
+ *
+ * 사용 예시:
+ *   getColorClass('blue')           -> 'text-notion-blue'
+ *   getColorClass('blue_background', 'background') -> 'bg-notion-blue-bg'
  */
+
+import type { NotionColor } from '@/types/notion';
 
 export type NotionColorVariant = 'text' | 'background';
 
 /**
+ * Notion color 값에서 기본 색상을 추출합니다.
+ * 예: 'blue_background' -> 'blue'
+ */
+function extractBaseColor(color: string): string {
+  return color.replace('_background', '');
+}
+
+/**
  * Notion color를 Tailwind CSS 클래스로 변환
  *
- * @param color - Notion API의 color 값
+ * @param color - Notion API의 color 값 (예: 'blue', 'gray_background')
  * @param variant - 'text' (텍스트 색상) 또는 'background' (배경 색상)
  * @returns Tailwind CSS 클래스 문자열
  */
-export function getColorClass(color: string | undefined, variant: NotionColorVariant = 'text'): string {
+export function getColorClass(
+  color: NotionColor | string | undefined,
+  variant: NotionColorVariant = 'text',
+): string {
   if (!color || color === 'default') {
     return '';
   }
 
-  // background variant 처리 (예: "gray_background" -> "gray")
-  const baseColor = color.replace('_background', '');
+  const baseColor = extractBaseColor(color);
 
   if (variant === 'text') {
     return getTextColorClass(baseColor);
@@ -33,19 +49,19 @@ export function getColorClass(color: string | undefined, variant: NotionColorVar
 
 /**
  * 텍스트 색상 클래스 매핑
- * 차분하고 읽기 좋은 색상 사용 (700/400)
+ * Notion 토큰을 사용하여 테마 자동 전환 지원
  */
 function getTextColorClass(color: string): string {
   const colorMap: Record<string, string> = {
-    gray: 'text-neutral-700 dark:text-neutral-400',
-    brown: 'text-amber-800 dark:text-amber-400',
-    orange: 'text-orange-700 dark:text-orange-400',
-    yellow: 'text-yellow-700 dark:text-yellow-400',
-    green: 'text-green-700 dark:text-green-400',
-    blue: 'text-blue-700 dark:text-blue-400',
-    purple: 'text-purple-700 dark:text-purple-400',
-    pink: 'text-pink-700 dark:text-pink-400',
-    red: 'text-red-700 dark:text-red-400',
+    gray: 'text-notion-gray',
+    brown: 'text-notion-brown',
+    orange: 'text-notion-orange',
+    yellow: 'text-notion-yellow',
+    green: 'text-notion-green',
+    blue: 'text-notion-blue',
+    purple: 'text-notion-purple',
+    pink: 'text-notion-pink',
+    red: 'text-notion-red',
   };
 
   return colorMap[color] || '';
@@ -53,20 +69,46 @@ function getTextColorClass(color: string): string {
 
 /**
  * 배경 색상 클래스 매핑 (Callout 등에서 사용)
- * 연하고 부드러운 배경 + 다크모드 지원
+ * Notion 배경 토큰 + border 스타일
  */
 function getBackgroundColorClass(color: string): string {
   const colorMap: Record<string, string> = {
-    gray: 'bg-muted/50 border-muted-foreground/20 dark:bg-muted/30 dark:border-muted-foreground/10',
-    brown: 'bg-amber-50/60 border-amber-300/40 dark:bg-amber-950/20 dark:border-amber-800/30',
-    orange: 'bg-orange-50/60 border-orange-300/40 dark:bg-orange-950/20 dark:border-orange-800/30',
-    yellow: 'bg-yellow-50/60 border-yellow-300/40 dark:bg-yellow-950/20 dark:border-yellow-800/30',
-    green: 'bg-green-50/60 border-green-300/40 dark:bg-green-950/20 dark:border-green-800/30',
-    blue: 'bg-blue-50/60 border-blue-300/40 dark:bg-blue-950/20 dark:border-blue-800/30',
-    purple: 'bg-purple-50/60 border-purple-300/40 dark:bg-purple-950/20 dark:border-purple-800/30',
-    pink: 'bg-pink-50/60 border-pink-300/40 dark:bg-pink-950/20 dark:border-pink-800/30',
-    red: 'bg-red-50/60 border-red-300/40 dark:bg-red-950/20 dark:border-red-800/30',
+    gray: 'bg-notion-gray-bg border-notion-gray/20',
+    brown: 'bg-notion-brown-bg border-notion-brown/20',
+    orange: 'bg-notion-orange-bg border-notion-orange/20',
+    yellow: 'bg-notion-yellow-bg border-notion-yellow/20',
+    green: 'bg-notion-green-bg border-notion-green/20',
+    blue: 'bg-notion-blue-bg border-notion-blue/20',
+    purple: 'bg-notion-purple-bg border-notion-purple/20',
+    pink: 'bg-notion-pink-bg border-notion-pink/20',
+    red: 'bg-notion-red-bg border-notion-red/20',
   };
 
   return colorMap[color] || colorMap.gray;
+}
+
+/**
+ * Notion 색상을 위한 paired 스타일 (텍스트 + 배경)
+ * WCAG AA 접근성을 위해 텍스트와 배경을 함께 적용
+ */
+export function getPairedColorClass(color: NotionColor | string | undefined): string {
+  if (!color || color === 'default') {
+    return '';
+  }
+
+  const baseColor = extractBaseColor(color);
+
+  const pairedMap: Record<string, string> = {
+    gray: 'text-notion-gray bg-notion-gray-bg',
+    brown: 'text-notion-brown bg-notion-brown-bg',
+    orange: 'text-notion-orange bg-notion-orange-bg',
+    yellow: 'text-notion-yellow bg-notion-yellow-bg',
+    green: 'text-notion-green bg-notion-green-bg',
+    blue: 'text-notion-blue bg-notion-blue-bg',
+    purple: 'text-notion-purple bg-notion-purple-bg',
+    pink: 'text-notion-pink bg-notion-pink-bg',
+    red: 'text-notion-red bg-notion-red-bg',
+  };
+
+  return pairedMap[baseColor] || '';
 }
