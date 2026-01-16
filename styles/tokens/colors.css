@@ -1,0 +1,146 @@
+/**
+ * Color Palette - OKLCH Based
+ *
+ * Mute-Tone 시스템: 차분하고 세련된 색상 팔레트
+ * 배경색은 순수한 흰색/검정을 유지하여 가독성 보장
+ *
+ * OKLCH 구조: oklch(Lightness Chroma Hue)
+ * - Lightness: 0-1 (밝기)
+ * - Chroma: 0-0.4 (채도, 낮을수록 muted)
+ * - Hue: 0-360 (색상각)
+ */
+
+:root {
+  /* =====================================================
+   * Achromatic Scale (Muted Gray Tones)
+   * 약간의 따뜻한 색조를 추가한 Mute-Tone 그레이
+   * ===================================================== */
+
+  /* Pure neutrals for backgrounds (no tint) */
+  --gray-0: oklch(1 0 0); /* Pure white */
+  --gray-50: oklch(0.985 0 0); /* Near white */
+  --gray-100: oklch(0.965 0.002 75); /* Slight warm tint */
+  --gray-200: oklch(0.925 0.004 75);
+  --gray-300: oklch(0.87 0.006 75);
+  --gray-400: oklch(0.72 0.008 75);
+  --gray-500: oklch(0.58 0.01 75);
+  --gray-600: oklch(0.48 0.01 75);
+  --gray-700: oklch(0.38 0.008 75);
+  --gray-800: oklch(0.27 0.006 75);
+  --gray-900: oklch(0.18 0.004 75);
+  --gray-950: oklch(0.12 0.002 75);
+  --gray-1000: oklch(0.08 0 0); /* Near black */
+
+  /* =====================================================
+   * Notion Color Palette
+   * 소프트하고 파스텔톤의 Notion 스타일 컬러
+   * ===================================================== */
+
+  /* Default - Neutral gray */
+  --notion-default-text: oklch(0.44 0.005 270);
+  --notion-default-bg: oklch(0.975 0.003 270);
+
+  /* Gray */
+  --notion-gray-text: oklch(0.46 0.01 255);
+  --notion-gray-bg: oklch(0.965 0.006 255);
+
+  /* Brown (차분한 모카톤) */
+  --notion-brown-text: oklch(0.45 0.06 55);
+  --notion-brown-bg: oklch(0.965 0.025 55);
+
+  /* Orange (웜하지만 촌스럽지 않게) */
+  --notion-orange-text: oklch(0.47 0.085 48);
+  --notion-orange-bg: oklch(0.965 0.035 48);
+
+  /* Yellow (골드베이지) */
+  --notion-yellow-text: oklch(0.48 0.08 92);
+  --notion-yellow-bg: oklch(0.97 0.035 92);
+
+  /* Green (딥 세이지) */
+  --notion-green-text: oklch(0.44 0.075 155);
+  --notion-green-bg: oklch(0.965 0.03 155);
+
+  /* Blue (차분한 인디고) */
+  --notion-blue-text: oklch(0.43 0.085 255);
+  --notion-blue-bg: oklch(0.965 0.03 255);
+
+  /* Purple (그레이쉬 퍼플) */
+  --notion-purple-text: oklch(0.45 0.08 305);
+  --notion-purple-bg: oklch(0.965 0.03 305);
+
+  /* Pink (로즈 베이지) */
+  --notion-pink-text: oklch(0.46 0.08 355);
+  --notion-pink-bg: oklch(0.97 0.03 355);
+
+  /* Red (딥 코랄) */
+  --notion-red-text: oklch(0.44 0.095 28);
+  --notion-red-bg: oklch(0.965 0.035 28);
+
+  /* =====================================================
+   * Semantic Colors - Light Mode
+   * ===================================================== */
+
+  /* Status colors */
+  --color-success: oklch(0.52 0.14 155);
+  --color-warning: oklch(0.65 0.18 75);
+  --color-error: oklch(0.55 0.2 25);
+  --color-info: oklch(0.55 0.15 245);
+}
+
+/* =====================================================
+ * Dark Mode Color Adjustments
+ * WCAG AA 대비율 4.5:1 이상 보장
+ * ===================================================== */
+.dark {
+  /* Achromatic Scale (inverted, muted) */
+  --gray-0: oklch(0.08 0 0);
+  --gray-50: oklch(0.12 0.002 75);
+  --gray-100: oklch(0.16 0.004 75);
+  --gray-200: oklch(0.22 0.006 75);
+  --gray-300: oklch(0.3 0.008 75);
+  --gray-400: oklch(0.45 0.01 75);
+  --gray-500: oklch(0.58 0.01 75);
+  --gray-600: oklch(0.68 0.008 75);
+  --gray-700: oklch(0.78 0.006 75);
+  --gray-800: oklch(0.88 0.004 75);
+  --gray-900: oklch(0.94 0.002 75);
+  --gray-950: oklch(0.97 0 0);
+  --gray-1000: oklch(1 0 0);
+
+  /* Notion Colors - Dark Mode Adjusted for WCAG AA */
+  --notion-default-text: oklch(0.75 0.01 75);
+  --notion-default-bg: oklch(0.22 0.008 75);
+
+  --notion-gray-text: oklch(0.72 0.015 260);
+  --notion-gray-bg: oklch(0.24 0.012 260);
+
+  --notion-brown-text: oklch(0.72 0.08 55);
+  --notion-brown-bg: oklch(0.25 0.04 55);
+
+  --notion-orange-text: oklch(0.78 0.12 50);
+  --notion-orange-bg: oklch(0.28 0.065 55);
+
+  --notion-yellow-text: oklch(0.82 0.1 85);
+  --notion-yellow-bg: oklch(0.28 0.06 95);
+
+  --notion-green-text: oklch(0.72 0.1 155);
+  --notion-green-bg: oklch(0.24 0.05 155);
+
+  --notion-blue-text: oklch(0.75 0.1 245);
+  --notion-blue-bg: oklch(0.24 0.055 245);
+
+  --notion-purple-text: oklch(0.75 0.1 300);
+  --notion-purple-bg: oklch(0.24 0.055 300);
+
+  --notion-pink-text: oklch(0.78 0.1 350);
+  --notion-pink-bg: oklch(0.26 0.055 350);
+
+  --notion-red-text: oklch(0.75 0.12 25);
+  --notion-red-bg: oklch(0.25 0.06 25);
+
+  /* Status colors - Dark Mode */
+  --color-success: oklch(0.72 0.14 155);
+  --color-warning: oklch(0.78 0.15 75);
+  --color-error: oklch(0.72 0.18 25);
+  --color-info: oklch(0.72 0.12 245);
+}

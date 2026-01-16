@@ -1,0 +1,67 @@
+/**
+ * Notion Context Colors
+ *
+ * Notion API의 색상 체계에 맞춘 컨텍스트 컬러
+ * NotionColorBase: gray, brown, orange, yellow, green, blue, purple, pink, red
+ * 각 색상에 대해 text(foreground)와 bg(background) 토큰 제공
+ *
+ * 사용법:
+ * - text-notion-gray, bg-notion-gray-bg
+ * - text-notion-blue, bg-notion-blue-bg
+ */
+
+:root {
+  /* =====================================================
+   * Notion Context Colors - Light Mode
+   * Foreground (Text) Colors
+   * ===================================================== */
+  --notion-color-default: var(--foreground);
+  --notion-color-gray: var(--notion-gray-text);
+  --notion-color-brown: var(--notion-brown-text);
+  --notion-color-orange: var(--notion-orange-text);
+  --notion-color-yellow: var(--notion-yellow-text);
+  --notion-color-green: var(--notion-green-text);
+  --notion-color-blue: var(--notion-blue-text);
+  --notion-color-purple: var(--notion-purple-text);
+  --notion-color-pink: var(--notion-pink-text);
+  --notion-color-red: var(--notion-red-text);
+
+  /* =====================================================
+   * Background Colors
+   * ===================================================== */
+  --notion-color-default-bg: transparent;
+  --notion-color-gray-bg: var(--notion-gray-bg);
+  --notion-color-brown-bg: var(--notion-brown-bg);
+  --notion-color-orange-bg: var(--notion-orange-bg);
+  --notion-color-yellow-bg: var(--notion-yellow-bg);
+  --notion-color-green-bg: var(--notion-green-bg);
+  --notion-color-blue-bg: var(--notion-blue-bg);
+  --notion-color-purple-bg: var(--notion-purple-bg);
+  --notion-color-pink-bg: var(--notion-pink-bg);
+  --notion-color-red-bg: var(--notion-red-bg);
+}
+
+.dark {
+  /* Dark mode colors are already adjusted in colors.css */
+  --notion-color-default: var(--foreground);
+  --notion-color-gray: var(--notion-gray-text);
+  --notion-color-brown: var(--notion-brown-text);
+  --notion-color-orange: var(--notion-orange-text);
+  --notion-color-yellow: var(--notion-yellow-text);
+  --notion-color-green: var(--notion-green-text);
+  --notion-color-blue: var(--notion-blue-text);
+  --notion-color-purple: var(--notion-purple-text);
+  --notion-color-pink: var(--notion-pink-text);
+  --notion-color-red: var(--notion-red-text);
+
+  --notion-color-default-bg: transparent;
+  --notion-color-gray-bg: var(--notion-gray-bg);
+  --notion-color-brown-bg: var(--notion-brown-bg);
+  --notion-color-orange-bg: var(--notion-orange-bg);
+  --notion-color-yellow-bg: var(--notion-yellow-bg);
+  --notion-color-green-bg: var(--notion-green-bg);
+  --notion-color-blue-bg: var(--notion-blue-bg);
+  --notion-color-purple-bg: var(--notion-purple-bg);
+  --notion-color-pink-bg: var(--notion-pink-bg);
+  --notion-color-red-bg: var(--notion-red-bg);
+}

@@ -1,0 +1,11 @@
+/**
+ * Design Token System - Entry Point
+ *
+ * 모든 토큰 파일을 import합니다.
+ * 순서가 중요합니다: primitives → colors → themes → notion-colors
+ */
+
+@import './primitives.css';
+@import './colors.css';
+@import './themes.css';
+@import './notion-colors.css';

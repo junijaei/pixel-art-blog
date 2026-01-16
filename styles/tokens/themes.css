@@ -1,0 +1,121 @@
+/**
+ * Theme Tokens
+ *
+ * Semantic 토큰: 실제 UI 컴포넌트에서 사용되는 토큰
+ * colors.css의 원시 값을 참조합니다.
+ */
+
+:root {
+  /* =====================================================
+   * Core UI Tokens - Light Mode
+   * ===================================================== */
+
+  /* Page Background - Pure white for readability */
+  --background: var(--gray-0);
+  --foreground: var(--gray-900);
+
+  /* Surface Colors - Slightly muted */
+  --card: var(--gray-0);
+  --card-foreground: var(--gray-900);
+  --popover: var(--gray-0);
+  --popover-foreground: var(--gray-900);
+
+  /* Interactive Elements */
+  --primary: var(--gray-900);
+  --primary-foreground: var(--gray-0);
+  --secondary: var(--gray-100);
+  --secondary-foreground: var(--gray-900);
+
+  /* Muted Elements */
+  --muted: var(--gray-100);
+  --muted-foreground: var(--gray-500);
+
+  /* Accent */
+  --accent: var(--gray-100);
+  --accent-foreground: var(--gray-900);
+
+  /* Destructive */
+  --destructive: var(--color-error);
+  --destructive-foreground: var(--gray-0);
+
+  /* Borders & Inputs */
+  --border: var(--gray-200);
+  --input: var(--gray-200);
+  --ring: var(--gray-400);
+
+  /* =====================================================
+   * Chart Colors
+   * ===================================================== */
+  --chart-1: oklch(0.65 0.18 45);
+  --chart-2: oklch(0.58 0.12 185);
+  --chart-3: oklch(0.42 0.08 230);
+  --chart-4: oklch(0.78 0.16 85);
+  --chart-5: oklch(0.72 0.15 70);
+
+  /* =====================================================
+   * Sidebar Tokens
+   * ===================================================== */
+  --sidebar: var(--gray-50);
+  --sidebar-foreground: var(--gray-900);
+  --sidebar-primary: var(--gray-900);
+  --sidebar-primary-foreground: var(--gray-0);
+  --sidebar-accent: var(--gray-100);
+  --sidebar-accent-foreground: var(--gray-900);
+  --sidebar-border: var(--gray-200);
+  --sidebar-ring: var(--gray-400);
+}
+
+/* =====================================================
+ * Dark Mode Theme
+ * ===================================================== */
+.dark {
+  /* Page Background - Pure dark for readability */
+  --background: var(--gray-0);
+  --foreground: var(--gray-900);
+
+  /* Surface Colors */
+  --card: var(--gray-100);
+  --card-foreground: var(--gray-900);
+  --popover: var(--gray-100);
+  --popover-foreground: var(--gray-900);
+
+  /* Interactive Elements */
+  --primary: var(--gray-900);
+  --primary-foreground: var(--gray-0);
+  --secondary: var(--gray-200);
+  --secondary-foreground: var(--gray-900);
+
+  /* Muted Elements */
+  --muted: var(--gray-200);
+  --muted-foreground: var(--gray-500);
+
+  /* Accent */
+  --accent: var(--gray-200);
+  --accent-foreground: var(--gray-900);
+
+  /* Destructive */
+  --destructive: var(--color-error);
+  --destructive-foreground: var(--gray-900);
+
+  /* Borders & Inputs */
+  --border: var(--gray-200);
+  --input: var(--gray-200);
+  --ring: var(--gray-400);
+
+  /* Chart Colors - Dark Mode */
+  --chart-1: oklch(0.55 0.2 265);
+  --chart-2: oklch(0.68 0.14 165);
+  --chart-3: oklch(0.72 0.15 70);
+  --chart-4: oklch(0.62 0.22 305);
+  --chart-5: oklch(0.65 0.2 18);
+
+  /* Sidebar Tokens - Dark Mode */
+  --sidebar: var(--gray-100);
+  --sidebar-foreground: var(--gray-900);
+  --sidebar-primary: oklch(0.55 0.2 265);
+  --sidebar-primary-foreground: var(--gray-900);
+  --sidebar-accent: var(--gray-200);
+  --sidebar-accent-foreground: var(--gray-900);
+  --sidebar-border: var(--gray-200);
+  --sidebar-ring: var(--gray-400);
+}

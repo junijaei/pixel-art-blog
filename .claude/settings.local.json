@@ -19,7 +19,8 @@
       "Bash(pnpm build-storybook:*)",
       "Bash(pnpm tsc:*)",
       "Bash(pnpm exec tsc:*)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(pnpm build:*)"
     ]
   }
 }
