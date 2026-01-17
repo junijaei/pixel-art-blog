@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { PixelFile, PixelFolder, PixelFolderOpen, PixelChevron } from '@/components/pixel-icons';
+import { PixelChevron, PixelFile, PixelFolder, PixelFolderOpen } from '@/components/ui/pixel-icons';
 import { cn } from '@/lib/utils';
+import { useState } from 'react';
 
 interface FileNode {
   name: string;
@@ -151,7 +151,7 @@ export function FileExplorer() {
       {/* Header */}
       <div className="border-sidebar-border flex shrink-0 items-center justify-between border-b px-3 py-3">
         {!isCollapsed && (
-          <span className="text-sidebar-foreground/80 font-[family-name:var(--font-silkscreen)] text-[10px] tracking-wider uppercase">
+          <span className="text-sidebar-foreground/80 font-(family-name:--font-silkscreen) text-[10px] tracking-wider uppercase">
             Explorer
           </span>
         )}

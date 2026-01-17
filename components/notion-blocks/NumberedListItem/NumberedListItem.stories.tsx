@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
+import { combineRichText, createNumberedListBlock, createRichText } from '../__integration__/fixtures';
 import { NumberedListItem } from './NumberedListItem';
-import {
-  createNumberedListBlock,
-  createRichText,
-  combineRichText,
-} from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/NumberedListItem',
@@ -42,10 +38,7 @@ export const WithBold: Story = {
 export const WithLink: Story = {
   args: {
     block: createNumberedListBlock(
-      combineRichText(
-        createRichText('Check out '),
-        createRichText('this link', { link: 'https://example.com' }),
-      ),
+      combineRichText(createRichText('Check out '), createRichText('this link', { link: 'https://example.com' }))
     ),
     index: 0,
   },
@@ -53,10 +46,7 @@ export const WithLink: Story = {
 
 export const WithColor: Story = {
   args: {
-    block: createNumberedListBlock(
-      createRichText('Blue colored item', { color: 'blue' }),
-      'blue',
-    ),
+    block: createNumberedListBlock(createRichText('Blue colored item', { color: 'blue' }), 'blue'),
     index: 0,
   },
 };
@@ -80,6 +70,22 @@ export const MultipleItems: Story = {
       <NumberedListItem
         block={createNumberedListBlock(createRichText('Third step'), 'default', { id: 'num-3' })}
         index={2}
+      />
+      <NumberedListItem
+        block={createNumberedListBlock(createRichText('Forth step'), 'default', { id: 'num-3' })}
+        index={3}
+      />
+      <NumberedListItem
+        block={createNumberedListBlock(createRichText('Fifth step'), 'default', { id: 'num-3' })}
+        index={4}
+      />
+      <NumberedListItem
+        block={createNumberedListBlock(createRichText('Sixth step'), 'default', { id: 'num-3' })}
+        index={5}
+      />
+      <NumberedListItem
+        block={createNumberedListBlock(createRichText('Seventh step'), 'default', { id: 'num-3' })}
+        index={6}
       />
     </ol>
   ),

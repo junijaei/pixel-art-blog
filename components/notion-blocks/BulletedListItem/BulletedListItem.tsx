@@ -1,7 +1,6 @@
-import React from 'react';
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
+import { PixelDot } from '@/components/ui/pixel-icons';
 import { getColorClass } from '@/lib/notion/color-utils';
-import { PixelDot } from '@/components/pixel-icons';
+import { renderRichText } from '@/lib/notion/rich-text-renderer';
 import type { BulletedListItemProps } from './index';
 
 /**
@@ -16,9 +15,9 @@ export function BulletedListItem({ block, children }: BulletedListItemProps) {
   const colorClass = getColorClass(color) || 'text-foreground/90';
 
   return (
-    <li className={`flex items-start gap-3 mb-2 ${colorClass}`.trim()}>
-      <PixelDot className="text-muted-foreground/60 mt-2 h-1.5 w-1.5 shrink-0" />
-      <span className="leading-relaxed flex-1">
+    <li className={`mb-2 flex items-start gap-2 ${colorClass}`.trim()}>
+      <PixelDot className="text-muted-foreground/60 mt-2.5 h-1.5 w-1.5 shrink-0" />
+      <span className="flex-1 leading-relaxed">
         {renderRichText(rich_text)}
         {/* 중첩된 리스트가 있을 경우 렌더링 */}
         {children && <ul className="mt-2 space-y-2">{children}</ul>}

@@ -1,48 +1,17 @@
 import type { Preview } from '@storybook/nextjs-vite';
 import { ThemeProvider, useTheme } from 'next-themes';
-import React, { ReactNode, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import '../app/globals.css';
 
 function ThemeSync({ theme }: { theme: string }) {
   const { setTheme } = useTheme();
 
   useEffect(() => {
-    console.log(theme);
     setTheme(theme);
   }, [setTheme, theme]);
 
   return null;
 }
-
-const ThemeWrapper = ({ children, theme }: { children: ReactNode; theme: 'light' | 'dark' }) => {
-  const { setTheme } = useTheme();
-  useEffect(() => {
-    console.log('mount');
-  }, []);
-
-  useEffect(() => {
-    setTheme(theme);
-  }, [setTheme, theme]);
-
-  // useEffect(() => {
-  //   // HTML root에 테마 클래스 적용
-  //   const root = document.documentElement;
-  //   root.classList.remove('light', 'dark');
-  //   root.classList.add(theme);
-
-  //   console.log(root.classList);
-
-  //   // body에도 배경색 적용
-  //   document.body.style.backgroundColor = theme === 'dark' ? '#09090b' : '#ffffff';
-  //   document.body.style.color = theme === 'dark' ? '#fafafa' : '#09090b';
-  // }, [theme]);
-
-  return (
-    <ThemeProvider key={theme} attribute="class" defaultTheme={theme} forcedTheme={theme} enableSystem>
-      <div className="bg-background text-foreground p-4">{children}</div>
-    </ThemeProvider>
-  );
-};
 
 const preview: Preview = {
   parameters: {

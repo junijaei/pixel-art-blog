@@ -1,7 +1,7 @@
+import type { NumberedListBlock } from '@/types/notion';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { NumberedListItem } from './NumberedListItem';
-import type { NumberedListBlock } from '@/types/notion';
 
 describe('NumberedListItem', () => {
   it('renders plain text', () => {
