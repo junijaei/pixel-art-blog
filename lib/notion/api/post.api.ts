@@ -12,9 +12,10 @@ import type {
   PostSortOptions,
   PostWithCategory,
 } from '@/types/notion';
-import { getCategoryPath, parseCategoryPage } from './category.api';
+import { NOTION_LIMITS } from '../config';
+import { parseCategoryPage } from '../util';
+import { getCategoryPath } from './category.api';
 import { notionClient } from './client';
-import { NOTION_LIMITS } from './constants';
 
 /**
  * 포스트 페이지를 파싱된 Post 객체로 변환
@@ -157,7 +158,6 @@ export async function getAllPosts(
         },
       ],
     });
-    console.log(response);
 
     posts.push(...(response.results as PostPage[]));
     hasMore = response.has_more;
@@ -198,8 +198,6 @@ export async function getPostByPathAndSlug(
     //   },
     // },
   });
-
-  console.log(categoryResponse);
 
   const categoryPage = categoryResponse.results[0] as CategoryPage | undefined;
   if (!categoryPage) return null;

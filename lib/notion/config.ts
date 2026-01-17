@@ -1,3 +1,6 @@
+export const NOTION_DATASOURCE_CATEGORY_ID = process.env.NOTION_DATASOURCE_CATEGORY_ID || '';
+export const NOTION_DATASOURCE_POST_ID = process.env.NOTION_DATASOURCE_POST_ID || '';
+
 /**
  * ISR 및 캐시 설정
  */
@@ -64,4 +67,11 @@ export const POST_STATUS = {
   SCHEDULED: 'scheduled',
   DRAFT: 'draft',
   COMPLETED: 'completed',
+} as const;
+
+export const NOTION_LIMITS = {
+  MAX_PAGE_SIZE: 100,
+  DEFAULT_PAGE_SIZE: 50,
+  MAX_DEPTH: 2,
+  RATE_LIMIT_PER_SECOND: 3,
 } as const;
