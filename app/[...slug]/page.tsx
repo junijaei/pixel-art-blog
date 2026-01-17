@@ -1,17 +1,25 @@
 /**
- * Dynamic Post Page with Full Path
- * URL 형식: /front/react/hook/example
- * - slug: ["front", "react", "hook", "example"]
- * - categoryPath: "front/react/hook" (마지막 제외)
- * - postSlug: "example" (마지막 세그먼트)
+ * Dynamic Post Page with Category Path + Post ID
+ * URL 형식: /tech/react/type/abc123
+ * - slug: ["tech", "react", "type", "abc123"]
+ * - categoryPath: "tech/react/type" (마지막 제외)
+ * - postId: "abc123" (마지막 세그먼트)
  */
 
-import { BlogFooter } from '@/components/blog-footer';
-import { BlogHeader } from '@/components/blog-header';
-import { DotDecoration } from '@/components/dot-decoration';
-import { PixelArrow, PixelClock, PixelTag } from '@/components/pixel-icons';
-import { ISR_CONFIG } from '@/lib/notion/config';
-import { getAllPostPaths, getPageBlocks, getPostByPathAndSlug } from '@/lib/notion/post.api';
+import { BlogFooter, BlogHeader } from '@/components/latouts';
+import { BlockRenderer } from '@/components/notion-blocks';
+import { DotDecoration, PixelArrow, PixelClock, PixelTag } from '@/components/ui';
+import {
+  getAllCategories,
+  getAllPosts,
+  getCategoryPath,
+  getPageBlocks,
+  getPost,
+  ISR_CONFIG,
+  parseCategoryPage,
+  parsePostPage,
+} from '@/lib/notion';
+import { parsePostLink } from '@/lib/notion/util/category';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -20,14 +28,28 @@ export const revalidate = 3600;
 
 /**
  * generateStaticParams
- * 빌드 타임에 모든 포스트 경로 생성
+ * 빌드 타임에 모든 포스트 경로 생성 (카테고리 경로 + 포스트 ID)
  */
 export async function generateStaticParams() {
   try {
-    const paths = await getAllPostPaths(ISR_CONFIG.POST_DATABASE_ID, ISR_CONFIG.CATEGORY_DATABASE_ID);
+    const [categoryPages, postPages] = await Promise.all([
+      getAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true }),
+      getAllPosts(ISR_CONFIG.POST_DATABASE_ID, { publishedOnly: true }),
+    ]);
 
-    return paths.map((path) => ({
-      slug: path.fullPath.split('/'), // "front/react/hook/example" → ["front", "react", "hook", "example"]
+    const categories = categoryPages.map(parseCategoryPage);
+    const posts = postPages.map(parsePostPage);
+
+    const paths = await Promise.all(
+      posts.map(async (post) => {
+        const categoryPath = await getCategoryPath(ISR_CONFIG.CATEGORY_DATABASE_ID, post.categoryId);
+        const fullPath = categoryPath ? `${categoryPath}/${post.id}` : post.id;
+        return fullPath.split('/').filter(Boolean);
+      })
+    );
+
+    return paths.map((pathSegments) => ({
+      slug: pathSegments,
     }));
   } catch (error) {
     console.error('Failed to generate static params:', error);
@@ -42,24 +64,18 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug: slugSegments } = await params;
 
-  if (slugSegments.length < 2) {
+  if (slugSegments.length === 0) {
     return { title: 'Post Not Found' };
   }
 
-  const postSlug = slugSegments[slugSegments.length - 1];
-  const categoryPath = slugSegments.slice(0, -1).join('/');
+  const parsed = parsePostLink(slugSegments);
+  if (!parsed) {
+    return { title: 'Post Not Found' };
+  }
 
   try {
-    const post = await getPostByPathAndSlug(
-      ISR_CONFIG.POST_DATABASE_ID,
-      ISR_CONFIG.CATEGORY_DATABASE_ID,
-      categoryPath,
-      postSlug
-    );
-
-    if (!post) {
-      return { title: 'Post Not Found' };
-    }
+    const postPage = await getPost(parsed.postId);
+    const post = parsePostPage(postPage);
 
     return {
       title: post.title,
@@ -84,23 +100,32 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function PostPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug: slugSegments } = await params;
 
-  // 최소 2개 세그먼트 필요 (category + slug)
-  if (slugSegments.length < 2) {
+  if (slugSegments.length === 0) {
     notFound();
   }
 
-  const postSlug = slugSegments[slugSegments.length - 1];
-  const categoryPath = slugSegments.slice(0, -1).join('/');
+  const parsed = parsePostLink(slugSegments);
+  if (!parsed) {
+    notFound();
+  }
 
   let post = null;
+  let category = null;
   let blocks: any[] = [];
 
   try {
-    post = await getPostByPathAndSlug(ISR_CONFIG.POST_DATABASE_ID, ISR_CONFIG.CATEGORY_DATABASE_ID, categoryPath, postSlug);
+    // 포스트 가져오기
+    const postPage = await getPost(parsed.postId);
+    post = parsePostPage(postPage);
 
-    if (!post) {
-      notFound();
-    }
+    // 카테고리 정보 가져오기
+    const categoryPath = await getCategoryPath(ISR_CONFIG.CATEGORY_DATABASE_ID, post.categoryId);
+    const categoryPages = await getAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true });
+    const categoryPage = categoryPages.find((cp) => {
+      const parsed = parseCategoryPage(cp);
+      return parsed.path === categoryPath;
+    });
+    category = categoryPage ? parseCategoryPage(categoryPage) : null;
 
     // 포스트 블록 (내용) fetch
     blocks = await getPageBlocks(post.id);
@@ -119,7 +144,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {/* Back Link */}
           <Link
             href="/posts"
-            className="group mb-(--spacing-12) inline-flex items-center gap-(--spacing-2) text-sm text-muted-foreground transition-colors duration-(--duration-normal) hover:text-foreground"
+            className="group text-muted-foreground hover:text-foreground mb-(--spacing-12) inline-flex items-center gap-(--spacing-2) text-sm transition-colors duration-(--duration-normal)"
           >
             <PixelArrow className="h-3 w-3 rotate-180 transition-transform group-hover:-translate-x-0.5" />
             <span>Back to posts</span>
@@ -128,22 +153,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {/* Article Header */}
           <header className="mb-(--spacing-12)">
             <div className="mb-(--spacing-6) flex items-center gap-(--spacing-4)">
-              <div className="flex items-center gap-(--spacing-2) text-muted-foreground">
+              <div className="text-muted-foreground flex items-center gap-(--spacing-2)">
                 <PixelTag className="h-3 w-3" />
-                <span className="text-xs">{post.categoryLabel}</span>
+                <span className="text-xs">{category?.label || ''}</span>
               </div>
               <DotDecoration variant="horizontal" className="opacity-30" />
             </div>
 
-            <h1 className="mb-(--spacing-6) text-balance text-3xl font-bold leading-tight sm:text-4xl">
-              {post.title}
-            </h1>
+            <h1 className="mb-(--spacing-6) text-3xl leading-tight font-bold text-balance sm:text-4xl">{post.title}</h1>
 
             {post.description && (
-              <p className="mb-(--spacing-6) text-lg leading-relaxed text-muted-foreground">{post.description}</p>
+              <p className="text-muted-foreground mb-(--spacing-6) text-lg leading-relaxed">{post.description}</p>
             )}
 
-            <div className="flex items-center gap-(--spacing-4) text-sm text-muted-foreground">
+            <div className="text-muted-foreground flex items-center gap-(--spacing-4) text-sm">
               <div className="flex items-center gap-(--spacing-1.5)">
                 <PixelClock className="h-3 w-3" />
                 <time dateTime={post.publishedAt}>{new Date(post.publishedAt).toLocaleDateString('ko-KR')}</time>
@@ -158,7 +181,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-muted px-(--spacing-3) py-(--spacing-1) font-(family-name:--font-silkscreen) text-[10px] tracking-wider text-muted-foreground"
+                    className="bg-muted text-muted-foreground rounded-full px-(--spacing-3) py-(--spacing-1) font-(family-name:--font-silkscreen) text-[10px] tracking-wider"
                   >
                     {tag}
                   </span>
@@ -169,36 +192,26 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
           {/* Decorative Divider */}
           <div className="mb-(--spacing-12) flex items-center gap-(--spacing-3)">
-            <div className="h-px flex-1 bg-border" />
+            <div className="bg-border h-px flex-1" />
             <DotDecoration variant="horizontal" className="opacity-50" />
-            <div className="h-px flex-1 bg-border" />
+            <div className="bg-border h-px flex-1" />
           </div>
 
           {/* Article Content */}
           <article className="prose prose-neutral dark:prose-invert max-w-none">
-            {/* TODO: Notion 블록 렌더러 구현 (Phase 2) */}
-            <div className="space-y-(--spacing-4)">
-              <p className="text-muted-foreground">
-                Notion 블록 렌더러가 구현되지 않았습니다.
-                <br />
-                {blocks.length}개의 블록을 불러왔습니다.
-              </p>
-              <pre className="overflow-auto rounded-lg bg-muted p-(--spacing-4) text-xs">
-                {JSON.stringify(blocks.slice(0, 3), null, 2)}
-              </pre>
-            </div>
+            <BlockRenderer blocks={blocks} />
           </article>
 
           {/* Article Footer */}
-          <footer className="mt-(--spacing-16) border-t border-border pt-(--spacing-8)">
+          <footer className="border-border mt-(--spacing-16) border-t pt-(--spacing-8)">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-(--spacing-3)">
                 <DotDecoration variant="corner" />
-                <span className="text-sm text-muted-foreground">Thanks for reading</span>
+                <span className="text-muted-foreground text-sm">Thanks for reading</span>
               </div>
               <Link
                 href="/posts"
-                className="group flex items-center gap-(--spacing-2) text-sm transition-colors duration-(--duration-normal) hover:text-muted-foreground"
+                className="group hover:text-muted-foreground flex items-center gap-(--spacing-2) text-sm transition-colors duration-(--duration-normal)"
               >
                 <span>More posts</span>
                 <PixelArrow className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />

@@ -1,40 +1,52 @@
-import { BlogFooter } from '@/components/blog-footer';
-import { BlogHeader } from '@/components/blog-header';
-import { DotDecoration } from '@/components/dot-decoration';
-import { PixelArrow, PixelDot } from '@/components/pixel-icons';
-import { PostCard } from '@/components/post-card';
-import { ISR_CONFIG } from '@/lib/notion/config';
-import { getPostListItems } from '@/lib/notion/post.api';
+import { BlogFooter, BlogHeader } from '@/components/latouts';
+import { DotDecoration, PixelArrow, PixelDot, PostCard } from '@/components/ui';
+import { getAllCategories, getAllPosts, ISR_CONFIG, parseCategoryPage, parsePostPage } from '@/lib/notion';
+import { createPostLinkFromPost } from '@/lib/notion/util/category';
+import type { PostCardData } from '@/types/notion';
 import Link from 'next/link';
 
 // ISR 재검증 설정
 export const revalidate = 3600; // ISR_CONFIG.REVALIDATE_TIME.HOME;
 
 export default async function HomePage() {
-  let posts: string | any[] = [];
+  let posts: PostCardData[] = [];
 
   try {
-    // Notion API에서 포스트 목록 가져오기
-    const postListItems = await getPostListItems(ISR_CONFIG.POST_DATABASE_ID, ISR_CONFIG.CATEGORY_DATABASE_ID, {
-      publishedOnly: true,
-    });
+    // 카테고리와 포스트 데이터 가져오기
+    const [categoryPages, postPages] = await Promise.all([
+      getAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true }),
+      getAllPosts(ISR_CONFIG.POST_DATABASE_ID, { publishedOnly: true }),
+    ]);
+
+    const categories = categoryPages.map(parseCategoryPage);
+    const allPosts = postPages.map(parsePostPage);
 
     // PostCard 컴포넌트가 기대하는 형식으로 변환
-    posts = postListItems.map((item) => ({
-      slug: item.fullPath, // fullPath를 slug로 사용 (나중에 라우팅 개선 필요)
-      title: item.title,
-      excerpt: item.description || '내용이 없습니다.',
-      date: new Date(item.publishedAt).toLocaleDateString('ko-KR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
-      category: item.categoryLabel,
-      readTime: '5 min read', // TODO: 실제 계산 로직 추가
-    }));
+    posts = await Promise.all(
+      allPosts.slice(0, 5).map(async (post) => {
+        const categoryPage = categoryPages.find((cp) => {
+          const parsed = parseCategoryPage(cp);
+          return parsed.id === post.categoryId;
+        });
+        const postCategory = categoryPage ? parseCategoryPage(categoryPage) : null;
+
+        return {
+          id: post.id,
+          title: post.title,
+          description: post.description || '내용이 없습니다.',
+          date: new Date(post.publishedAt).toLocaleDateString('ko-KR', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+          }),
+          categoryPath: postCategory?.path || '',
+          categoryLabel: postCategory?.label || '',
+          tags: post.tags,
+        } satisfies PostCardData;
+      })
+    );
   } catch (error) {
     console.error('Failed to fetch posts from Notion:', error);
-    // 에러 발생 시 빈 배열
     posts = [];
   }
 
@@ -78,7 +90,15 @@ export default async function HomePage() {
         {featuredPost && (
           <section className="mb-(--spacing-16) px-(--spacing-6)">
             <div className="mx-auto max-w-6xl">
-              <PostCard post={featuredPost} featured />
+              <PostCard
+                id={featuredPost.id}
+                title={featuredPost.title}
+                description={featuredPost.description}
+                date={featuredPost.date}
+                categoryPath={featuredPost.categoryPath}
+                categoryLabel={featuredPost.categoryLabel}
+                tags={featuredPost.tags}
+              />
             </div>
           </section>
         )}
@@ -104,7 +124,16 @@ export default async function HomePage() {
 
               <div className="grid gap-(--spacing-6) sm:grid-cols-2">
                 {recentPosts.map((post) => (
-                  <PostCard key={post.slug} post={post} />
+                  <PostCard
+                    key={post.id}
+                    id={post.id}
+                    title={post.title}
+                    description={post.description}
+                    date={post.date}
+                    categoryPath={post.categoryPath}
+                    categoryLabel={post.categoryLabel}
+                    tags={post.tags}
+                  />
                 ))}
               </div>
             </div>
