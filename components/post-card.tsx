@@ -19,29 +19,29 @@ export function PostCard({ post, featured = false }: PostCardProps) {
     return (
       <Link
         href={`/posts/${post.slug}`}
-        className="group bg-card border-border hover:border-muted-foreground/30 relative block rounded-xl border p-8 transition-all duration-300"
+        className="group relative block rounded-xl border border-border bg-card p-(--spacing-8) transition-all duration-(--duration-slow) hover:border-muted-foreground/30"
       >
-        <DotDecoration variant="corner" className="absolute top-4 right-4 opacity-50" />
+        <DotDecoration variant="corner" className="absolute right-(--spacing-4) top-(--spacing-4) opacity-50" />
 
-        <div className="mb-4 flex items-center gap-4">
-          <span className="bg-foreground text-background rounded-md px-3 py-1.5 font-[family-name:var(--font-silkscreen)] text-[10px] tracking-wider">
+        <div className="mb-(--spacing-4) flex items-center gap-(--spacing-4)">
+          <span className="rounded-md bg-foreground px-(--spacing-3) py-(--spacing-1.5) font-(family-name:--font-silkscreen) text-[10px] tracking-wider text-background">
             FEATURED
           </span>
-          <div className="text-muted-foreground flex items-center gap-2">
+          <div className="flex items-center gap-(--spacing-2) text-muted-foreground">
             <PixelTag className="h-3 w-3" />
             <span className="text-xs">{post.category}</span>
           </div>
         </div>
 
-        <h2 className="group-hover:text-muted-foreground mb-3 text-2xl leading-relaxed font-semibold transition-colors">
+        <h2 className="mb-(--spacing-3) text-2xl font-semibold leading-relaxed transition-colors duration-(--duration-normal) group-hover:text-muted-foreground">
           {post.title}
         </h2>
 
-        <p className="text-muted-foreground mb-6 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+        <p className="mb-(--spacing-6) line-clamp-2 leading-relaxed text-muted-foreground">{post.excerpt}</p>
 
         <div className="flex items-center justify-between">
-          <div className="text-muted-foreground flex items-center gap-4 text-sm">
-            <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-(--spacing-4) text-sm text-muted-foreground">
+            <div className="flex items-center gap-(--spacing-1.5)">
               <PixelClock className="h-3 w-3" />
               <span>{post.date}</span>
             </div>
@@ -49,7 +49,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
             <span>{post.readTime}</span>
           </div>
 
-          <div className="flex items-center gap-2 text-sm font-medium transition-all group-hover:gap-3">
+          <div className="flex items-center gap-(--spacing-2) text-sm font-medium transition-all duration-(--duration-normal) group-hover:gap-(--spacing-3)">
             <span>Read</span>
             <PixelArrow className="h-4 w-4" />
           </div>
@@ -61,28 +61,28 @@ export function PostCard({ post, featured = false }: PostCardProps) {
   return (
     <Link
       href={`/posts/${post.slug}`}
-      className="group bg-card border-border hover:border-muted-foreground/30 block rounded-xl border p-6 transition-all duration-300"
+      className="group block rounded-xl border border-border bg-card p-(--spacing-6) transition-all duration-(--duration-slow) hover:border-muted-foreground/30"
     >
-      <div className="mb-3 flex items-start justify-between">
-        <div className="text-muted-foreground flex items-center gap-2">
+      <div className="mb-(--spacing-3) flex items-start justify-between">
+        <div className="flex items-center gap-(--spacing-2) text-muted-foreground">
           <PixelFile className="h-3 w-3" />
           <span className="text-xs">{post.category}</span>
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-(--spacing-1)">
           {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-muted-foreground/30 h-1 w-1 rounded-full" />
+            <div key={i} className="h-1 w-1 rounded-full bg-muted-foreground/30" />
           ))}
         </div>
       </div>
 
-      <h3 className="group-hover:text-muted-foreground mb-2 text-lg leading-relaxed font-medium transition-colors">
+      <h3 className="mb-(--spacing-2) text-lg font-medium leading-relaxed transition-colors duration-(--duration-normal) group-hover:text-muted-foreground">
         {post.title}
       </h3>
 
-      <p className="text-muted-foreground mb-4 line-clamp-2 text-sm leading-relaxed">{post.excerpt}</p>
+      <p className="mb-(--spacing-4) line-clamp-2 text-sm leading-relaxed text-muted-foreground">{post.excerpt}</p>
 
-      <div className="text-muted-foreground flex items-center gap-3 text-xs">
-        <div className="flex items-center gap-1">
+      <div className="flex items-center gap-(--spacing-3) text-xs text-muted-foreground">
+        <div className="flex items-center gap-(--spacing-1)">
           <PixelClock className="h-2.5 w-2.5" />
           <span>{post.date}</span>
         </div>

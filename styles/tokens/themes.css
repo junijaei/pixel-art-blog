@@ -70,24 +70,24 @@
  * ===================================================== */
 .dark {
   /* Page Background - Pure dark for readability */
-  --background: var(--gray-0);
-  --foreground: var(--gray-900);
+  --background: var(--gray-0); /* Pure black in dark mode (colors.css inverts it) */
+  --foreground: var(--gray-900); /* Near white in dark mode */
 
-  /* Surface Colors */
-  --card: var(--gray-100);
+  /* Surface Colors - Elevated surfaces */
+  --card: var(--gray-100); /* Slightly lighter than background */
   --card-foreground: var(--gray-900);
-  --popover: var(--gray-100);
+  --popover: var(--gray-50); /* Even more elevated */
   --popover-foreground: var(--gray-900);
 
   /* Interactive Elements */
-  --primary: var(--gray-900);
-  --primary-foreground: var(--gray-0);
+  --primary: var(--gray-900); /* Bright in dark mode */
+  --primary-foreground: var(--gray-0); /* Dark text on bright bg */
   --secondary: var(--gray-200);
   --secondary-foreground: var(--gray-900);
 
   /* Muted Elements */
   --muted: var(--gray-200);
-  --muted-foreground: var(--gray-500);
+  --muted-foreground: var(--gray-600); /* Less contrast for secondary text */
 
   /* Accent */
   --accent: var(--gray-200);
@@ -95,12 +95,12 @@
 
   /* Destructive */
   --destructive: var(--color-error);
-  --destructive-foreground: var(--gray-900);
+  --destructive-foreground: var(--gray-0); /* Dark bg for error in dark mode */
 
   /* Borders & Inputs */
-  --border: var(--gray-200);
+  --border: var(--gray-200); /* Subtle borders */
   --input: var(--gray-200);
-  --ring: var(--gray-400);
+  --ring: var(--gray-500); /* More visible focus ring */
 
   /* Chart Colors - Dark Mode */
   --chart-1: oklch(0.55 0.2 265);
