@@ -3,10 +3,9 @@
  * 빌드 타임 및 ISR에서만 사용
  */
 
+import type { DatabasePage } from '@/types/notion';
 import { notionClient } from './client';
 import { NOTION_LIMITS } from './constants';
-import type { QueryDatabaseParameters } from '@/types/notion';
-import type { DatabasePage, QueryDatabaseResponse } from '@/types/notion';
 
 /**
  * 데이터베이스의 모든 페이지를 가져오기 (자동 페이지네이션)
@@ -17,8 +16,8 @@ export async function getAllPosts(databaseId: string): Promise<DatabasePage[]> {
   let hasMore = true;
 
   while (hasMore) {
-    const response = await notionClient.databases.query({
-      database_id: databaseId,
+    const response = await notionClient.dataSources.query({
+      data_source_id: databaseId,
       page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
       start_cursor: cursor,
       filter: {
@@ -58,8 +57,8 @@ export async function getPost(pageId: string): Promise<DatabasePage> {
  * 포스트 슬러그로 페이지 찾기
  */
 export async function getPostBySlug(databaseId: string, slug: string): Promise<DatabasePage | null> {
-  const response = await notionClient.databases.query({
-    database_id: databaseId,
+  const response = await notionClient.dataSources.query({
+    data_source_id: databaseId,
     filter: {
       property: 'Slug',
       rich_text: {

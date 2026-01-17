@@ -14,9 +14,9 @@ export const ISR_CONFIG = {
   },
 
   // 환경변수
-  CATEGORY_DATABASE_ID: process.env.NOTION_CATEGORY_DATABASE_ID || '',
-  POST_DATABASE_ID: process.env.NOTION_POST_DATABASE_ID || '',
-  REVALIDATE_SECRET: process.env.REVALIDATE_SECRET || '',
+  API_KEY: process.env.NOTION_API_KEY || '',
+  CATEGORY_DATABASE_ID: process.env.NOTION_DATASOURCE_CATEGORY_ID || '',
+  POST_DATABASE_ID: process.env.NOTION_DATASOURCE_POST_ID || '',
 } as const;
 
 /**

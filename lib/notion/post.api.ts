@@ -3,19 +3,18 @@
  * 글 데이터베이스 서버 전용 API 함수
  */
 
+import type {
+  CategoryPage,
+  Post,
+  PostFilterOptions,
+  PostListItem,
+  PostPage,
+  PostSortOptions,
+  PostWithCategory,
+} from '@/types/notion';
+import { getCategoryPath, parseCategoryPage } from './category.api';
 import { notionClient } from './client';
 import { NOTION_LIMITS } from './constants';
-import { parseCategoryPage, getCategoryPath } from './category.api';
-import type {
-  PostPage,
-  Post,
-  PostWithCategory,
-  PostListItem,
-  PostFilterOptions,
-  PostSortOptions,
-  DEFAULT_POST_SORT,
-} from '@/types/notion';
-import type { CategoryPage } from '@/types/notion';
 
 /**
  * 포스트 페이지를 파싱된 Post 객체로 변환
@@ -56,8 +55,7 @@ export function parsePostPage(page: PostPage): Post {
 
   // slug (text 타입)
   const slugProp = properties.slug;
-  const slug =
-    slugProp?.type === 'rich_text' && slugProp.rich_text.length > 0 ? slugProp.rich_text[0].plain_text : '';
+  const slug = slugProp?.type === 'rich_text' && slugProp.rich_text.length > 0 ? slugProp.rich_text[0].plain_text : '';
 
   // tag (multi-select 타입)
   const tagProp = properties.tag;
@@ -147,11 +145,11 @@ export async function getAllPosts(
   const sort = sortOptions || { field: 'publishedAt', direction: 'descending' };
 
   while (hasMore) {
-    const response = await notionClient.databases.query({
-      database_id: databaseId,
+    const response = await notionClient.dataSources.query({
+      data_source_id: databaseId,
       page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
       start_cursor: cursor,
-      filter,
+      // filter,
       sorts: [
         {
           property: sort.field,
@@ -159,6 +157,7 @@ export async function getAllPosts(
         },
       ],
     });
+    console.log(response);
 
     posts.push(...(response.results as PostPage[]));
     hasMore = response.has_more;
@@ -190,15 +189,17 @@ export async function getPostByPathAndSlug(
   slug: string
 ): Promise<PostWithCategory | null> {
   // 1. 카테고리 경로로 카테고리 찾기
-  const categoryResponse = await notionClient.databases.query({
-    database_id: categoryDatabaseId,
-    filter: {
-      property: 'path',
-      rich_text: {
-        equals: categoryPath,
-      },
-    },
+  const categoryResponse = await notionClient.dataSources.query({
+    data_source_id: categoryDatabaseId,
+    // filter: {
+    //   property: 'path',
+    //   rich_text: {
+    //     equals: categoryPath,
+    //   },
+    // },
   });
+
+  console.log(categoryResponse);
 
   const categoryPage = categoryResponse.results[0] as CategoryPage | undefined;
   if (!categoryPage) return null;
@@ -206,30 +207,30 @@ export async function getPostByPathAndSlug(
   const category = parseCategoryPage(categoryPage);
 
   // 2. 해당 카테고리의 포스트 중 슬러그로 찾기
-  const postResponse = await notionClient.databases.query({
-    database_id: postDatabaseId,
-    filter: {
-      and: [
-        {
-          property: 'slug',
-          rich_text: {
-            equals: slug,
-          },
-        },
-        {
-          property: 'category',
-          relation: {
-            contains: category.id,
-          },
-        },
-        {
-          property: 'isPublished',
-          checkbox: {
-            equals: true,
-          },
-        },
-      ],
-    },
+  const postResponse = await notionClient.dataSources.query({
+    data_source_id: postDatabaseId,
+    // filter: {
+    //   and: [
+    //     {
+    //       property: 'slug',
+    //       rich_text: {
+    //         equals: slug,
+    //       },
+    //     },
+    //     {
+    //       property: 'category',
+    //       relation: {
+    //         contains: category.id,
+    //       },
+    //     },
+    //     {
+    //       property: 'isPublished',
+    //       checkbox: {
+    //         equals: true,
+    //       },
+    //     },
+    //   ],
+    // },
   });
 
   const postPage = postResponse.results[0] as PostPage | undefined;
