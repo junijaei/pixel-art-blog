@@ -1,7 +1,7 @@
-import { BlogFooter } from '@/components/blog-footer';
-import { BlogHeader } from '@/components/blog-header';
-import { DotDecoration } from '@/components/dot-decoration';
-import { PixelDot, PixelUser } from '@/components/pixel-icons';
+import { BlogFooter } from '@/components/latouts/footer';
+import { BlogHeader } from '@/components/latouts/header';
+import { DotDecoration } from '@/components/ui/dot-decoration';
+import { PixelDot, PixelUser } from '@/components/ui/pixel-icons';
 
 export default function AboutPage() {
   return (

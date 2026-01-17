@@ -1,5 +1,5 @@
-import { getColorClass } from '@/lib/notion/color-utils';
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
+import { getColorClass } from '@/lib/notion/util/color-utils';
+import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
 import type { NumberedListItemProps } from './index';
 
 /**

@@ -1,5 +1,4 @@
-import { getColorClass } from '@/lib/notion/color-utils';
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
+import { getColorClass, renderRichText } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
 import type { CalloutProps } from './index';
 

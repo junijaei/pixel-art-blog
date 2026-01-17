@@ -1,6 +1,6 @@
 'use client';
 
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
+import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 import type { ToggleProps } from './index';

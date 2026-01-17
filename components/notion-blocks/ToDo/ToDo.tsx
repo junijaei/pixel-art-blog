@@ -1,4 +1,4 @@
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
+import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
 import { cn } from '@/lib/utils';
 import type { ToDoProps } from './index';
 

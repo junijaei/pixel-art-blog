@@ -1,6 +1,5 @@
 import { PixelDot } from '@/components/ui/pixel-icons';
-import { getColorClass } from '@/lib/notion/color-utils';
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
+import { getColorClass, renderRichText } from '@/lib/notion';
 import type { BulletedListItemProps } from './index';
 
 /**

@@ -1,6 +1,4 @@
-import React from 'react';
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
-import { getColorClass } from '@/lib/notion/color-utils';
+import { getColorClass, renderRichText } from '@/lib/notion/util';
 import type { HeadingProps } from './index';
 
 /**

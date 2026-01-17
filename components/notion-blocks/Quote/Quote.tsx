@@ -1,6 +1,4 @@
-import React from 'react';
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
-import { getColorClass } from '@/lib/notion/color-utils';
+import { getColorClass, renderRichText } from '@/lib/notion/util';
 import type { QuoteProps } from './index';
 
 /**
@@ -11,9 +9,7 @@ export function Quote({ block }: QuoteProps) {
   const colorClass = getColorClass(color);
 
   return (
-    <blockquote
-      className={`border-l-4 border-muted-foreground/30 pl-4 py-2 my-4 italic ${colorClass}`.trim()}
-    >
+    <blockquote className={`border-muted-foreground/30 my-4 border-l-4 py-2 pl-4 italic ${colorClass}`.trim()}>
       {renderRichText(rich_text)}
     </blockquote>
   );

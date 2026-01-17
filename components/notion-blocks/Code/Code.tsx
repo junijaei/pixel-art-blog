@@ -1,7 +1,6 @@
 'use client';
 
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
-import { highlightCode } from '@/lib/notion/shiki-highlighter';
+import { highlightCode, renderRichText } from '@/lib/notion/util';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import type { CodeBlock, CodeProps } from './index';

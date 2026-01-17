@@ -1,6 +1,5 @@
-import React from 'react';
-import { renderRichText } from '@/lib/notion/rich-text-renderer';
-import { getColorClass } from '@/lib/notion/color-utils';
+import { getColorClass } from '@/lib/notion/util/color-utils';
+import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
 import type { ParagraphProps } from './index';
 
 /**
@@ -12,9 +11,5 @@ export function Paragraph({ block }: ParagraphProps) {
   const { rich_text, color } = block.paragraph;
   const colorClass = getColorClass(color);
 
-  return (
-    <p className={`leading-relaxed mb-4 ${colorClass}`.trim()}>
-      {renderRichText(rich_text)}
-    </p>
-  );
+  return <p className={`mb-4 leading-relaxed ${colorClass}`.trim()}>{renderRichText(rich_text)}</p>;
 }

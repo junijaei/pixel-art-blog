@@ -3,7 +3,7 @@
  * Notion에서 변경 사항 발생 시 특정 페이지만 재생성
  */
 
-import { ISR_CONFIG } from '@/lib/notion/config';
+import { ISR_CONFIG } from '@/lib/notion';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
 
