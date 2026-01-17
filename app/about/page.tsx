@@ -1,7 +1,7 @@
-import { BlogHeader } from '@/components/blog-header';
 import { BlogFooter } from '@/components/blog-footer';
+import { BlogHeader } from '@/components/blog-header';
 import { DotDecoration } from '@/components/dot-decoration';
-import { PixelUser, PixelDot } from '@/components/pixel-icons';
+import { PixelDot, PixelUser } from '@/components/pixel-icons';
 
 export default function AboutPage() {
   return (
@@ -14,7 +14,7 @@ export default function AboutPage() {
           <div className="mb-12">
             <div className="mb-6 flex items-center gap-4">
               <PixelUser className="text-muted-foreground h-5 w-5" />
-              <span className="text-muted-foreground font-[family-name:var(--font-silkscreen)] text-[10px] tracking-widest uppercase">
+              <span className="text-muted-foreground font-(family-name:--font-silkscreen) text-[10px] tracking-widest uppercase">
                 About
               </span>
               <DotDecoration variant="horizontal" className="opacity-30" />
@@ -57,7 +57,7 @@ export default function AboutPage() {
                     <PixelDot key={i} className="text-foreground h-2 w-2" />
                   ))}
                 </div>
-                <span className="text-muted-foreground font-[family-name:var(--font-silkscreen)] text-[10px] tracking-wider">
+                <span className="text-muted-foreground font-(family-name:--font-silkscreen) text-[10px] tracking-wider">
                   FOCUS
                 </span>
               </div>

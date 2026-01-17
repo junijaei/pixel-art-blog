@@ -20,7 +20,11 @@
       "Bash(pnpm tsc:*)",
       "Bash(pnpm exec tsc:*)",
       "Bash(npx tsc:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(timeout 15 pnpm dev:*)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

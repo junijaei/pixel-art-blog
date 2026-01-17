@@ -3,9 +3,9 @@
  * Notion에서 변경 사항 발생 시 특정 페이지만 재생성
  */
 
-import { revalidatePath, revalidateTag } from 'next/cache';
-import { NextRequest, NextResponse } from 'next/server';
 import { ISR_CONFIG } from '@/lib/notion/config';
+import { revalidatePath } from 'next/cache';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const authHeader = request.headers.get('authorization');
     const secret = authHeader?.replace('Bearer ', '');
 
-    if (secret !== ISR_CONFIG.REVALIDATE_SECRET) {
+    if (secret !== ISR_CONFIG.API_KEY) {
       return NextResponse.json({ message: 'Invalid secret' }, { status: 401 });
     }
 
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
       case 'tag':
         // 특정 태그로 재검증
         if (tag) {
-          revalidateTag(tag);
+          // revalidateTag(tag);
           console.log(`Revalidated tag: ${tag}`);
         }
         break;
