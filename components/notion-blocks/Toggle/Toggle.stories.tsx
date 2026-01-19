@@ -41,8 +41,8 @@ export const FAQ: Story = {
     <div className="space-y-2">
       <Toggle block={createToggleBlock(createRichText('What is this project about?', { bold: true }))}>
         <p>
-          This is a personal blog project built with Next.js and Notion as a CMS. It combines
-          modern design with retro pixel aesthetics.
+          This is a personal blog project built with Next.js and Notion as a CMS. It combines modern design with retro
+          pixel aesthetics.
         </p>
       </Toggle>
 

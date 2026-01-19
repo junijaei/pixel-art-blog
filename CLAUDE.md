@@ -8,6 +8,7 @@ ALWAYS RESPOND IN KOREAN
 This is a personal blog project that combines modern design with retro pixel aesthetics. The project is built with Next.js 16 and is designed to eventually use Notion as a CMS while maintaining full control over rendering and styling.
 
 **Key Goals:**
+
 - Zero maintenance cost (free hosting on Vercel)
 - SEO-friendly static/ISR pages
 - Simple content management through Notion (planned)
@@ -45,6 +46,7 @@ pnpm build-storybook    # Build Storybook for production
 ### Design Philosophy
 
 This project follows a **"retro-modern fusion"** approach where:
+
 - Pixel/dot elements are **accent features only** (15-20% visual weight)
 - Modern design principles form the **primary foundation** (80-85% visual weight)
 - Readability is never compromised for aesthetic
@@ -103,11 +105,13 @@ lib/                     # Utilities and helpers
 5. **Image Handling:** Notion images are downloaded at build time and served locally, cached based on `last_edited_time`
 
 **Key Files (To Be Implemented):**
+
 - `lib/notion/rich-text-renderer.tsx` - Handles RichText arrays with annotations (bold, italic, code, links)
 - `components/notion-blocks/` - Individual block components (Paragraph, Heading, Code, Callout, Image, etc.)
 - `components/notion-blocks/BlockRenderer.tsx` - Main renderer that maps block types to components
 
 **Development Approach:** Test-Driven Development (TDD)
+
 - Write tests first for each component
 - Implement component to pass tests
 - Add Storybook stories for visual testing
@@ -120,32 +124,37 @@ See [.claude/docs/guideline/notion-block-components.md](.claude/docs/guideline/n
 Comprehensive design system documentation is in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md). Key highlights:
 
 ### Color System
+
 - **Achromatic Only:** Pure grays using `oklch(lightness 0 0)` with chroma = 0
 - No blue-tinted grays (avoid slate/gray colors with hue)
 - Use CSS variables: `--foreground`, `--background`, `--muted-foreground`, `--border`, `--accent`, etc.
 - Opacity patterns for decorative elements: `/60`, `/40`, `/30`, `/20`, `/10`
 
 ### Typography
+
 ```tsx
 // Pixel font application (Silkscreen)
-className="font-[family-name:var(--font-silkscreen)] text-xs tracking-wider"
+className = 'font-[family-name:var(--font-silkscreen)] text-xs tracking-wider';
 
 // Use cases: Labels, badges, navigation items, small section headers
 // Never use for: Body text, articles, long-form content, main headings
 ```
 
 ### Layout Patterns
+
 - **Wide Layout:** `max-w-6xl` for home, listings, card grids
 - **Reading Layout:** `max-w-2xl` for article content (centered)
 - **Spacing:** `px-6` horizontal padding, `py-16` section spacing, `gap-6` card grids
 
 ### Components
+
 - All cards use `rounded-xl`, `border border-border`, hover transitions
 - Featured cards include corner dot decorations
 - Badges use pixel font with `text-[10px]`
 - Icons are custom 16x16 pixel SVGs using `currentColor`
 
 ### Critical Rules
+
 1. **Hydration Safety:** Never use `Math.random()` in render - use fixed pattern arrays
 2. **Font Loading:** Always load fonts via `next/font/google` in layout.tsx
 3. **Pixel Font Syntax:** Use `font-[family-name:var(--font-silkscreen)]` NOT inline styles
@@ -155,22 +164,26 @@ className="font-[family-name:var(--font-silkscreen)] text-xs tracking-wider"
 ## Configuration Notes
 
 ### TypeScript
+
 - Path alias `@/` maps to project root
 - Strict mode enabled
 - Build errors are currently ignored (`ignoreBuildErrors: true` - should be addressed)
 
 ### Next.js
+
 - Images are unoptimized (for free Vercel hosting)
 - App Router with TypeScript
 - ISR (Incremental Static Regeneration) will be used for Notion content
 
 ### Testing
+
 - Vitest with jsdom environment
 - Setup file: `vitest.setup.ts`
 - React Testing Library for component tests
 - Path alias `@/` configured
 
 ### Storybook
+
 - NextJS Vite integration
 - Addons: Chromatic, Vitest, a11y, Docs
 - Stories location: `stories/**/*.stories.@(js|jsx|ts|tsx)`
@@ -179,33 +192,38 @@ className="font-[family-name:var(--font-silkscreen)] text-xs tracking-wider"
 ## Code Style Guidelines
 
 ### Component Structure
+
 - Use functional components with TypeScript
 - Props should have explicit interfaces
 - Export types alongside components
 - Use `cn()` utility from `lib/utils.ts` for conditional classes
 
 ### Styling Patterns
+
 ```tsx
 // Card hover pattern
-className="transition-all duration-300 hover:border-muted-foreground/30"
+className = 'transition-all duration-300 hover:border-muted-foreground/30';
 
 // Icon + text spacing
-className="flex items-center gap-2"
+className = 'flex items-center gap-2';
 
 // Pixel icon sizing
-className="h-4 w-4"  // Standard navigation/buttons
-className="h-3 w-3"  // Small metadata icons
-className="h-2 w-2"  // Decorative dots
+className = 'h-4 w-4'; // Standard navigation/buttons
+className = 'h-3 w-3'; // Small metadata icons
+className = 'h-2 w-2'; // Decorative dots
 ```
 
 ### Accessibility
+
 - Use semantic HTML (`<header>`, `<main>`, `<article>`, `<nav>`)
 - Icons need accompanying text or `aria-label`
 - Maintain WCAG contrast ratios
 - Pixel fonts only for decorative text, not essential content
 
 ### File References
+
 When referencing code locations, use the format:
+
 - Files: [filename.tsx](path/to/filename.tsx)
 - Lines: [filename.tsx:42](path/to/filename.tsx#L42)
 - Ranges: [filename.tsx:42-51](path/to/filename.tsx#L42-L51)
@@ -213,6 +231,7 @@ When referencing code locations, use the format:
 ## Important Context
 
 ### What NOT to Do
+
 - Don't convert Notion content to Markdown (preserves structure & allows custom rendering)
 - Don't use pixel fonts for long-form content (readability first)
 - Don't add random decorative elements (15-20% visual weight rule)
@@ -221,6 +240,7 @@ When referencing code locations, use the format:
 - Don't compromise backwards compatibility without good reason
 
 ### When Working on Notion Integration
+
 1. Always refer to [.claude/docs/guideline/GUIDELINE.md](.claude/docs/guideline/GUIDELINE.md) for architectural decisions
 2. Follow TDD approach from [.claude/docs/guideline/notion-block-components.md](.claude/docs/guideline/notion-block-components.md)
 3. Test each block component thoroughly before moving to next
@@ -228,6 +248,7 @@ When referencing code locations, use the format:
 5. Handle `has_children` recursively with depth limits
 
 ### Design System Adherence
+
 - Reference [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) for all styling decisions
 - Colors must use `oklch(lightness 0 0)` - pure achromatic
 - Maintain 80/15 modern/retro visual weight balance

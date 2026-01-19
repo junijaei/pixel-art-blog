@@ -5,6 +5,7 @@
 이 문서는 Notion API 블록을 React 컴포넌트로 렌더링하는 시스템 구축을 위한 전체 프로세스와 체크리스트를 제공합니다.
 
 **핵심 원칙: TDD (Test-Driven Development)**
+
 - 각 컴포넌트는 테스트 작성 → 구현 → 테스트 통과 사이클을 따릅니다
 - 테스트가 통과할 때까지 반복적으로 수정합니다
 - 모든 컴포넌트는 테스트와 스토리북을 함께 제공해야 합니다
@@ -14,6 +15,7 @@
 ## 전체 진행 과정
 
 ### Phase 0: 환경 설정 (사전 준비)
+
 → Phase 1: 공통 유틸리티 개발
 → Phase 2: 기본 블록 컴포넌트 개발
 → Phase 3: 고급 블록 컴포넌트 개발
@@ -25,11 +27,13 @@
 ## Phase 0: 환경 설정
 
 ### 목표
+
 개발에 필요한 도구 설치 및 설정 완료
 
 ### 작업 항목
 
 #### 0.1 Storybook 설치 및 설정
+
 - [ ] Storybook 설치 (`@storybook/nextjs`, `storybook`)
 - [ ] Storybook 초기화
 - [ ] Tailwind CSS Storybook 통합
@@ -38,11 +42,13 @@
 - [ ] 첫 샘플 스토리 작성 및 동작 확인
 
 **완료 기준:**
+
 - `pnpm storybook` 실행 시 브라우저에서 정상 작동
 - Tailwind CSS 스타일 적용 확인
 - 다크/라이트 모드 전환 확인
 
 #### 0.2 테스트 환경 설정
+
 - [ ] Vitest 설치 및 설정
 - [ ] React Testing Library 설치
 - [ ] @testing-library/jest-dom 설치
@@ -51,11 +57,13 @@
 - [ ] 첫 샘플 테스트 작성 및 통과 확인
 
 **완료 기준:**
+
 - `pnpm test` 실행 시 테스트 정상 실행
 - TypeScript 타입 에러 없음
 - 테스트 커버리지 리포트 생성 가능
 
 #### 0.3 디렉토리 구조 생성
+
 ```bash
 mkdir -p components/notion-blocks
 mkdir -p lib/notion
@@ -68,6 +76,7 @@ touch lib/notion/index.ts
 ## Phase 1: 공통 유틸리티 개발
 
 ### 목표
+
 모든 블록 컴포넌트에서 사용할 공통 유틸리티 개발
 
 ### 1.1 RichText 렌더링 헬퍼
@@ -75,6 +84,7 @@ touch lib/notion/index.ts
 **TDD 사이클:**
 
 #### 단계 1: 테스트 작성
+
 - [ ] `lib/notion/rich-text-renderer.test.tsx` 생성
 - [ ] 기본 텍스트 렌더링 테스트
 - [ ] Bold 스타일 테스트
@@ -88,6 +98,7 @@ touch lib/notion/index.ts
 → **예상 결과:** 모두 실패 (Red)
 
 #### 단계 2: 구현
+
 - [ ] `lib/notion/rich-text-renderer.tsx` 생성
 - [ ] RichText 타입 정의 확인 (types/notion.ts)
 - [ ] renderRichText 함수 구현
@@ -100,6 +111,7 @@ touch lib/notion/index.ts
 → **목표:** 모든 테스트 통과 (Green)
 
 #### 단계 3: 리팩토링
+
 - [ ] 중복 코드 제거
 - [ ] 타입 안정성 개선
 - [ ] 성능 최적화 (필요시)
@@ -108,6 +120,7 @@ touch lib/notion/index.ts
 → **확인:** 여전히 모든 테스트 통과
 
 #### 단계 4: 스토리북
+
 - [ ] `lib/notion/rich-text-renderer.stories.tsx` 생성
 - [ ] 다양한 스타일 조합 스토리 작성
 
@@ -121,6 +134,7 @@ touch lib/notion/index.ts
 ## Phase 2: 기본 블록 컴포넌트 개발
 
 ### 개발 순서
+
 1. Paragraph
 2. Heading (h1, h2, h3)
 3. BulletedListItem
@@ -137,6 +151,7 @@ touch lib/notion/index.ts
 ### 2.1 Paragraph 컴포넌트
 
 #### 단계 1: 테스트 작성 (Red)
+
 - [ ] `components/notion-blocks/Paragraph/Paragraph.test.tsx` 생성
 - [ ] 테스트 케이스 작성:
   ```typescript
@@ -155,11 +170,13 @@ touch lib/notion/index.ts
 → **예상 결과:** 모두 실패 (컴포넌트 미구현)
 
 #### 단계 2: 타입 정의
+
 - [ ] `components/notion-blocks/Paragraph/types.ts` 생성
 - [ ] ParagraphProps 인터페이스 정의
 - [ ] Notion API의 paragraph 블록 타입 참고
 
 #### 단계 3: 컴포넌트 구현 (Green)
+
 - [ ] `components/notion-blocks/Paragraph/Paragraph.tsx` 생성
 - [ ] Props 타입 정의 import
 - [ ] RichText 렌더링 헬퍼 사용
@@ -170,12 +187,14 @@ touch lib/notion/index.ts
 → **목표:** 모든 테스트 통과
 
 **통과하지 않으면:**
+
 - [ ] 실패한 테스트 확인
 - [ ] 코드 수정
 - [ ] 다시 테스트 실행
 - [ ] 모든 테스트 통과할 때까지 반복
 
 #### 단계 4: 리팩토링 (Refactor)
+
 - [ ] 코드 정리
 - [ ] 중복 제거
 - [ ] 접근성 개선 (semantic HTML)
@@ -184,6 +203,7 @@ touch lib/notion/index.ts
 → **확인:** 여전히 모든 테스트 통과
 
 #### 단계 5: 스토리북 작성
+
 - [ ] `components/notion-blocks/Paragraph/Paragraph.stories.tsx` 생성
 - [ ] 스토리 작성:
   - Default (기본 텍스트)
@@ -198,11 +218,13 @@ touch lib/notion/index.ts
 **확인:** `pnpm storybook` 실행 후 모든 스토리 시각적 검증
 
 #### 단계 6: Export
+
 - [ ] `components/notion-blocks/Paragraph/index.ts` 생성
 - [ ] 컴포넌트 및 타입 export
 - [ ] `components/notion-blocks/index.ts`에 추가
 
 **체크리스트:**
+
 - [x] 테스트 작성 완료
 - [x] 모든 테스트 통과
 - [x] 컴포넌트 구현 완료
@@ -221,6 +243,7 @@ touch lib/notion/index.ts
 ### 2.2 Heading 컴포넌트
 
 #### 단계 1: 테스트 작성 (Red)
+
 - [ ] `components/notion-blocks/Heading/Heading.test.tsx` 생성
 - [ ] 테스트 케이스:
   ```typescript
@@ -240,6 +263,7 @@ touch lib/notion/index.ts
 #### 단계 2-6: 위와 동일한 TDD 사이클 반복
 
 **체크리스트:**
+
 - [ ] 테스트 작성 완료
 - [ ] 모든 테스트 통과
 - [ ] 컴포넌트 구현 완료
@@ -251,6 +275,7 @@ touch lib/notion/index.ts
 ### 2.3 BulletedListItem 컴포넌트
 
 #### TDD 사이클 체크리스트
+
 - [ ] 테스트 작성 (Red)
 - [ ] 타입 정의
 - [ ] 컴포넌트 구현 (Green)
@@ -261,6 +286,7 @@ touch lib/notion/index.ts
 - [ ] Export
 
 **특별 고려사항:**
+
 - [ ] has_children 처리 (재귀 렌더링 준비)
 - [ ] 중첩 리스트 스타일
 
@@ -269,6 +295,7 @@ touch lib/notion/index.ts
 ### 2.4 NumberedListItem 컴포넌트
 
 #### TDD 사이클 체크리스트
+
 - [ ] 테스트 작성 (Red)
 - [ ] 타입 정의
 - [ ] 컴포넌트 구현 (Green)
@@ -279,6 +306,7 @@ touch lib/notion/index.ts
 - [ ] Export
 
 **특별 고려사항:**
+
 - [ ] 번호 매기기 처리
 - [ ] 중첩 리스트 스타일
 
@@ -287,6 +315,7 @@ touch lib/notion/index.ts
 ### 2.5 Code 컴포넌트
 
 #### TDD 사이클 체크리스트
+
 - [ ] 테스트 작성 (Red)
   - 언어 표시
   - 코드 하이라이팅 (선택적)
@@ -299,6 +328,7 @@ touch lib/notion/index.ts
 - [ ] Export
 
 **특별 고려사항:**
+
 - [ ] 코드 스타일 (monospace, 배경색)
 - [ ] 스크롤 처리 (긴 코드)
 - [ ] 다크 모드 대응
@@ -308,6 +338,7 @@ touch lib/notion/index.ts
 ### 2.6 Callout 컴포넌트
 
 #### TDD 사이클 체크리스트
+
 - [ ] 테스트 작성 (Red)
 - [ ] 타입 정의
 - [ ] 컴포넌트 구현 (Green)
@@ -317,6 +348,7 @@ touch lib/notion/index.ts
 - [ ] Export
 
 **특별 고려사항:**
+
 - [ ] 아이콘 처리 (emoji)
 - [ ] 배경색 처리
 - [ ] has_children 처리
@@ -328,6 +360,7 @@ touch lib/notion/index.ts
 ### 3.1 Image 컴포넌트
 
 #### TDD 사이클 체크리스트
+
 - [ ] 테스트 작성 (Red)
   - 외부 URL 렌더링
   - 로컬 이미지 렌더링
@@ -344,6 +377,7 @@ touch lib/notion/index.ts
 - [ ] Export
 
 **특별 고려사항:**
+
 - [ ] Next.js Image 최적화
 - [ ] caption 렌더링
 - [ ] 반응형 처리
@@ -354,6 +388,7 @@ touch lib/notion/index.ts
 ### 3.2 Quote 컴포넌트
 
 #### TDD 사이클 체크리스트
+
 - [ ] 테스트 작성
 - [ ] 컴포넌트 구현
 - [ ] 테스트 통과
@@ -364,6 +399,7 @@ touch lib/notion/index.ts
 ### 3.3 Divider 컴포넌트
 
 #### TDD 사이클 체크리스트
+
 - [ ] 테스트 작성
 - [ ] 컴포넌트 구현
 - [ ] 테스트 통과
@@ -374,12 +410,14 @@ touch lib/notion/index.ts
 ### 3.4 Toggle 컴포넌트
 
 #### TDD 사이클 체크리스트
+
 - [ ] 테스트 작성 (상태 관리 포함)
 - [ ] 컴포넌트 구현
 - [ ] 테스트 통과
 - [ ] 스토리북 작성 (열림/닫힘 상태)
 
 **특별 고려사항:**
+
 - [ ] 클라이언트 컴포넌트 ('use client')
 - [ ] 상태 관리 (useState)
 - [ ] 애니메이션 (선택적)
@@ -389,11 +427,13 @@ touch lib/notion/index.ts
 ## Phase 4: BlockRenderer 통합
 
 ### 목표
+
 모든 블록 컴포넌트를 재귀적으로 렌더링하는 통합 컴포넌트 개발
 
 ### 4.1 BlockRenderer 컴포넌트
 
 #### 단계 1: 테스트 작성 (Red)
+
 - [ ] `components/notion-blocks/BlockRenderer.test.tsx` 생성
 - [ ] 테스트 케이스:
   ```typescript
@@ -411,12 +451,14 @@ touch lib/notion/index.ts
 → **예상 결과:** 모두 실패
 
 #### 단계 2: 구현
+
 - [ ] `components/notion-blocks/BlockRenderer.tsx` 생성
 - [ ] 블록 타입별 컴포넌트 매핑 로직
 - [ ] 재귀 렌더링 처리
 - [ ] 지원하지 않는 블록 fallback UI
 
 **구현 예시:**
+
 ```typescript
 function BlockRenderer({ block, children }: BlockRendererProps) {
   switch (block.type) {
@@ -438,6 +480,7 @@ function BlockRenderer({ block, children }: BlockRendererProps) {
 → **목표:** 모든 테스트 통과
 
 #### 단계 3: 재귀 처리 구현
+
 - [ ] has_children 처리
 - [ ] children 블록 재귀 렌더링
 - [ ] 중첩 레벨 제한 (스택 오버플로우 방지)
@@ -446,12 +489,14 @@ function BlockRenderer({ block, children }: BlockRendererProps) {
 → **확인:** 재귀 테스트 포함 모두 통과
 
 #### 단계 4: 스토리북
+
 - [ ] `BlockRenderer.stories.tsx` 생성
 - [ ] 다양한 블록 조합 스토리
 - [ ] 중첩 블록 스토리
 - [ ] 전체 페이지 렌더링 시뮬레이션
 
 **체크리스트:**
+
 - [ ] 모든 테스트 통과
 - [ ] 재귀 렌더링 정상 작동
 - [ ] Fallback UI 확인
@@ -513,6 +558,7 @@ function BlockRenderer({ block, children }: BlockRendererProps) {
 ### 각 컴포넌트별 필수 체크포인트
 
 **테스트 작성 시:**
+
 - [ ] 정상 케이스
 - [ ] 경계 케이스 (빈 데이터, null, undefined)
 - [ ] 에러 케이스
@@ -520,12 +566,14 @@ function BlockRenderer({ block, children }: BlockRendererProps) {
 - [ ] 접근성 (a11y)
 
 **구현 시:**
+
 - [ ] TypeScript 타입 안정성
 - [ ] Props validation
 - [ ] 에러 처리
 - [ ] 접근성 (semantic HTML, ARIA)
 
 **테스트 통과 기준:**
+
 - [ ] `pnpm test [컴포넌트명]` 모두 통과
 - [ ] 커버리지 80% 이상
 - [ ] TypeScript 에러 없음
@@ -536,6 +584,7 @@ function BlockRenderer({ block, children }: BlockRendererProps) {
 ## 진행 상황 추적
 
 ### 전체 진행률
+
 - [ ] Phase 0: 환경 설정 (0/3)
 - [ ] Phase 1: 공통 유틸리티 (0/1)
 - [ ] Phase 2: 기본 블록 (0/6)
@@ -544,6 +593,7 @@ function BlockRenderer({ block, children }: BlockRendererProps) {
 - [ ] Phase 5: API 연동 (0/3)
 
 ### 완료된 컴포넌트
+
 - [ ] RichText 렌더링 헬퍼
 - [ ] Paragraph
 - [ ] Heading

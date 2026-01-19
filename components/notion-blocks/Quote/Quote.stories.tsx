@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Quote } from './Quote';
-import {
-  createQuoteBlock,
-  createRichText,
-  combineRichText,
-} from '../__integration__/fixtures';
+import { createQuoteBlock, createRichText, combineRichText } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/Quote',
@@ -20,19 +16,14 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    block: createQuoteBlock(
-      createRichText('The only way to do great work is to love what you do.'),
-    ),
+    block: createQuoteBlock(createRichText('The only way to do great work is to love what you do.')),
   },
 };
 
 export const WithAuthor: Story = {
   args: {
     block: createQuoteBlock(
-      combineRichText(
-        createRichText('Stay hungry, stay foolish. '),
-        createRichText('— Steve Jobs', { bold: true }),
-      ),
+      combineRichText(createRichText('Stay hungry, stay foolish. '), createRichText('— Steve Jobs', { bold: true }))
     ),
   },
 };
@@ -42,8 +33,8 @@ export const LongQuote: Story = {
   args: {
     block: createQuoteBlock(
       createRichText(
-        'In the long history of humankind (and animal kind, too) those who learned to collaborate and improvise most effectively have prevailed. The future depends on what we do in the present.',
-      ),
+        'In the long history of humankind (and animal kind, too) those who learned to collaborate and improvise most effectively have prevailed. The future depends on what we do in the present.'
+      )
     ),
   },
 };
@@ -53,7 +44,7 @@ export const WithItalic: Story = {
     block: createQuoteBlock(
       createRichText('Innovation distinguishes between a leader and a follower.', {
         italic: true,
-      }),
+      })
     ),
   },
 };
@@ -64,8 +55,8 @@ export const WithMultipleStyles: Story = {
     block: createQuoteBlock(
       combineRichText(
         createRichText('Code is like humor. ', { italic: true }),
-        createRichText('When you have to explain it, its bad.', { bold: true }),
-      ),
+        createRichText('When you have to explain it, its bad.', { bold: true })
+      )
     ),
   },
 };
@@ -76,18 +67,15 @@ export const WithLink: Story = {
       combineRichText(
         createRichText('Read more about design systems at '),
         createRichText('our documentation', { link: 'https://example.com/docs' }),
-        createRichText('.'),
-      ),
+        createRichText('.')
+      )
     ),
   },
 };
 
 export const WithColor: Story = {
   args: {
-    block: createQuoteBlock(
-      createRichText('This is a gray background quote.'),
-      'gray_background',
-    ),
+    block: createQuoteBlock(createRichText('This is a gray background quote.'), 'gray_background'),
   },
 };
 
@@ -98,21 +86,10 @@ export const ColorVariants: Story = {
   },
   render: () => (
     <div className="space-y-4">
-      <Quote
-        block={createQuoteBlock(createRichText('Gray background quote'), 'gray_background')}
-      />
-      <Quote
-        block={createQuoteBlock(createRichText('Blue background quote'), 'blue_background')}
-      />
-      <Quote
-        block={createQuoteBlock(
-          createRichText('Yellow background quote'),
-          'yellow_background',
-        )}
-      />
-      <Quote
-        block={createQuoteBlock(createRichText('Green background quote'), 'green_background')}
-      />
+      <Quote block={createQuoteBlock(createRichText('Gray background quote'), 'gray_background')} />
+      <Quote block={createQuoteBlock(createRichText('Blue background quote'), 'blue_background')} />
+      <Quote block={createQuoteBlock(createRichText('Yellow background quote'), 'yellow_background')} />
+      <Quote block={createQuoteBlock(createRichText('Green background quote'), 'green_background')} />
     </div>
   ),
 };
@@ -130,22 +107,16 @@ export const MultipleQuotes: Story = {
   },
   render: () => (
     <div className="space-y-4">
-      <Quote
-        block={createQuoteBlock(createRichText('Simplicity is the ultimate sophistication.'))}
-      />
+      <Quote block={createQuoteBlock(createRichText('Simplicity is the ultimate sophistication.'))} />
       <Quote
         block={createQuoteBlock(
           combineRichText(
             createRichText('Design is not just what it looks like and feels like. '),
-            createRichText('Design is how it works.', { bold: true }),
-          ),
+            createRichText('Design is how it works.', { bold: true })
+          )
         )}
       />
-      <Quote
-        block={createQuoteBlock(
-          createRichText('Good design is obvious. Great design is transparent.'),
-        )}
-      />
+      <Quote block={createQuoteBlock(createRichText('Good design is obvious. Great design is transparent.'))} />
     </div>
   ),
 };

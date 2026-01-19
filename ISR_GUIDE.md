@@ -88,6 +88,7 @@ export async function generateStaticParams() {
 ```
 
 **동작:**
+
 - 빌드 시점에 Notion에서 모든 포스트의 slug를 fetch
 - 각 slug에 대해 정적 페이지 생성
 - `npm run build` 시 `/posts/[모든-slug]` HTML 파일 생성
@@ -104,6 +105,7 @@ export const revalidate = 3600; // 1시간 (초 단위)
 ```
 
 **동작:**
+
 1. 사용자가 `/posts/hello-world` 요청
 2. 캐시된 정적 HTML 즉시 반환 (빠름!)
 3. 마지막 생성 후 1시간 경과했다면:
@@ -112,6 +114,7 @@ export const revalidate = 3600; // 1시간 (초 단위)
    - 다음 요청부터 새 페이지 제공
 
 **설정값 ([lib/notion/config.ts](lib/notion/config.ts)):**
+
 ```typescript
 REVALIDATE_TIME: {
   HOME: 3600,        // 1시간
@@ -136,6 +139,7 @@ curl -X POST https://your-domain.com/api/revalidate \
 ```
 
 **사용 케이스:**
+
 - Notion 데이터베이스에서 포스트 발행/수정
 - 특정 포스트만 재생성 (전체 빌드 불필요)
 - Notion Webhook 연동 가능
@@ -166,6 +170,7 @@ REVALIDATE_SECRET=your-random-secret-key
 [lib/notion/api.ts](lib/notion/api.ts) 파일이 이미 생성되어 있습니다.
 
 **주요 함수:**
+
 - `getAllPosts()` - 모든 발행된 포스트 가져오기
 - `getPostBySlug()` - 슬러그로 포스트 찾기
 - `getAllPostSlugs()` - generateStaticParams용 슬러그 목록
@@ -178,6 +183,7 @@ REVALIDATE_SECRET=your-random-secret-key
 현재 [app/posts/[slug]/page.example.tsx](app/posts/[slug]/page.example.tsx)에 예시가 있습니다.
 
 **실제 구현 시:**
+
 1. `page.example.tsx` → `page.tsx`로 복사/수정
 2. `generateStaticParams()` 추가
 3. `revalidate` 설정
@@ -190,11 +196,13 @@ REVALIDATE_SECRET=your-random-secret-key
 Notion 블록을 React 컴포넌트로 변환해야 합니다.
 
 **옵션 1: react-notion-x (추천)**
+
 ```bash
 pnpm add react-notion-x
 ```
 
 **옵션 2: 커스텀 렌더러**
+
 ```typescript
 // components/notion/BlockRenderer.tsx
 export function BlockRenderer({ blocks }) {
@@ -240,6 +248,7 @@ pnpm build
 ```
 
 **빌드 과정:**
+
 1. `generateStaticParams()` 실행 → Notion에서 모든 slug fetch
 2. 각 slug마다 페이지 생성
 3. `/posts/[slug]/*.html` 파일 생성
@@ -260,6 +269,7 @@ vercel env add REVALIDATE_SECRET
 ```
 
 **Vercel 특징:**
+
 - ISR 자동 지원
 - Edge CDN 캐싱
 - On-Demand Revalidation 지원
@@ -271,23 +281,25 @@ vercel env add REVALIDATE_SECRET
 
 ### Time-based Revalidation (기본)
 
-| 페이지 타입 | Revalidate 시간 | 이유 |
-|------------|----------------|------|
-| 홈페이지 (`/`) | 1시간 | 최신 포스트 목록 표시 |
-| 포스트 목록 (`/posts`) | 30분 | 자주 업데이트될 수 있음 |
-| 포스트 상세 (`/posts/[slug]`) | 1시간 | 콘텐츠는 자주 변경되지 않음 |
-| About 페이지 | `false` | 정적 (거의 변경 안됨) |
+| 페이지 타입                   | Revalidate 시간 | 이유                        |
+| ----------------------------- | --------------- | --------------------------- |
+| 홈페이지 (`/`)                | 1시간           | 최신 포스트 목록 표시       |
+| 포스트 목록 (`/posts`)        | 30분            | 자주 업데이트될 수 있음     |
+| 포스트 상세 (`/posts/[slug]`) | 1시간           | 콘텐츠는 자주 변경되지 않음 |
+| About 페이지                  | `false`         | 정적 (거의 변경 안됨)       |
 
 ---
 
 ### On-Demand Revalidation (권장)
 
 **장점:**
+
 - 즉시 반영 (사용자가 기다릴 필요 없음)
 - 불필요한 재생성 방지
 - API 호출 최소화
 
 **단점:**
+
 - Webhook 설정 필요
 - Notion 자체 Webhook 미지원 (서드파티 필요)
 
@@ -362,6 +374,7 @@ pnpm build
 ```
 
 **심볼 의미:**
+
 - `●` Static: 빌드 타임에 생성
 - `○` ISR: 재검증 가능한 정적 페이지
 - `λ` Server: 서버 사이드 렌더링
@@ -376,6 +389,7 @@ console.log(`Revalidated post: /posts/${slug}`);
 ```
 
 Vercel에서 로그 확인:
+
 ```bash
 vercel logs
 ```

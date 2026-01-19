@@ -30,10 +30,7 @@ function extractBaseColor(color: string): string {
  * @param variant - 'text' (텍스트 색상) 또는 'background' (배경 색상)
  * @returns Tailwind CSS 클래스 문자열
  */
-export function getColorClass(
-  color: NotionColor | string | undefined,
-  variant: NotionColorVariant = 'text',
-): string {
+export function getColorClass(color: NotionColor | string | undefined, variant: NotionColorVariant = 'text'): string {
   if (!color || color === 'default') {
     return '';
   }

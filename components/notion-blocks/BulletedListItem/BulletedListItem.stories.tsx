@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { BulletedListItem } from './BulletedListItem';
-import {
-  createBulletedListBlock,
-  createRichText,
-  combineRichText,
-} from '../__integration__/fixtures';
+import { createBulletedListBlock, createRichText, combineRichText } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/BulletedListItem',
@@ -40,20 +36,14 @@ export const WithBold: Story = {
 export const WithLink: Story = {
   args: {
     block: createBulletedListBlock(
-      combineRichText(
-        createRichText('Check out '),
-        createRichText('this link', { link: 'https://example.com' }),
-      ),
+      combineRichText(createRichText('Check out '), createRichText('this link', { link: 'https://example.com' }))
     ),
   },
 };
 
 export const WithColor: Story = {
   args: {
-    block: createBulletedListBlock(
-      createRichText('Blue colored list item', { color: 'blue' }),
-      'blue',
-    ),
+    block: createBulletedListBlock(createRichText('Blue colored list item', { color: 'blue' }), 'blue'),
   },
 };
 
@@ -64,15 +54,9 @@ export const MultipleItems: Story = {
   decorators: [],
   render: () => (
     <ul>
-      <BulletedListItem
-        block={createBulletedListBlock(createRichText('First item'), 'default', { id: 'bullet-1' })}
-      />
-      <BulletedListItem
-        block={createBulletedListBlock(createRichText('Second item'), 'default', { id: 'bullet-2' })}
-      />
-      <BulletedListItem
-        block={createBulletedListBlock(createRichText('Third item'), 'default', { id: 'bullet-3' })}
-      />
+      <BulletedListItem block={createBulletedListBlock(createRichText('First item'), 'default', { id: 'bullet-1' })} />
+      <BulletedListItem block={createBulletedListBlock(createRichText('Second item'), 'default', { id: 'bullet-2' })} />
+      <BulletedListItem block={createBulletedListBlock(createRichText('Third item'), 'default', { id: 'bullet-3' })} />
     </ul>
   ),
 };

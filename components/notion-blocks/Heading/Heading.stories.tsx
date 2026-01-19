@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Heading } from './Heading';
-import {
-  createHeadingBlock,
-  createRichText,
-  combineRichText,
-} from '../__integration__/fixtures';
+import { createHeadingBlock, createRichText, combineRichText } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/Heading',
@@ -50,11 +46,7 @@ export const WithItalic: Story = {
 
 export const WithColor: Story = {
   args: {
-    block: createHeadingBlock(
-      2,
-      createRichText('Blue Colored Heading', { color: 'blue' }),
-      'blue',
-    ),
+    block: createHeadingBlock(2, createRichText('Blue Colored Heading', { color: 'blue' }), 'blue'),
   },
 };
 
@@ -67,8 +59,8 @@ export const WithMultipleStyles: Story = {
         createRichText('bold', { bold: true }),
         createRichText(' and '),
         createRichText('italic', { italic: true }),
-        createRichText(' styles'),
-      ),
+        createRichText(' styles')
+      )
     ),
   },
 };

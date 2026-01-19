@@ -13,7 +13,7 @@ export function DotDecoration({
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className={cn('h-1.5 w-1.5 rounded-full bg-muted-foreground/30', i === 2 && 'bg-muted-foreground/60')}
+            className={cn('bg-muted-foreground/30 h-1.5 w-1.5 rounded-full', i === 2 && 'bg-muted-foreground/60')}
           />
         ))}
       </div>
@@ -26,7 +26,7 @@ export function DotDecoration({
         {[...Array(5)].map((_, i) => (
           <div
             key={i}
-            className={cn('h-1.5 w-1.5 rounded-full bg-muted-foreground/30', i === 2 && 'bg-muted-foreground/60')}
+            className={cn('bg-muted-foreground/30 h-1.5 w-1.5 rounded-full', i === 2 && 'bg-muted-foreground/60')}
           />
         ))}
       </div>
@@ -36,13 +36,13 @@ export function DotDecoration({
   if (variant === 'corner') {
     return (
       <div className={cn('grid grid-cols-3 gap-(--spacing-1)', className)}>
-        <div className="h-1 w-1 rounded-full bg-muted-foreground/40" />
-        <div className="h-1 w-1 rounded-full bg-muted-foreground/20" />
-        <div className="h-1 w-1 rounded-full bg-muted-foreground/10" />
-        <div className="h-1 w-1 rounded-full bg-muted-foreground/20" />
-        <div className="h-1 w-1 rounded-full bg-muted-foreground/10" />
+        <div className="bg-muted-foreground/40 h-1 w-1 rounded-full" />
+        <div className="bg-muted-foreground/20 h-1 w-1 rounded-full" />
+        <div className="bg-muted-foreground/10 h-1 w-1 rounded-full" />
+        <div className="bg-muted-foreground/20 h-1 w-1 rounded-full" />
+        <div className="bg-muted-foreground/10 h-1 w-1 rounded-full" />
         <div className="h-1 w-1" />
-        <div className="h-1 w-1 rounded-full bg-muted-foreground/10" />
+        <div className="bg-muted-foreground/10 h-1 w-1 rounded-full" />
         <div className="h-1 w-1" />
         <div className="h-1 w-1" />
       </div>

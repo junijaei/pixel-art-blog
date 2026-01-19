@@ -1,11 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-  cn,
-  formatRelativeTime,
-  slugify,
-  calculateReadingTime,
-  extractHeadings,
-} from './utils';
+import { cn, formatRelativeTime, slugify, calculateReadingTime, extractHeadings } from './utils';
 
 describe('cn', () => {
   it('should merge class names', () => {

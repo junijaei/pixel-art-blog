@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Callout } from './Callout';
-import {
-  createCalloutBlock,
-  createRichText,
-  combineRichText,
-} from '../__integration__/fixtures';
+import { createCalloutBlock, createRichText, combineRichText } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/Callout',
@@ -23,8 +19,8 @@ export const Default: Story = {
     block: createCalloutBlock(
       combineRichText(
         createRichText('This is an important callout message. '),
-        createRichText('Pay attention!', { bold: true }),
-      ),
+        createRichText('Pay attention!', { bold: true })
+      )
     ),
   },
 };
@@ -34,9 +30,9 @@ export const WithEmojiIcon: Story = {
     block: createCalloutBlock(
       combineRichText(
         createRichText('This is an important callout message. '),
-        createRichText('Pay attention!', { bold: true }),
+        createRichText('Pay attention!', { bold: true })
       ),
-      { emoji: '💡' },
+      { emoji: '💡' }
     ),
   },
 };
@@ -47,19 +43,9 @@ export const WithDifferentEmojis: Story = {
   },
   render: () => (
     <div className="space-y-4">
-      <Callout
-        block={createCalloutBlock(createRichText('Information callout'), { emoji: 'ℹ️' })}
-      />
-      <Callout
-        block={createCalloutBlock(
-          createRichText('Warning callout'),
-          { emoji: '⚠️' },
-          'orange',
-        )}
-      />
-      <Callout
-        block={createCalloutBlock(createRichText('Success callout'), { emoji: '✅' }, 'green')}
-      />
+      <Callout block={createCalloutBlock(createRichText('Information callout'), { emoji: 'ℹ️' })} />
+      <Callout block={createCalloutBlock(createRichText('Warning callout'), { emoji: '⚠️' }, 'orange')} />
+      <Callout block={createCalloutBlock(createRichText('Success callout'), { emoji: '✅' }, 'green')} />
     </div>
   ),
 };
@@ -70,39 +56,18 @@ export const ColorVariants: Story = {
   },
   render: () => (
     <div className="space-y-4">
-      <Callout
-        block={createCalloutBlock(
-          createRichText('Gray background'),
-          { emoji: '📝' },
-          'gray_background',
-        )}
-      />
-      <Callout
-        block={createCalloutBlock(
-          createRichText('Blue background'),
-          { emoji: '💙' },
-          'blue_background',
-        )}
-      />
-      <Callout
-        block={createCalloutBlock(
-          createRichText('Yellow background'),
-          { emoji: '💛' },
-          'yellow_background',
-        )}
-      />
+      <Callout block={createCalloutBlock(createRichText('Gray background'), { emoji: '📝' }, 'gray_background')} />
+      <Callout block={createCalloutBlock(createRichText('Blue background'), { emoji: '💙' }, 'blue_background')} />
+      <Callout block={createCalloutBlock(createRichText('Yellow background'), { emoji: '💛' }, 'yellow_background')} />
     </div>
   ),
 };
 
 export const WithChildren: Story = {
   args: {
-    block: createCalloutBlock(
-      createRichText('Parent callout with nested content'),
-      { emoji: '📦' },
-      'default',
-      { has_children: true },
-    ),
+    block: createCalloutBlock(createRichText('Parent callout with nested content'), { emoji: '📦' }, 'default', {
+      has_children: true,
+    }),
     children: (
       <div className="text-muted-foreground space-y-2 text-sm">
         <p>• Nested item 1</p>

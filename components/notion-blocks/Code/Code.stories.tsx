@@ -23,7 +23,7 @@ export const JavaScript: Story = {
 }
 
 console.log(fibonacci(10));`,
-      'javascript',
+      'javascript'
     ),
   },
 };
@@ -36,7 +36,7 @@ export const Python: Story = {
 
 if __name__ == "__main__":
     hello_world()`,
-      'python',
+      'python'
     ),
   },
 };
@@ -51,17 +51,14 @@ export const WithCaption: Story = {
 
 console.log(fibonacci(10));`,
       'javascript',
-      createRichText('Example code implementation', { italic: true }),
+      createRichText('Example code implementation', { italic: true })
     ),
   },
 };
 
 export const PlainText: Story = {
   args: {
-    block: createCodeBlock(
-      'This is plain text code without syntax highlighting',
-      'plain text',
-    ),
+    block: createCodeBlock('This is plain text code without syntax highlighting', 'plain text'),
   },
 };
 
@@ -78,7 +75,7 @@ const users: User[] = [
   { id: 1, name: 'Alice', email: 'alice@example.com' },
   { id: 2, name: 'Bob', email: 'bob@example.com' },
 ];`,
-      'typescript',
+      'typescript'
     ),
   },
 };
@@ -90,7 +87,7 @@ export const JSX: Story = {
   <h1>Hello</h1>
   <p>This is JSX</p>
 </div>`,
-      'jsx',
+      'jsx'
     ),
   },
 };
@@ -106,7 +103,7 @@ export const Bash: Story = {
     block: createCodeBlock(
       `git commit -m "Initial commit"
 git push origin main`,
-      'bash',
+      'bash'
     ),
   },
 };
@@ -123,7 +120,7 @@ function complexFunction(param1, param2, param3, param4, param5) {
 
 // More code...
 const anotherVeryLongVariableNameThatDemonstratesHorizontalScrolling = true;`,
-      'typescript',
+      'typescript'
     ),
   },
 };
@@ -139,7 +136,7 @@ export const MultipleCodeBlocks: Story = {
           `<div className="container">
   <h1>Hello</h1>
 </div>`,
-          'jsx',
+          'jsx'
         )}
       />
       <Code block={createCodeBlock('SELECT * FROM users WHERE age > 18;', 'sql')} />
@@ -147,7 +144,7 @@ export const MultipleCodeBlocks: Story = {
         block={createCodeBlock(
           `git commit -m "Initial commit"
 git push origin main`,
-          'bash',
+          'bash'
         )}
       />
     </div>
