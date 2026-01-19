@@ -1,4 +1,5 @@
 import {
+  Bookmark,
   BulletedListItem,
   Callout,
   Code,
@@ -34,13 +35,7 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
           numberedListIndex = 0;
         }
 
-        return (
-          <BlockComponent
-            key={block.id || index}
-            block={block}
-            numberedListIndex={numberedListIndex}
-          />
-        );
+        return <BlockComponent key={block.id || index} block={block} numberedListIndex={numberedListIndex} />;
       })}
     </>
   );
@@ -53,8 +48,7 @@ interface BlockComponentProps {
 
 function BlockComponent({ block, numberedListIndex }: BlockComponentProps) {
   // children이 있는 경우 재귀적으로 렌더링
-  const children =
-    block.has_children && block.children ? <BlockRenderer blocks={block.children} /> : undefined;
+  const children = block.has_children && block.children ? <BlockRenderer blocks={block.children} /> : undefined;
 
   switch (block.type) {
     case 'paragraph':
@@ -92,6 +86,9 @@ function BlockComponent({ block, numberedListIndex }: BlockComponentProps) {
 
     case 'divider':
       return <Divider />;
+
+    case 'bookmark':
+      return <Bookmark block={block} />;
 
     default:
       // Unknown block type - gracefully skip or show placeholder

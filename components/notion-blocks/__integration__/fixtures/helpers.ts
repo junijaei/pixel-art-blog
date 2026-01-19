@@ -12,6 +12,7 @@ import type {
   QuoteBlock,
   CalloutBlock,
   CodeBlock,
+  BookmarkBlock,
 } from '@/types/notion';
 
 const DEFAULT_BLOCK_META = {
@@ -88,7 +89,7 @@ type BlockBaseOptions = Partial<Pick<BlockBase, 'id' | 'has_children' | 'childre
 export function createParagraphBlock(
   richText: RichText[],
   color: NotionColor = 'default',
-  options: BlockBaseOptions = {},
+  options: BlockBaseOptions = {}
 ): ParagraphBlock {
   return {
     ...DEFAULT_BLOCK_META,
@@ -107,7 +108,7 @@ export function createHeadingBlock(
   level: 1 | 2 | 3,
   richText: RichText[],
   color: NotionColor = 'default',
-  options: BlockBaseOptions & { is_toggleable?: boolean } = {},
+  options: BlockBaseOptions & { is_toggleable?: boolean } = {}
 ): HeadingBlock {
   const headingKey = `heading_${level}` as const;
 
@@ -128,7 +129,7 @@ export function createHeadingBlock(
 export function createBulletedListBlock(
   richText: RichText[],
   color: NotionColor = 'default',
-  options: BlockBaseOptions = {},
+  options: BlockBaseOptions = {}
 ): BulletedListBlock {
   return {
     ...DEFAULT_BLOCK_META,
@@ -146,7 +147,7 @@ export function createBulletedListBlock(
 export function createNumberedListBlock(
   richText: RichText[],
   color: NotionColor = 'default',
-  options: BlockBaseOptions = {},
+  options: BlockBaseOptions = {}
 ): NumberedListBlock {
   return {
     ...DEFAULT_BLOCK_META,
@@ -165,7 +166,7 @@ export function createToDoBlock(
   richText: RichText[],
   checked: boolean,
   color: NotionColor = 'default',
-  options: BlockBaseOptions = {},
+  options: BlockBaseOptions = {}
 ): ToDoBlock {
   return {
     ...DEFAULT_BLOCK_META,
@@ -184,13 +185,13 @@ export function createToDoBlock(
 export function createToggleBlock(
   richText: RichText[],
   color: NotionColor = 'default',
-  options: BlockBaseOptions = {},
+  options: BlockBaseOptions = {}
 ): ToggleBlock {
   return {
     ...DEFAULT_BLOCK_META,
     id: options.id ?? generateBlockId('toggle'),
     type: 'toggle',
-    has_children: options.has_children ?? (options.children !== undefined),
+    has_children: options.has_children ?? options.children !== undefined,
     children: options.children,
     toggle: {
       rich_text: richText,
@@ -202,7 +203,7 @@ export function createToggleBlock(
 export function createQuoteBlock(
   richText: RichText[],
   color: NotionColor = 'default',
-  options: BlockBaseOptions = {},
+  options: BlockBaseOptions = {}
 ): QuoteBlock {
   return {
     ...DEFAULT_BLOCK_META,
@@ -221,13 +222,13 @@ export function createCalloutBlock(
   richText: RichText[],
   icon: { emoji: string } | null = null,
   color: NotionColor = 'default',
-  options: BlockBaseOptions = {},
+  options: BlockBaseOptions = {}
 ): CalloutBlock {
   return {
     ...DEFAULT_BLOCK_META,
     id: options.id ?? generateBlockId('callout'),
     type: 'callout',
-    has_children: options.has_children ?? (options.children !== undefined),
+    has_children: options.has_children ?? options.children !== undefined,
     children: options.children,
     callout: {
       rich_text: richText,
@@ -241,7 +242,7 @@ export function createCodeBlock(
   code: string,
   language: string,
   caption: RichText[] = [],
-  options: BlockBaseOptions = {},
+  options: BlockBaseOptions = {}
 ): CodeBlock {
   return {
     ...DEFAULT_BLOCK_META,
@@ -252,6 +253,24 @@ export function createCodeBlock(
     code: {
       rich_text: createRichText(code),
       language,
+      caption,
+    },
+  };
+}
+
+export function createBookmarkBlock(
+  url: string,
+  caption: RichText[] = [],
+  options: BlockBaseOptions = {}
+): BookmarkBlock {
+  return {
+    ...DEFAULT_BLOCK_META,
+    id: options.id ?? generateBlockId('bookmark'),
+    type: 'bookmark',
+    has_children: options.has_children ?? false,
+    children: options.children,
+    bookmark: {
+      url,
       caption,
     },
   };

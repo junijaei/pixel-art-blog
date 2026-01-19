@@ -170,3 +170,24 @@ export function PixelChevron({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function PixelLink({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <rect x="2" y="3" width="2" height="2" />
+      <rect x="4" y="1" width="2" height="2" />
+      <rect x="6" y="1" width="2" height="2" />
+      <rect x="8" y="3" width="2" height="2" />
+      <rect x="2" y="5" width="2" height="4" />
+      <rect x="8" y="5" width="2" height="2" />
+      <rect x="10" y="7" width="2" height="2" />
+      <rect x="12" y="9" width="2" height="2" />
+      <rect x="6" y="9" width="2" height="2" />
+      <rect x="4" y="7" width="2" height="2" />
+      <rect x="6" y="11" width="2" height="2" />
+      <rect x="8" y="13" width="2" height="2" />
+      <rect x="10" y="13" width="2" height="2" />
+      <rect x="12" y="11" width="2" height="2" />
+    </svg>
+  );
+}
