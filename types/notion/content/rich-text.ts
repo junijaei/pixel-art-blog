@@ -32,15 +32,47 @@ export interface RichTextEquation extends RichTextBase {
   equation: { expression: string };
 }
 
+export interface UserMention {
+  type: 'user';
+  user: NotionUser;
+}
+export interface PageMention {
+  type: 'page';
+  page: { id: UUID };
+}
+export interface DatabaseMention {
+  type: 'database';
+  database: { id: UUID };
+}
+export interface DateMention {
+  type: 'date';
+  date: { start: string; end: string | null };
+}
+export interface LinkPreviewMention {
+  type: 'link_mention';
+  link_mention: {
+    href?: string;
+    icon_url?: string;
+    thumbnail_url?: string;
+    title?: string;
+    description?: string;
+  };
+}
+export interface TemplateMention {
+  type: 'template_mention';
+  template_mention: unknown;
+}
+
 export interface RichTextMention extends RichTextBase {
   type: 'mention';
   mention:
-    | { type: 'user'; user: NotionUser }
-    | { type: 'page'; page: { id: UUID } }
-    | { type: 'database'; database: { id: UUID } }
-    | { type: 'date'; date: { start: string; end: string | null } }
-    | { type: 'link_preview'; link_preview: { url: string } }
-    | { type: 'template_mention'; template_mention: unknown };
+    | UserMention
+    | UserMention
+    | PageMention
+    | DatabaseMention
+    | DateMention
+    | LinkPreviewMention
+    | TemplateMention;
 }
 
 export type RichText = RichTextText | RichTextEquation | RichTextMention;

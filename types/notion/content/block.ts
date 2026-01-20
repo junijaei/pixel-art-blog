@@ -177,11 +177,6 @@ export interface SyncedBlock extends BlockBase {
   synced_block: unknown;
 }
 
-export interface LinkPreviewBlock extends BlockBase {
-  type: 'link_preview';
-  link_preview: { url: string };
-}
-
 export interface TemplateBlock extends BlockBase {
   type: 'template';
   template: { rich_text: RichText[] };
@@ -225,6 +220,5 @@ export type Block =
   | TableOfContentsBlock
   | BreadcrumbBlock
   | SyncedBlock
-  | LinkPreviewBlock
   | TemplateBlock
   | UnsupportedBlock;
