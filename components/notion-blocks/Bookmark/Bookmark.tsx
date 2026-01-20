@@ -1,12 +1,12 @@
 'use client';
 
+import type { LinkPreviewData } from '@/app/api/link-preview/route';
+import { PixelLink } from '@/components/ui/pixel-icons';
 import { renderRichText } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
-import { PixelLink } from '@/components/ui/pixel-icons';
+import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import type { BookmarkProps } from './index';
-import type { LinkPreviewData } from '@/app/api/link-preview/route';
-import Image from 'next/image';
 
 /**
  * Notion Bookmark 블록을 렌더링하는 컴포넌트
@@ -18,6 +18,8 @@ export function Bookmark({ block }: BookmarkProps) {
   const { url, caption } = block.bookmark;
   const [preview, setPreview] = useState<LinkPreviewData | null>(null);
   const [loading, setLoading] = useState(true);
+
+  console.log(block, block.bookmark);
 
   useEffect(() => {
     async function loadPreview() {

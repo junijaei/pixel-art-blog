@@ -193,6 +193,6 @@ describe('Paragraph', () => {
 
     const { container } = render(<Paragraph block={block} />);
     const paragraph = container.querySelector('p');
-    expect(paragraph).toHaveClass('text-blue-700');
+    expect(paragraph).toHaveClass('text-notion-blue');
   });
 });

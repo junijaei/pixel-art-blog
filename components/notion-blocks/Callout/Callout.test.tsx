@@ -157,8 +157,8 @@ describe('Callout', () => {
     const { container } = render(<Callout block={block} />);
 
     const calloutDiv = container.querySelector('div.rounded-xl');
-    expect(calloutDiv).toHaveClass('bg-blue-50/60');
-    expect(calloutDiv).toHaveClass('border-blue-300/40');
+    expect(calloutDiv).toHaveClass('bg-notion-blue-bg');
+    expect(calloutDiv).toHaveClass('border-notion-blue/20');
   });
 
   it('빈 richText 배열을 처리한다', () => {

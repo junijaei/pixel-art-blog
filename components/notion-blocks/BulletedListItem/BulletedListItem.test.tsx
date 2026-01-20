@@ -1,34 +1,48 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { BulletedListItem } from './BulletedListItem';
-import type { BulletedListBlock } from '@/types/notion';
+import type { BulletedListBlock, RichText } from '@/types/notion';
+
+// 테스트용 mock 블록 생성 헬퍼
+function createMockBlock(
+  richTextContent: string,
+  options: {
+    bold?: boolean;
+    color?: string;
+    hasChildren?: boolean;
+  } = {}
+): BulletedListBlock {
+  const { bold = false, color = 'default', hasChildren = false } = options;
+  return {
+    type: 'bulleted_list_item',
+    bulleted_list_item: {
+      rich_text: richTextContent
+        ? [
+            {
+              type: 'text',
+              text: { content: richTextContent, link: null },
+              annotations: {
+                bold,
+                italic: false,
+                strikethrough: false,
+                underline: false,
+                code: false,
+                color: 'default',
+              },
+              plain_text: richTextContent,
+              href: null,
+            } as RichText,
+          ]
+        : [],
+      color,
+    },
+    has_children: hasChildren,
+  } as BulletedListBlock;
+}
 
 describe('BulletedListItem', () => {
   it('renders plain text', () => {
-    const block: BulletedListBlock = {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'First item', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'First item',
-            href: null,
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('First item');
 
     const { container } = render(<BulletedListItem block={block} />);
     const li = container.querySelector('li');
@@ -37,30 +51,7 @@ describe('BulletedListItem', () => {
   });
 
   it('renders with flex layout and dot icon', () => {
-    const block: BulletedListBlock = {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Bullet item', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Bullet item',
-            href: null,
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('Bullet item');
 
     const { container } = render(<BulletedListItem block={block} />);
     const li = container.querySelector('li');
@@ -69,30 +60,7 @@ describe('BulletedListItem', () => {
   });
 
   it('renders with bold annotation', () => {
-    const block: BulletedListBlock = {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Bold item', link: null },
-            annotations: {
-              bold: true,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Bold item',
-            href: null,
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('Bold item', { bold: true });
 
     render(<BulletedListItem block={block} />);
     const boldElement = screen.getByText('Bold item');
@@ -101,15 +69,7 @@ describe('BulletedListItem', () => {
   });
 
   it('handles empty rich_text', () => {
-    const block: BulletedListBlock = {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('');
 
     const { container } = render(<BulletedListItem block={block} />);
     const li = container.querySelector('li');
@@ -117,30 +77,7 @@ describe('BulletedListItem', () => {
   });
 
   it('handles has_children flag', () => {
-    const block: BulletedListBlock = {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Parent item', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Parent item',
-            href: null,
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: true,
-    };
+    const block = createMockBlock('Parent item', { hasChildren: true });
 
     const { container } = render(<BulletedListItem block={block} />);
     const li = container.querySelector('li');
@@ -149,33 +86,10 @@ describe('BulletedListItem', () => {
   });
 
   it('applies correct color class', () => {
-    const block: BulletedListBlock = {
-      type: 'bulleted_list_item',
-      bulleted_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Blue item', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'blue',
-            },
-            plain_text: 'Blue item',
-            href: null,
-          },
-        ],
-        color: 'blue',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('Blue item', { color: 'blue' });
 
     const { container } = render(<BulletedListItem block={block} />);
     const li = container.querySelector('li');
-    expect(li).toHaveClass('text-blue-700');
+    expect(li).toHaveClass('text-notion-blue');
   });
 });

@@ -22,9 +22,11 @@ const silkscreen = Silkscreen({
 });
 
 export const metadata: Metadata = {
-  title: 'Pixel Blog',
-  description: 'A minimal pixel-styled blog exploring design, minimalism, and creativity',
-  generator: 'v0.app',
+  title: 'Bit by Bit - junijaei blog',
+  description: '프론트엔드 개발자 junijaei의 블로그 입니다.',
+  icons: {
+    icon: '/favicon.ico'
+  }
 };
 
 export const viewport: Viewport = {

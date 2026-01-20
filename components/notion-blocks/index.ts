@@ -31,5 +31,8 @@ export type { DividerProps } from './Divider';
 export { Bookmark } from './Bookmark';
 export type { BookmarkBlock, BookmarkProps } from './Bookmark';
 
+export { Mention } from './Mention';
+export type { MentionProps } from './Mention';
+
 export { BlockRenderer } from './BlockRenderer';
 export type { BlockRendererProps } from './BlockRenderer';

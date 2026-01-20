@@ -1,5 +1,5 @@
 import type { CodeBlock, RichText } from '@/types/notion';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { Code } from './Code';
 
@@ -99,5 +99,85 @@ describe('Code', () => {
     const { container } = render(<Code block={block} />);
     expect(screen.getByText('code')).toBeInTheDocument();
     expect(container.querySelector('.text-muted-foreground.text-center')).not.toBeInTheDocument();
+  });
+
+  describe('Collapse/Expand 기능', () => {
+    // 110줄짜리 코드 생성
+    const generateLongCode = (lines: number): string => {
+      return Array.from({ length: lines }, (_, i) => `// Line ${i + 1}`).join('\n');
+    };
+
+    it('100줄 이하의 코드는 collapse 버튼을 표시하지 않는다', () => {
+      const shortCode = generateLongCode(50);
+      const block = createCodeBlock(shortCode, 'javascript');
+
+      render(<Code block={block} />);
+
+      expect(screen.queryByText('Expand')).not.toBeInTheDocument();
+      expect(screen.queryByText('Collapse')).not.toBeInTheDocument();
+      expect(screen.queryByText(/lines/)).not.toBeInTheDocument();
+    });
+
+    it('100줄 이상의 코드는 초기에 collapsed 상태이다', () => {
+      const longCode = generateLongCode(150);
+      const block = createCodeBlock(longCode, 'javascript');
+
+      render(<Code block={block} />);
+
+      // Expand 버튼이 표시됨
+      expect(screen.getByText('Expand')).toBeInTheDocument();
+      // 줄 수가 표시됨
+      expect(screen.getByText('(150 lines)')).toBeInTheDocument();
+      // 전체 줄 수 표시 버튼
+      expect(screen.getByText('Show all 150 lines')).toBeInTheDocument();
+    });
+
+    it('Expand 버튼 클릭 시 코드가 확장된다', () => {
+      const longCode = generateLongCode(150);
+      const block = createCodeBlock(longCode, 'javascript');
+
+      render(<Code block={block} />);
+
+      // 초기: Expand 버튼
+      const expandButton = screen.getByText('Expand');
+      expect(expandButton).toBeInTheDocument();
+
+      // 클릭
+      fireEvent.click(expandButton);
+
+      // 확장 후: Collapse 버튼
+      expect(screen.getByText('Collapse')).toBeInTheDocument();
+      // Show all 버튼은 사라짐
+      expect(screen.queryByText('Show all 150 lines')).not.toBeInTheDocument();
+    });
+
+    it('Collapse 버튼 클릭 시 코드가 다시 접힌다', () => {
+      const longCode = generateLongCode(150);
+      const block = createCodeBlock(longCode, 'javascript');
+
+      render(<Code block={block} />);
+
+      // Expand
+      fireEvent.click(screen.getByText('Expand'));
+      expect(screen.getByText('Collapse')).toBeInTheDocument();
+
+      // Collapse
+      fireEvent.click(screen.getByText('Collapse'));
+      expect(screen.getByText('Expand')).toBeInTheDocument();
+      expect(screen.getByText('Show all 150 lines')).toBeInTheDocument();
+    });
+
+    it('"Show all X lines" 버튼 클릭 시 코드가 확장된다', () => {
+      const longCode = generateLongCode(150);
+      const block = createCodeBlock(longCode, 'javascript');
+
+      render(<Code block={block} />);
+
+      // Show all 버튼 클릭
+      fireEvent.click(screen.getByText('Show all 150 lines'));
+
+      // 확장됨
+      expect(screen.getByText('Collapse')).toBeInTheDocument();
+    });
   });
 });

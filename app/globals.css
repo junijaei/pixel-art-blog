@@ -126,3 +126,26 @@
     @apply outline-ring outline-2 outline-offset-2;
   }
 }
+
+/* =====================================================
+ * Content Overflow Prevention
+ * 긴 URL, 단어 등이 컨테이너를 벗어나지 않도록 처리
+ * ===================================================== */
+@layer components {
+  /* 블록 콘텐츠 영역 (Notion 블록 렌더링 영역) */
+  .notion-content {
+    overflow-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  /* 링크 텍스트 overflow 방지 */
+  .notion-content a {
+    word-break: break-all;
+  }
+
+  /* 인라인 코드 overflow 방지 */
+  .notion-content code:not(pre code) {
+    word-break: break-all;
+  }
+}

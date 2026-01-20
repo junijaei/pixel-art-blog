@@ -1,12 +1,12 @@
 import { BlogFooter, BlogHeader } from '@/components/latouts';
 import { DotDecoration, PostCard } from '@/components/ui';
 import {
-  buildCategoryTree,
-  getAllCategories,
-  getAllPosts,
-  ISR_CONFIG,
-  parseCategoryPage,
-  parsePostPage,
+    buildCategoryTree,
+    getAllCategories,
+    getAllPosts,
+    ISR_CONFIG,
+    parseCategoryPage,
+    parsePostPage,
 } from '@/lib/notion';
 import type { CategoryTreeNode, PostCardData } from '@/types/notion';
 
@@ -133,18 +133,16 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 
       <main className="flex-1">
         {/* Header Section */}
-        <section className="px-(--spacing-6) py-(--spacing-16)">
+        <section className="px-6 py-16">
           <div className="mx-auto max-w-6xl">
-            <div className="mb-(--spacing-6) flex items-center gap-(--spacing-4)">
+            <div className="mb-6 flex items-center gap-4">
               <DotDecoration variant="horizontal" />
               <span className="text-muted-foreground font-(family-name:--font-silkscreen) text-[10px] tracking-widest uppercase">
                 All Posts
               </span>
             </div>
 
-            <h1 className="mb-(--spacing-4) text-4xl leading-tight font-bold text-balance sm:text-5xl">
-              {categoryLabel}
-            </h1>
+            <h1 className="mb-4 text-4xl leading-tight font-bold sm:text-5xl">{categoryLabel}</h1>
 
             <p className="text-muted-foreground max-w-2xl text-lg leading-relaxed">
               {posts.length > 0 ? `총 ${posts.length}개의 포스트` : '포스트가 없습니다.'}
@@ -154,9 +152,9 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 
         {/* Posts Grid */}
         {posts.length > 0 && (
-          <section className="px-(--spacing-6) pb-(--spacing-20)">
+          <section className="px-6 pb-20">
             <div className="mx-auto max-w-6xl">
-              <div className="grid gap-(--spacing-6) sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {posts.map((post) => (
                   <PostCard
                     key={post.id}

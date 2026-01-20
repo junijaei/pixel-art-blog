@@ -14,6 +14,10 @@ export function parseCategoryPage(page: CategoryPage): Category {
   const parentProp = properties.parent;
   const parentId = parentProp?.type === 'relation' && parentProp.relation.length > 0 ? parentProp.relation[0].id : null;
 
+  // children (관계형)
+  const childrenProp = properties.children;
+  const hasChildren = childrenProp?.type === 'relation' && childrenProp.relation.length > 0;
+
   // path (text 타입)
   const pathProp = properties.path;
   const path = pathProp?.type === 'rich_text' && pathProp.rich_text.length > 0 ? pathProp.rich_text[0].plain_text : '';
@@ -34,6 +38,7 @@ export function parseCategoryPage(page: CategoryPage): Category {
     id: page.id,
     label,
     parentId,
+    hasChildren,
     path,
     isActive,
     createdAt,

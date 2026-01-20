@@ -1,34 +1,48 @@
-import type { NumberedListBlock } from '@/types/notion';
+import type { NumberedListBlock, RichText } from '@/types/notion';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { NumberedListItem } from './NumberedListItem';
 
+// 테스트용 mock 블록 생성 헬퍼
+function createMockBlock(
+  richTextContent: string,
+  options: {
+    bold?: boolean;
+    color?: string;
+    hasChildren?: boolean;
+  } = {}
+): NumberedListBlock {
+  const { bold = false, color = 'default', hasChildren = false } = options;
+  return {
+    type: 'numbered_list_item',
+    numbered_list_item: {
+      rich_text: richTextContent
+        ? [
+            {
+              type: 'text',
+              text: { content: richTextContent, link: null },
+              annotations: {
+                bold,
+                italic: false,
+                strikethrough: false,
+                underline: false,
+                code: false,
+                color: 'default',
+              },
+              plain_text: richTextContent,
+              href: null,
+            } as RichText,
+          ]
+        : [],
+      color,
+    },
+    has_children: hasChildren,
+  } as NumberedListBlock;
+}
+
 describe('NumberedListItem', () => {
   it('renders plain text', () => {
-    const block: NumberedListBlock = {
-      type: 'numbered_list_item',
-      numbered_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'First item', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'First item',
-            href: null,
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('First item');
 
     const { container } = render(<NumberedListItem block={block} index={0} />);
     const li = container.querySelector('li');
@@ -37,30 +51,7 @@ describe('NumberedListItem', () => {
   });
 
   it('renders with flex layout and number', () => {
-    const block: NumberedListBlock = {
-      type: 'numbered_list_item',
-      numbered_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Numbered item', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Numbered item',
-            href: null,
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('Numbered item');
 
     const { container } = render(<NumberedListItem block={block} index={0} />);
     const li = container.querySelector('li');
@@ -70,30 +61,7 @@ describe('NumberedListItem', () => {
   });
 
   it('renders with bold annotation', () => {
-    const block: NumberedListBlock = {
-      type: 'numbered_list_item',
-      numbered_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Bold item', link: null },
-            annotations: {
-              bold: true,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'default',
-            },
-            plain_text: 'Bold item',
-            href: null,
-          },
-        ],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('Bold item', { bold: true });
 
     render(<NumberedListItem block={block} index={0} />);
     const boldElement = screen.getByText('Bold item');
@@ -102,15 +70,7 @@ describe('NumberedListItem', () => {
   });
 
   it('handles empty rich_text', () => {
-    const block: NumberedListBlock = {
-      type: 'numbered_list_item',
-      numbered_list_item: {
-        rich_text: [],
-        color: 'default',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('');
 
     const { container } = render(<NumberedListItem block={block} index={0} />);
     const li = container.querySelector('li');
@@ -118,33 +78,10 @@ describe('NumberedListItem', () => {
   });
 
   it('applies correct color class', () => {
-    const block: NumberedListBlock = {
-      type: 'numbered_list_item',
-      numbered_list_item: {
-        rich_text: [
-          {
-            type: 'text',
-            text: { content: 'Blue item', link: null },
-            annotations: {
-              bold: false,
-              italic: false,
-              strikethrough: false,
-              underline: false,
-              code: false,
-              color: 'blue',
-            },
-            plain_text: 'Blue item',
-            href: null,
-          },
-        ],
-        color: 'blue',
-        children: [],
-      },
-      has_children: false,
-    };
+    const block = createMockBlock('Blue item', { color: 'blue' });
 
     const { container } = render(<NumberedListItem block={block} index={0} />);
     const li = container.querySelector('li');
-    expect(li).toHaveClass('text-blue-700');
+    expect(li).toHaveClass('text-notion-blue');
   });
 });

@@ -1,7 +1,6 @@
 import { BlogFooter, BlogHeader } from '@/components/latouts';
 import { DotDecoration, PixelArrow, PixelDot, PostCard } from '@/components/ui';
 import { getAllCategories, getAllPosts, ISR_CONFIG, parseCategoryPage, parsePostPage } from '@/lib/notion';
-import { createPostLinkFromPost } from '@/lib/notion/util/category';
 import type { PostCardData } from '@/types/notion';
 import Link from 'next/link';
 
@@ -18,7 +17,6 @@ export default async function HomePage() {
       getAllPosts(ISR_CONFIG.POST_DATABASE_ID, { publishedOnly: true }),
     ]);
 
-    const categories = categoryPages.map(parseCategoryPage);
     const allPosts = postPages.map(parsePostPage);
 
     // PostCard 컴포넌트가 기대하는 형식으로 변환
@@ -59,26 +57,26 @@ export default async function HomePage() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="px-(--spacing-6) py-(--spacing-20)">
+        <section className="px-6 py-20">
           <div className="mx-auto max-w-6xl">
-            <div className="mb-(--spacing-6) flex items-center gap-(--spacing-4)">
+            <div className="mb-6 flex items-center gap-4">
               <DotDecoration variant="horizontal" />
               <span className="text-muted-foreground font-(family-name:--font-silkscreen) text-[10px] tracking-widest uppercase">
                 Personal Blog
               </span>
             </div>
 
-            <h1 className="mb-(--spacing-6) text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl">
+            <h1 className="mb-6 text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl">
               Thoughts on design,
               <br />
               <span className="text-muted-foreground">pixels & minimalism</span>
             </h1>
 
-            <p className="text-muted-foreground mb-(--spacing-8) max-w-xl text-lg leading-relaxed">
+            <p className="text-muted-foreground mb-8 max-w-xl text-lg leading-relaxed">
               Exploring the intersection of pixel aesthetics and modern design principles.
             </p>
 
-            <div className="flex items-center gap-(--spacing-2)">
+            <div className="flex items-center gap-2">
               {[...Array(8)].map((_, i) => (
                 <PixelDot key={i} className={`h-2 w-2 ${i < 3 ? 'text-foreground' : 'text-muted-foreground/30'}`} />
               ))}
@@ -88,7 +86,7 @@ export default async function HomePage() {
 
         {/* Featured Post */}
         {featuredPost && (
-          <section className="mb-(--spacing-16) px-(--spacing-6)">
+          <section className="mb-16 px-6">
             <div className="mx-auto max-w-6xl">
               <PostCard
                 id={featuredPost.id}
@@ -105,24 +103,24 @@ export default async function HomePage() {
 
         {/* Recent Posts */}
         {recentPosts.length > 0 && (
-          <section className="px-(--spacing-6)">
+          <section className="px-6">
             <div className="mx-auto max-w-6xl">
-              <div className="mb-(--spacing-8) flex items-center justify-between">
-                <div className="flex items-center gap-(--spacing-4)">
+              <div className="mb-8 flex items-center justify-between">
+                <div className="flex items-center gap-4">
                   <h2 className="font-(family-name:--font-silkscreen) text-xs tracking-wider">RECENT POSTS</h2>
                   <DotDecoration variant="horizontal" className="opacity-50" />
                 </div>
 
                 <Link
                   href="/posts"
-                  className="group text-muted-foreground hover:text-foreground flex items-center gap-(--spacing-2) text-sm transition-colors duration-(--duration-normal)"
+                  className="group text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors duration-(--duration-normal)"
                 >
                   <span>View all</span>
                   <PixelArrow className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </div>
 
-              <div className="grid gap-(--spacing-6) sm:grid-cols-2">
+              <div className="grid gap-6 sm:grid-cols-2">
                 {recentPosts.map((post) => (
                   <PostCard
                     key={post.id}

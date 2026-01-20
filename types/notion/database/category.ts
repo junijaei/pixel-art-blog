@@ -3,14 +3,14 @@
  */
 
 import type {
-  DatabasePage,
-  PropertyValue,
-  TitlePropertyValue,
-  RichTextPropertyValue,
-  RelationPropertyValue,
-  SelectPropertyValue,
   CreatedTimePropertyValue,
+  DatabasePage,
   LastEditedTimePropertyValue,
+  PropertyValue,
+  RelationPropertyValue,
+  RichTextPropertyValue,
+  SelectPropertyValue,
+  TitlePropertyValue,
 } from '@/types/notion';
 
 export type CategoryStatus = 'active' | 'deactive';
@@ -19,6 +19,7 @@ export interface CategoryProperties {
   ID: PropertyValue;
   label: TitlePropertyValue;
   parent: RelationPropertyValue;
+  children: RelationPropertyValue;
   path: RichTextPropertyValue;
   isActive: SelectPropertyValue;
   createdAt: CreatedTimePropertyValue;
@@ -33,6 +34,7 @@ export interface Category {
   id: string;
   label: string;
   parentId: string | null;
+  hasChildren: boolean;
   path: string;
   isActive: boolean;
   createdAt: string;

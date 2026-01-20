@@ -9,8 +9,7 @@ import type {
   PostFilterOptions,
   PostListItem,
   PostPage,
-  PostSortOptions,
-  PostWithCategory,
+  PostSortOptions
 } from '@/types/notion';
 import { NOTION_LIMITS } from '../config';
 import { parseCategoryPage } from '../util';
@@ -130,16 +129,6 @@ export async function getAllPosts(
     });
   }
 
-  // status 옵션 (표시 여부에는 영향 없음)
-  if (options?.status) {
-    filters.push({
-      property: 'status',
-      status: {
-        equals: options.status,
-      },
-    });
-  }
-
   const filter = filters.length > 0 ? (filters.length === 1 ? filters[0] : { and: filters }) : undefined;
 
   // 정렬 옵션 (기본값: publishedAt 내림차순)
@@ -150,7 +139,7 @@ export async function getAllPosts(
       data_source_id: databaseId,
       page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
       start_cursor: cursor,
-      // filter,
+      filter,
       sorts: [
         {
           property: sort.field,
@@ -176,72 +165,6 @@ export async function getPost(pageId: string): Promise<PostPage> {
   });
 
   return page as PostPage;
-}
-
-/**
- * 카테고리 경로와 슬러그로 포스트 찾기
- * 예: categoryPath = "front/react/hook", slug = "example"
- */
-export async function getPostByPathAndSlug(
-  postDatabaseId: string,
-  categoryDatabaseId: string,
-  categoryPath: string,
-  slug: string
-): Promise<PostWithCategory | null> {
-  // 1. 카테고리 경로로 카테고리 찾기
-  const categoryResponse = await notionClient.dataSources.query({
-    data_source_id: categoryDatabaseId,
-    // filter: {
-    //   property: 'path',
-    //   rich_text: {
-    //     equals: categoryPath,
-    //   },
-    // },
-  });
-
-  const categoryPage = categoryResponse.results[0] as CategoryPage | undefined;
-  if (!categoryPage) return null;
-
-  const category = parseCategoryPage(categoryPage);
-
-  // 2. 해당 카테고리의 포스트 중 슬러그로 찾기
-  const postResponse = await notionClient.dataSources.query({
-    data_source_id: postDatabaseId,
-    // filter: {
-    //   and: [
-    //     {
-    //       property: 'slug',
-    //       rich_text: {
-    //         equals: slug,
-    //       },
-    //     },
-    //     {
-    //       property: 'category',
-    //       relation: {
-    //         contains: category.id,
-    //       },
-    //     },
-    //     {
-    //       property: 'isPublished',
-    //       checkbox: {
-    //         equals: true,
-    //       },
-    //     },
-    //   ],
-    // },
-  });
-
-  const postPage = postResponse.results[0] as PostPage | undefined;
-  if (!postPage) return null;
-
-  const post = parsePostPage(postPage);
-
-  return {
-    ...post,
-    categoryPath: category.path,
-    categoryLabel: category.label,
-    fullPath: `${category.path}/${post.slug}`,
-  };
 }
 
 /**
@@ -274,6 +197,7 @@ export async function getAllPostPaths(
 
 /**
  * 페이지 블록 가져오기 (포스트 내용)
+ * @deprecated `getPageBlocksWithChildren`을 사용하세요. 이 함수는 children을 가져오지 않습니다.
  */
 export async function getPageBlocks(pageId: string) {
   const blocks: any[] = [];

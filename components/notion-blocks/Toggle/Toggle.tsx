@@ -20,7 +20,7 @@ export function Toggle({ block, children }: ToggleProps) {
         type="button"
       >
         {/* Arrow icon */}
-        <span className={cn('mt-0.5 shrink-0 transition-transform duration-200', isOpen && 'rotate-90')}>
+        <span className={cn('mt-1 shrink-0 transition-transform duration-200', isOpen && 'rotate-90')}>
           <svg
             width="16"
             height="16"

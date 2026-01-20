@@ -26,7 +26,7 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
   let numberedListIndex = 0;
 
   return (
-    <>
+    <div className="notion-content">
       {blocks.map((block, index) => {
         // numbered_list_item인 경우 순번 증가, 아니면 리셋
         if (block.type === 'numbered_list_item') {
@@ -37,7 +37,7 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
 
         return <BlockComponent key={block.id || index} block={block} numberedListIndex={numberedListIndex} />;
       })}
-    </>
+    </div>
   );
 }
 
@@ -70,7 +70,7 @@ function BlockComponent({ block, numberedListIndex }: BlockComponentProps) {
       );
 
     case 'quote':
-      return <Quote block={block} />;
+      return <Quote block={block}>{children}</Quote>;
 
     case 'callout':
       return <Callout block={block}>{children}</Callout>;

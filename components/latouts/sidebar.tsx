@@ -1,12 +1,13 @@
 'use client';
 
-import { PixelChevron, PixelFolder, PixelFolderOpen } from '@/components/ui';
+import { PixelChevron, PixelCollapse, PixelExpand, PixelFolder, PixelFolderOpen } from '@/components/ui';
+import { useStorage } from '@/hooks/use-storage';
 import { buildCategoryTree } from '@/lib/notion';
 import { cn } from '@/lib/utils';
 import type { Category, CategoryTreeNode, Post } from '@/types/notion';
 import Link from 'next/link';
-import { usePathname, useSearchParams } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { usePathname } from 'next/navigation';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface SidebarProps {
   categories: Category[];
@@ -17,7 +18,7 @@ interface SidebarProps {
 interface CategoryTreeItemProps {
   node: CategoryTreeNode;
   level?: number;
-  expandedCategories: Set<string>;
+  expandedCategories: string[];
   onToggleExpanded: (categoryId: string) => void;
   postCountMap: Map<string, number>;
   currentPath: string;
@@ -31,7 +32,7 @@ function CategoryTreeItem({
   postCountMap,
   currentPath,
 }: CategoryTreeItemProps) {
-  const isExpanded = expandedCategories.has(node.id);
+  const isExpanded = expandedCategories.includes(node.id);
   const hasChildren = node.children && node.children.length > 0;
   const postCount = postCountMap.get(node.id) || 0;
 
@@ -56,7 +57,7 @@ function CategoryTreeItem({
       <div
         className={cn(
           'flex items-center gap-1 rounded-md text-sm transition-colors',
-          isActive && 'bg-sidebar-primary/10 text-sidebar-primary font-medium'
+          isActive && 'text-sidebar-primary font-semibold'
         )}
         style={{ paddingLeft: `${level * 12 + 8}px` }}
       >
@@ -120,9 +121,8 @@ function CategoryTreeItem({
 
 export function Sidebar({ categories, posts, className }: SidebarProps) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const [expandedCategories, setExpandedCategories] = useState<Set<string>>(new Set());
+  const [expandedCategories, setExpandedCategories] = useStorage<string[]>('expanded-categories', ['all']);
 
   // 카테고리 트리 메모이제이션
   const categoryTree = useMemo(() => buildCategoryTree(categories), [categories]);
@@ -154,31 +154,37 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
     return map;
   }, [categoryTree, posts]);
 
+  useEffect(() => {}, []);
+
   // 카테고리 확장/축소 토글
   const handleToggleExpanded = useCallback((categoryId: string) => {
     setExpandedCategories((prev) => {
-      const next = new Set(prev);
-      if (next.has(categoryId)) {
-        next.delete(categoryId);
+      const next = [...prev];
+      if (next.includes(categoryId)) {
+        return next.filter((item) => item !== categoryId);
       } else {
-        next.add(categoryId);
+        return [...next, categoryId];
       }
-      return next;
     });
   }, []);
 
+  const isAllExpanded = useMemo(() => {
+    return expandedCategories.length === categories.filter(category => category.hasChildren).length;
+  }, [expandedCategories, categories])
+
   // 전체 맵 열기/닫기
   const handleToggleAll = useCallback(() => {
-    if (expandedCategories.size === categoryTree.length) {
+    console.log(expandedCategories, categoryTree, categories)
+    if (isAllExpanded) {
       // 모두 열려있으면 모두 닫기
-      setExpandedCategories(new Set());
+      setExpandedCategories([]);
     } else {
       // 모두 열기
-      const allIds = new Set<string>();
+      const allIds: string[] = [];
       const collectIds = (nodes: CategoryTreeNode[]) => {
         nodes.forEach((node) => {
           if (node.children.length > 0) {
-            allIds.add(node.id);
+            allIds.push(node.id);
             collectIds(node.children);
           }
         });
@@ -186,7 +192,7 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
       collectIds(categoryTree);
       setExpandedCategories(allIds);
     }
-  }, [expandedCategories.size, categoryTree]);
+  }, [expandedCategories.length, categoryTree]);
 
   return (
     <aside
@@ -199,16 +205,16 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
       {/* Header */}
       <div className="border-sidebar-border flex shrink-0 items-center justify-between border-b px-3 py-3">
         {!isCollapsed && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <span className="text-sidebar-foreground/80 font-(family-name:--font-silkscreen) text-[10px] tracking-wider uppercase">
               Categories
             </span>
             <button
               onClick={handleToggleAll}
-              className="hover:bg-sidebar-accent rounded px-1.5 py-0.5 text-[10px] transition-colors"
+              className="hover:bg-sidebar-accent rounded p-1 transition-colors text-sidebar-foreground/60"
               aria-label="Toggle all categories"
             >
-              {expandedCategories.size === categoryTree.length ? 'Collapse' : 'Expand'}
+              {isAllExpanded ? <PixelCollapse className='h-3 w-3' /> : <PixelExpand className='h-3 w-3' />}
             </button>
           </div>
         )}

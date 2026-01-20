@@ -1,5 +1,6 @@
-import { getColorClass } from '@/lib/notion/util/color-utils';
 import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
+import { getNotionColorClass } from '@/lib/notion/util/color-utils';
+import { cn } from '@/lib/utils';
 import type { ParagraphProps } from './index';
 
 /**
@@ -9,7 +10,7 @@ import type { ParagraphProps } from './index';
  */
 export function Paragraph({ block }: ParagraphProps) {
   const { rich_text, color } = block.paragraph;
-  const colorClass = getColorClass(color);
+  const colorClass = getNotionColorClass(color);
 
-  return <p className={`mb-4 leading-relaxed ${colorClass}`.trim()}>{renderRichText(rich_text)}</p>;
+  return <p className={cn('mb-4 leading-relaxed', colorClass)}>{renderRichText(rich_text)}</p>;
 }

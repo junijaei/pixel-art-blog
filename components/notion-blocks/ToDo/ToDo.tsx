@@ -8,7 +8,7 @@ export function ToDo({ block, children }: ToDoProps) {
     <div className="my-1">
       <div className="flex items-start gap-2">
         {/* Checkbox */}
-        <div className="mt-0.5 shrink-0">
+        <div className="mt-1 shrink-0">
           <div
             className={cn(
               'border-border flex h-4 w-4 items-center justify-center rounded border',
