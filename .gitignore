@@ -26,6 +26,10 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# cloudflare images cache
+.cache/
+.DS_Store
+
 tmpclaude-*
 .history
 *storybook.log

@@ -1,18 +1,19 @@
 import type {
-  NotionColor,
-  RichText,
-  RichTextAnnotations,
   BlockBase,
-  ParagraphBlock,
-  HeadingBlock,
+  BookmarkBlock,
   BulletedListBlock,
-  NumberedListBlock,
-  ToDoBlock,
-  ToggleBlock,
-  QuoteBlock,
   CalloutBlock,
   CodeBlock,
-  BookmarkBlock,
+  HeadingBlock,
+  ImageBlock,
+  NotionColor,
+  NumberedListBlock,
+  ParagraphBlock,
+  QuoteBlock,
+  RichText,
+  RichTextAnnotations,
+  ToDoBlock,
+  ToggleBlock,
 } from '@/types/notion';
 
 const DEFAULT_BLOCK_META = {
@@ -272,6 +273,38 @@ export function createBookmarkBlock(
     bookmark: {
       url,
       caption,
+    },
+  };
+}
+
+export function createImageBlock(
+  url: string,
+  type: 'file' | 'external' = 'external',
+  name?: string,
+  caption: RichText[] = [],
+  options: BlockBaseOptions = {}
+): ImageBlock {
+  return {
+    ...DEFAULT_BLOCK_META,
+    id: options.id ?? generateBlockId('image'),
+    type: 'image',
+    has_children: options.has_children ?? false,
+    children: options.children,
+    image: {
+      type,
+      ...(type === 'file' && {
+        file: {
+          url,
+          expiry_time: '2026-12-31T23:59:59.000Z',
+        },
+      }),
+      ...(type === 'external' && {
+        external: {
+          url,
+        },
+      }),
+      ...(name && { name }),
+      ...(caption.length > 0 && { caption }),
     },
   };
 }

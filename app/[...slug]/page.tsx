@@ -13,12 +13,12 @@ import {
   getAllCategories,
   getAllPosts,
   getCategoryPath,
-  getPageBlocksWithChildren,
   getPost,
   ISR_CONFIG,
   parseCategoryPage,
   parsePostPage,
 } from '@/lib/notion';
+import { getPageBlocksWithChildren } from '@/lib/notion/api/block.api';
 import { parsePostLink } from '@/lib/notion/util/category';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';

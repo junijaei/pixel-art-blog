@@ -48,6 +48,7 @@ export interface NotionFile {
     url: string;
   };
   name?: string;
+  caption?: import('./content/rich-text').RichText[];
 }
 
 type NotionColorBase = 'gray' | 'brown' | 'orange' | 'yellow' | 'green' | 'blue' | 'purple' | 'pink' | 'red';

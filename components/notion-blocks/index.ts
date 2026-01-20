@@ -34,5 +34,8 @@ export type { BookmarkBlock, BookmarkProps } from './Bookmark';
 export { Mention } from './Mention';
 export type { MentionProps } from './Mention';
 
+export { Image } from './Image';
+export type { ImageBlock, ImageProps } from './Image';
+
 export { BlockRenderer } from './BlockRenderer';
 export type { BlockRendererProps } from './BlockRenderer';

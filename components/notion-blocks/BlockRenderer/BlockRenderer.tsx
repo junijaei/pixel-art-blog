@@ -5,6 +5,7 @@ import {
   Code,
   Divider,
   Heading,
+  Image,
   NumberedListItem,
   Paragraph,
   Quote,
@@ -77,6 +78,9 @@ function BlockComponent({ block, numberedListIndex }: BlockComponentProps) {
 
     case 'code':
       return <Code block={block} />;
+
+    case 'image':
+      return <Image block={block} />;
 
     case 'to_do':
       return <ToDo block={block}>{children}</ToDo>;

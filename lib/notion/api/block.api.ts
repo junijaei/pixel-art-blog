@@ -107,11 +107,14 @@ export async function enrichBlocksWithChildren(
  * ```
  */
 export async function getPageBlocksWithChildren(pageId: string, maxDepth: number = 10): Promise<Block[]> {
-  // 1. 최상위 블록 가져오기
   const topLevelBlocks = await fetchBlockChildren(pageId);
-
-  // 2. 재귀적으로 children enrichment
   const enrichedBlocks = await enrichBlocksWithChildren(topLevelBlocks, maxDepth);
+
+  const { processNotionBlocks } = await import('@/lib/cdn');
+  const stats = await processNotionBlocks(enrichedBlocks);
+  if (stats.totalImages > 0) {
+    console.log(`[BlockAPI] Images: ${stats.uploaded} uploaded, ${stats.cached} cached, ${stats.failed} failed`);
+  }
 
   return enrichedBlocks;
 }

@@ -19,8 +19,6 @@ export function Bookmark({ block }: BookmarkProps) {
   const [preview, setPreview] = useState<LinkPreviewData | null>(null);
   const [loading, setLoading] = useState(true);
 
-  console.log(block, block.bookmark);
-
   useEffect(() => {
     async function loadPreview() {
       try {

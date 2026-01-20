@@ -67,8 +67,6 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    console.log(image, rawImage);
-
     const previewData: LinkPreviewData = {
       url,
       title,

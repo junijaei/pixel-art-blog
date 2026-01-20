@@ -174,7 +174,6 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
 
   // 전체 맵 열기/닫기
   const handleToggleAll = useCallback(() => {
-    console.log(expandedCategories, categoryTree, categories)
     if (isAllExpanded) {
       // 모두 열려있으면 모두 닫기
       setExpandedCategories([]);
