@@ -7,7 +7,11 @@ export function isDevelopment(): boolean {
   return process.env.NODE_ENV === 'development';
 }
 
-export async function mockUploadImage(_imageUrl: string, _blockId: string): Promise<ImageUploadResult> {
+export async function mockUploadImage(
+  _imageUrl: string,
+  _blockId: string,
+  _lastEditedTime: string
+): Promise<ImageUploadResult> {
   console.log('[Dev Mock] Using placeholder image');
   return {
     success: true,
@@ -22,12 +26,13 @@ export async function mockProcessBlocks(blocks: Block[]): Promise<ImageProcessin
   function processBlock(block: Block) {
     if (block.type === 'image') {
       const imageBlock = block as ImageBlock;
+      const originalImage = imageBlock.image;
 
       imageBlock.image = {
         type: 'external',
         external: { url: PLACEHOLDER_IMAGE },
-        name: imageBlock.image.name,
-        caption: imageBlock.image.caption,
+        name: originalImage.name,
+        caption: originalImage.caption,
       };
 
       imageCount++;

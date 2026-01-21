@@ -76,7 +76,7 @@ async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUpload
   }
 
   console.log(`[Processor] Uploading: ${blockId}`);
-  const result = await uploadImage(imageUrl, blockId);
+  const result = await uploadImage(imageUrl, blockId, lastEditedTime);
 
   if (!result.success || !result.cdnUrl) {
     console.error(`[Processor] Failed: ${blockId}`, result.error);

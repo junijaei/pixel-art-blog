@@ -6,6 +6,10 @@ const CACHE_DIR = path.join(process.cwd(), '.cache');
 const CACHE_FILE = path.join(CACHE_DIR, 'cdn-images.json');
 const CACHE_VERSION = '2.0.0';
 
+// 메모리 캐시: 파일 I/O를 최소화합니다
+let memoryCache: ImageCacheStore | null = null;
+let memoryCacheLoaded = false;
+
 function createEmptyStore(): ImageCacheStore {
   return {
     version: CACHE_VERSION,
@@ -23,6 +27,11 @@ async function ensureCacheDir(): Promise<void> {
 }
 
 export async function loadCache(): Promise<ImageCacheStore> {
+  // 메모리 캐시가 있으면 재사용
+  if (memoryCacheLoaded && memoryCache) {
+    return memoryCache;
+  }
+
   try {
     await ensureCacheDir();
     const data = await fs.readFile(CACHE_FILE, 'utf-8');
@@ -30,18 +39,26 @@ export async function loadCache(): Promise<ImageCacheStore> {
 
     if (store.version !== CACHE_VERSION) {
       console.warn('[Cache] Version mismatch, creating new cache');
-      return createEmptyStore();
+      memoryCache = createEmptyStore();
+      memoryCacheLoaded = true;
+      return memoryCache;
     }
 
-    console.log(`[Cache] Loaded ${Object.keys(store.entries).length} entries`);
+    console.log(`[Cache] Loaded ${Object.keys(store.entries).length} entries from disk`);
+    memoryCache = store;
+    memoryCacheLoaded = true;
     return store;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
       console.log('[Cache] No cache file found, creating new');
-      return createEmptyStore();
+      memoryCache = createEmptyStore();
+      memoryCacheLoaded = true;
+      return memoryCache;
     }
     console.error('[Cache] Error loading:', error);
-    return createEmptyStore();
+    memoryCache = createEmptyStore();
+    memoryCacheLoaded = true;
+    return memoryCache;
   }
 }
 
@@ -49,8 +66,13 @@ export async function saveCache(store: ImageCacheStore): Promise<void> {
   try {
     await ensureCacheDir();
     store.lastUpdated = new Date().toISOString();
+
+    // 메모리 캐시 업데이트
+    memoryCache = store;
+    memoryCacheLoaded = true;
+
     await fs.writeFile(CACHE_FILE, JSON.stringify(store, null, 2), 'utf-8');
-    console.log(`[Cache] Saved ${Object.keys(store.entries).length} entries`);
+    console.log(`[Cache] Saved ${Object.keys(store.entries).length} entries to disk`);
   } catch (error) {
     console.error('[Cache] Error saving:', error);
     throw error;
@@ -106,8 +128,19 @@ export async function deleteCachedImage(blockId: string): Promise<void> {
 
 export async function clearCache(): Promise<void> {
   const store = createEmptyStore();
+  memoryCache = store;
+  memoryCacheLoaded = true;
   await saveCache(store);
   console.log('[Cache] Cleared');
+}
+
+/**
+ * 메모리 캐시를 초기화합니다.
+ * 테스트 또는 새 빌드 시작 시 사용합니다.
+ */
+export function resetMemoryCache(): void {
+  memoryCache = null;
+  memoryCacheLoaded = false;
 }
 
 export async function getCacheStats(): Promise<{

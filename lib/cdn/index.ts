@@ -10,6 +10,7 @@ export {
   deleteCachedImage,
   clearCache,
   getCacheStats,
+  resetMemoryCache,
 } from './cache';
 
 export { isDevelopment, mockUploadImage, mockProcessBlocks, mockValidateConfig } from './dev-mock';

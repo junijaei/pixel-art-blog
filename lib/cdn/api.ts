@@ -1,14 +1,19 @@
-import crypto from 'crypto';
 import type { CdnUploadResponse, ImageUploadResult } from '@/types/cdn';
 import { CDN_BASE_URL } from '@/types/cdn';
+import crypto from 'crypto';
 
 const DEFAULT_TIMEOUT = 30000;
 const MAX_RETRIES = 3;
 
-export function generateFileName(blockId: string, imageUrl: string): string {
-  const urlHash = crypto.createHash('sha256').update(imageUrl).digest('hex').slice(0, 8);
-  const sanitizedBlockId = blockId.replace(/-/g, '').slice(0, 12);
-  return `${sanitizedBlockId}_${urlHash}.webp`;
+/**
+ * CDN에 저장될 파일명을 생성합니다.
+ * blockId + lastEditedTime을 해시하여 일관된 파일명을 생성합니다.
+ * 이미지가 수정되면 lastEditedTime이 변경되어 새 파일명이 생성됩니다.
+ */
+export function generateFileName(blockId: string, lastEditedTime: string): string {
+  const contentHash = crypto.createHash('sha256').update(`${blockId}:${lastEditedTime}`).digest('hex').slice(0, 8);
+  const sanitizedBlockId = blockId.replace(/-/g, '');
+  return `${sanitizedBlockId}_${contentHash}.webp`;
 }
 
 export function getCdnUrl(fileName: string): string {
@@ -37,6 +42,11 @@ async function uploadWithRetry(
 ): Promise<CdnUploadResponse> {
   let lastError: Error | null = null;
 
+  const apiKey = process.env.CLOUDFLARE_API_KEY;
+  if (!apiKey) {
+    throw new Error('CLOUDFLARE_API_KEY environment variable is not set');
+  }
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const response = await fetchWithTimeout(
@@ -45,6 +55,7 @@ async function uploadWithRetry(
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'x-api-key': apiKey,
           },
           body: JSON.stringify({ imageUrl, fileName }),
         },
@@ -83,9 +94,13 @@ async function uploadWithRetry(
   throw lastError || new Error('Upload failed after max retries');
 }
 
-export async function uploadImage(imageUrl: string, blockId: string): Promise<ImageUploadResult> {
+export async function uploadImage(
+  imageUrl: string,
+  blockId: string,
+  lastEditedTime: string
+): Promise<ImageUploadResult> {
   try {
-    const fileName = generateFileName(blockId, imageUrl);
+    const fileName = generateFileName(blockId, lastEditedTime);
 
     console.log(`[CDN] Uploading: ${fileName}`);
     const result = await uploadWithRetry(imageUrl, fileName);
