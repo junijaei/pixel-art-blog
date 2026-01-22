@@ -21,7 +21,7 @@ export default function AboutPage() {
               <DotDecoration variant="horizontal" className="opacity-30" />
             </div>
 
-            <h1 className="font-mulmaru mb-6 text-3xl font-bold sm:text-4xl">프론트엔드 개발자, 전희재입니다.</h1>
+            <h1 className="font-mulmaru mb-6 text-3xl font-bold sm:text-4xl">프론트엔드 개발자,<br className="inline sm:hidden"/>전희재입니다.</h1>
           </div>
 
           {/* Avatar/Visual */}
@@ -80,8 +80,7 @@ export default function AboutPage() {
 
             <p className="text-muted-foreground leading-relaxed">
               정답을 정리하기보다는, 왜 그런 선택을 했는지와 그 과정에서 생긴 시행착오를 남깁니다. 크지 않은 선택 하나가
-              전체 경험에 어떤 영향을 주는지, 그 연결을 스스로 납득하기 위해 글을 씁니다. 그렇게 생각을 정리하다 보면
-              결과물보다 그 과정 자체가 더 오래 남는다는 걸 자주 느낍니다.
+              전체 경험에 어떤 영향을 주는지, 그 연결을 스스로 납득하기 위해 글을 씁니다.
               <br />
               <br />
               천천히 가더라도 방향은 분명하게 잡고 싶습니다.

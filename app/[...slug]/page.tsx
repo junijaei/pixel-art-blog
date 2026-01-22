@@ -200,7 +200,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     <div className="flex min-h-screen flex-col">
       <BlogHeader />
 
-      <main className="flex-1 px-6 py-16">
+      <main className="flex-1 px-6 py-16 max-w-dvw">
         {/* Table of Contents - fixed on right side, hidden on mobile */}
         {tocItems.length > 0 && <TocWithScrollSpy items={tocItems} />}
 
@@ -243,7 +243,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="bg-muted text-muted-foreground rounded-full px-3 py-1 font-pixel text-[10px] tracking-wider"
+                    className="bg-muted text-muted-foreground rounded-full px-3 py-1 font-galmuri9 text-[10px] tracking-wider"
                   >
                     {tag}
                   </span>
@@ -269,7 +269,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <DotDecoration variant="corner" />
-                <span className="text-muted-foreground text-sm">Thanks for reading</span>
               </div>
               <Link
                 href="/posts"

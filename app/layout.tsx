@@ -52,7 +52,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistMono.variable} ${silkscreen.variable} font-sans antialiased`}>
+      <body className={`${geistMono.variable} ${silkscreen.variable} font-sans antialiased max-w-dvw`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex">
             <Sidebar categories={categories} posts={posts} />
