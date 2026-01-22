@@ -401,7 +401,7 @@ describe('Component', () => {
 ### 9.2 Story 작성 패턴
 
 ```typescript
-import type { Meta, StoryObj } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/nextjs';
 import { Component } from './Component';
 import type { ComponentBlock } from '@/types/notion';
 

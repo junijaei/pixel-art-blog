@@ -1,6 +1,6 @@
-import Link from 'next/link';
+import { PixelChevronRight, PixelTag } from '@/components/ui/pixel-icons';
 import { cn } from '@/lib/utils';
-import { PixelTag, PixelChevronRight } from '@/components/ui/pixel-icons';
+import Link from 'next/link';
 
 export interface BreadcrumbItem {
   label: string;
@@ -35,7 +35,7 @@ export function Breadcrumb({ items, currentPath, className }: BreadcrumbProps) {
             <Link
               href={href}
               className={cn(
-                'transition-colors duration-(--duration-normal)',
+                'transition-colors ',
                 isCurrent ? 'text-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
               )}
             >

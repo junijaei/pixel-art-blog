@@ -58,22 +58,23 @@ export default async function HomePage() {
       <main className="flex-1">
         {/* Hero Section */}
         <section className="px-6 py-20">
-          <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-2xl">
             <div className="mb-6 flex items-center gap-4">
               <DotDecoration variant="horizontal" />
-              <span className="text-muted-foreground font-(family-name:--font-silkscreen) text-[10px] tracking-widest uppercase">
-                Personal Blog
+              <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">
+                Frontend Blog
               </span>
             </div>
 
-            <h1 className="mb-6 text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl">
-              Thoughts on design,
+            <h1 className="mb-6 text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl font-mulmaru">
+              Bit By Bit,
               <br />
-              <span className="text-muted-foreground">pixels & minimalism</span>
+              <span className="text-muted-foreground">One bit at a time</span>
             </h1>
 
-            <p className="text-muted-foreground mb-8 max-w-xl text-lg leading-relaxed">
-              Exploring the intersection of pixel aesthetics and modern design principles.
+            <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
+            Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만든다는 의미를 담고 있습니다. 
+            <br className='hidden sm:inline'/> 이 블로그에는 프론트엔드를 설계하고 구현하며 쌓아온 생각과 경험을 기록합니다.
             </p>
 
             <div className="flex items-center gap-2">
@@ -87,7 +88,7 @@ export default async function HomePage() {
         {/* Featured Post */}
         {featuredPost && (
           <section className="mb-16 px-6">
-            <div className="mx-auto max-w-6xl">
+            <div className="mx-auto max-w-2xl">
               <PostCard
                 id={featuredPost.id}
                 title={featuredPost.title}
@@ -104,23 +105,23 @@ export default async function HomePage() {
         {/* Recent Posts */}
         {recentPosts.length > 0 && (
           <section className="px-6">
-            <div className="mx-auto max-w-6xl">
+            <div className="mx-auto max-w-2xl">
               <div className="mb-8 flex items-center justify-between">
                 <div className="flex items-center gap-4">
-                  <h2 className="font-(family-name:--font-silkscreen) text-xs tracking-wider">RECENT POSTS</h2>
+                  <h2 className="font-pixel text-xs tracking-wider">RECENT POSTS</h2>
                   <DotDecoration variant="horizontal" className="opacity-50" />
                 </div>
 
                 <Link
                   href="/posts"
-                  className="group text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors duration-(--duration-normal)"
+                  className="group text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors "
                 >
                   <span>View all</span>
                   <PixelArrow className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
                 </Link>
               </div>
 
-              <div className="grid gap-6 sm:grid-cols-2">
+              <div className="flex flex-col gap-6">
                 {recentPosts.map((post) => (
                   <PostCard
                     key={post.id}

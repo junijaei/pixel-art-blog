@@ -14,7 +14,7 @@ export interface ThemeToggleProps {
  * 시스템 테마가 기본값이며, 클릭 시 토글 전환
  */
 export function ThemeToggle({ className }: ThemeToggleProps) {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   // Hydration mismatch 방지
@@ -26,7 +26,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     // 서버 렌더링 시 placeholder
     return (
       <button
-        className={cn('hover:bg-secondary rounded-lg p-2 transition-colors duration-(--duration-normal)', className)}
+        className={cn('hover:bg-secondary rounded-lg p-2 transition-colors cursor-pointer', className)}
         aria-label="Toggle theme"
       >
         <div className="h-4 w-4" />
@@ -38,13 +38,12 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
 
   const toggleTheme = () => {
     setTheme(isDark ? 'light' : 'dark');
-    console.log('toggle!!', resolvedTheme, theme)
   };
 
   return (
     <button
       onClick={toggleTheme}
-      className={cn('hover:bg-secondary rounded-lg p-2 transition-colors duration-(--duration-normal)', className)}
+      className={cn('hover:bg-secondary rounded-lg p-2 transition-colors cursor-pointer', className)}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDark ? (

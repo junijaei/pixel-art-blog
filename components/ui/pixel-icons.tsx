@@ -217,3 +217,133 @@ export function PixelCollapse({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function PixelSun({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <rect x="6" y="4" width="4" height="2" />
+      <rect x="4" y="6" width="8" height="4" />
+      <rect x="6" y="10" width="4" height="2" />
+      <rect x="7" y="1" width="2" height="2" />
+      <rect x="7" y="13" width="2" height="2" />
+      <rect x="1" y="7" width="2" height="2" />
+      <rect x="13" y="7" width="2" height="2" />
+      <rect x="3" y="3" width="2" height="2" />
+      <rect x="11" y="3" width="2" height="2" />
+      <rect x="3" y="11" width="2" height="2" />
+      <rect x="11" y="11" width="2" height="2" />
+    </svg>
+  );
+}
+
+export function PixelMoon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <path d="M10 1H5V3H10V1Z" />
+      <path d="M5 3H3V5H5V3Z" />
+      <path d="M9 3H7V5H9V3Z" />
+      <path d="M3 5H1V11H3V5Z" />
+      <path d="M5 11H3V13H5V11Z" />
+      <path d="M15 6H13V11H15V6Z" />
+      <path d="M11 13H5V15H11V13Z" />
+      <path d="M13 11H11V13H13V11Z" />
+      <path d="M8 5H6V7H8V5Z" />
+      <path d="M11 8H9V10H11V8Z" />
+      <path d="M13 7H11V9H13V7Z" />
+      <path d="M9 7H7V9H9V7Z" />
+    </svg>
+  );
+}
+
+export function PixelClose({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <rect x="2" y="3" width="2" height="2" />
+      <rect x="4" y="5" width="2" height="2" />
+      <rect x="6" y="7" width="4" height="2" />
+      <rect x="10" y="5" width="2" height="2" />
+      <rect x="12" y="3" width="2" height="2" />
+      <rect x="12" y="11" width="2" height="2" />
+      <rect x="10" y="9" width="2" height="2" />
+      <rect x="4" y="9" width="2" height="2" />
+      <rect x="2" y="11" width="2" height="2" />
+    </svg>
+  );
+}
+
+export function PixelChevronRight({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <rect x="5" y="2" width="2" height="2" />
+      <rect x="7" y="4" width="2" height="2" />
+      <rect x="9" y="6" width="2" height="4" />
+      <rect x="7" y="10" width="2" height="2" />
+      <rect x="5" y="12" width="2" height="2" />
+    </svg>
+  );
+}
+
+export function PixelMail({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <path d="M15 3H1V5H15V3Z" />
+      <path d="M3 3H1V13H3V3Z" />
+      <path d="M15 3H13V13H15V3Z" />
+      <path d="M15 11H1V13H15V11Z" />
+      <path d="M5 5H3V7H5V5Z" />
+      <path d="M13 5H11V7H13V5Z" />
+      <path d="M7 7H5V9H7V7Z" />
+      <path d="M11 7H9V9H11V7Z" />
+      <path d="M9 9H7V11H9V9Z" />
+    </svg>
+  );
+}
+
+export function PixelGithub({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <path d="M11 6H5V8H11V6Z" />
+      <path d="M13 8H3V10H13V8Z" />
+      <path d="M13 10H3V12H13V10Z" />
+      <path d="M13 12H3V14H13V12Z" />
+      <path d="M5 6H3V8H5V6Z" />
+      <path d="M13 6H11V8H13V6Z" />
+      <path d="M3 8H1V12H3V8Z" />
+      <path d="M15 8H13V12H15V8Z" />
+      <path d="M13 2H11V6H13V2Z" />
+      <path d="M15 4H13V8H15V4Z" />
+      <path d="M5 2H3V6H5V2Z" />
+      <path d="M3 4H1V8H3V4Z" />
+      <path d="M5 12H3V14H5V12Z" />
+      <path d="M13 12H11V14H13V12Z" />
+    </svg>
+  );
+}
+
+export function PixelLinkedin({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <path d="M14 2H2V4H14V2Z" />
+      <path d="M3 2H1V15H3V2Z" />
+      <path d="M15 2H13V15H15V2Z" />
+      <path d="M14 13H2V15H14V13Z" />
+      <path d="M6 5H4V7H6V5Z" />
+      <path d="M6 8H4V12H6V8Z" />
+      <path d="M9 8H7V12H9V8Z" />
+      <path d="M12 9H10V12H12V9Z" />
+      <path d="M11 7H9V9H11V7Z" />
+    </svg>
+  );
+}
+
+export function PixelPhone({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <path d="M11 1H5V3H11V1Z" />
+      <path d="M5 1H3V15H5V1Z" />
+      <path d="M13 1H11V15H13V1Z" />
+      <path d="M11 13H5V15H11V13Z" />
+      <path d="M9 11H7V13H9V11Z" />
+    </svg>
+  );
+}

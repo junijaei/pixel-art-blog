@@ -1,7 +1,8 @@
 import { BlogFooter } from '@/components/latouts/footer';
 import { BlogHeader } from '@/components/latouts/header';
 import { DotDecoration } from '@/components/ui/dot-decoration';
-import { PixelDot, PixelUser } from '@/components/ui/pixel-icons';
+import { PixelDot, PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui/pixel-icons';
+import Link from 'next/link';
 
 export default function AboutPage() {
   return (
@@ -14,40 +15,77 @@ export default function AboutPage() {
           <div className="mb-12">
             <div className="mb-6 flex items-center gap-4">
               <PixelUser className="text-muted-foreground h-5 w-5" />
-              <span className="text-muted-foreground font-(family-name:--font-silkscreen) text-[10px] tracking-widest uppercase">
+              <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">
                 About
               </span>
               <DotDecoration variant="horizontal" className="opacity-30" />
             </div>
 
-            <h1 className="mb-6 text-3xl font-bold sm:text-4xl">Hello, I'm the Pixel Designer</h1>
+            <h1 className="font-mulmaru mb-6 text-3xl font-bold sm:text-4xl">프론트엔드 개발자, 전희재입니다.</h1>
           </div>
 
           {/* Avatar/Visual */}
-          <div className="relative mb-12">
-            <div className="bg-secondary border-border flex h-32 w-32 items-center justify-center rounded-xl border">
-              <div className="grid grid-cols-5 gap-1.5">
-                {[...Array(25)].map((_, i) => {
-                  const pattern = [0, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0];
-                  return (
-                    <div key={i} className={`h-3 w-3 rounded-sm ${pattern[i] ? 'bg-foreground' : 'bg-transparent'}`} />
-                  );
-                })}
+          <div className="relative mb-12 flex flex-col gap-8 sm:flex-row sm:items-start">
+            <div className="bg-secondary border-border flex h-48 w-48 shrink-0 items-center justify-center rounded-xl border">
+              <img
+                src="/profile.png"
+                alt="프로필 이미지. 엘모가 컴퓨터 앞에 앉아 코딩을 하고 있다."
+                className="rounded-xl"
+              />
+            </div>
+
+            {/* Contact Links */}
+            <div className="flex flex-col gap-3 mr-6">
+              <span className="text-muted-foreground mb-1 font-pixel text-[10px] tracking-wider">
+                CONTACT
+              </span>
+              <div className="flex flex-col gap-2">
+                <Link
+                  href="mailto:hjhj7895598@gmail.com"
+                  className="text-muted-foreground hover:text-foreground hover:bg-secondary group flex items-center gap-3 rounded-lg px-3 py-2 transition-colors"
+                >
+                  <PixelMail className="h-4 w-4 shrink-0" />
+                  <span className="text-sm">hjhj7895598@gmail.com</span>
+                </Link>
+                <Link
+                  href="https://github.com/junijaei"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground hover:bg-secondary group flex items-center gap-3 rounded-lg px-3 py-2 transition-colors"
+                >
+                  <PixelGithub className="h-4 w-4 shrink-0" />
+                  <span className="text-sm">github.com/junijaei</span>
+                </Link>
+                <Link
+                  href="https://linkedin.com/in/junijaei"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground hover:bg-secondary group flex items-center gap-3 rounded-lg px-3 py-2 transition-colors"
+                >
+                  <PixelLinkedin className="h-4 w-4 shrink-0" />
+                  <span className="text-sm">linkedin.com/in/junijaei</span>
+                </Link>
               </div>
             </div>
-            <DotDecoration variant="corner" className="absolute -right-2 -bottom-2" />
+
+            <DotDecoration variant="corner" className="absolute -right-2 -bottom-2 hidden sm:grid" />
           </div>
 
           {/* Bio Content */}
           <div className="space-y-6">
             <p className="text-foreground/90 text-lg leading-relaxed">
-              I'm passionate about the intersection of retro aesthetics and modern design. This blog is where I explore
-              ideas about minimalism, pixel art, and the philosophy of digital creation.
+              Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만든다는 의미를 담고 있습니다.
+              <br />이 블로그에는 프로젝트를 설계하고 구현하며 쌓아온 생각과 경험을 기록합니다.
             </p>
 
             <p className="text-muted-foreground leading-relaxed">
-              Every pixel tells a story. In a world of infinite resolution, choosing to work within constraints becomes
-              a statement about intentionality and craft.
+              정답을 정리하기보다는, 왜 그런 선택을 했는지와 그 과정에서 생긴 시행착오를 남깁니다. 크지 않은 선택 하나가
+              전체 경험에 어떤 영향을 주는지, 그 연결을 스스로 납득하기 위해 글을 씁니다. 그렇게 생각을 정리하다 보면
+              결과물보다 그 과정 자체가 더 오래 남는다는 걸 자주 느낍니다.
+              <br />
+              <br />
+              천천히 가더라도 방향은 분명하게 잡고 싶습니다.
+              <br />이 블로그는 제 태도와 생각을 bit 단위로 쌓아가는 기록이자, 스스로에게 설명하기 위한 기록입니다.
             </p>
 
             <div className="py-8">
@@ -57,13 +95,18 @@ export default function AboutPage() {
                     <PixelDot key={i} className="text-foreground h-2 w-2" />
                   ))}
                 </div>
-                <span className="text-muted-foreground font-(family-name:--font-silkscreen) text-[10px] tracking-wider">
+                <span className="text-muted-foreground font-pixel text-[10px] tracking-wider">
                   FOCUS
                 </span>
               </div>
 
               <ul className="space-y-3">
-                {['Pixel Art & Retro Design', 'Minimalist Interfaces', 'Design Systems', 'Typography'].map((item) => (
+                {[
+                  '프론트엔드 구조와 설계',
+                  '코드 품질을 유지하는 방법',
+                  'UI 구현과 인터랙션 디테일',
+                  '학습 과정과 성장 기록',
+                ].map((item) => (
                   <li key={item} className="text-foreground/90 flex items-center gap-3">
                     <PixelDot className="text-muted-foreground/60 h-1.5 w-1.5" />
                     <span>{item}</span>
@@ -72,22 +115,15 @@ export default function AboutPage() {
               </ul>
             </div>
 
-            <p className="text-muted-foreground leading-relaxed">
+            {/* <p className="text-muted-foreground leading-relaxed">
               Feel free to explore the posts and reach out if you'd like to discuss design, collaborate on a project, or
               just chat about pixels.
-            </p>
+            </p> */}
           </div>
 
           {/* Decorative Footer */}
           <div className="mt-16 flex justify-center">
-            <div className="flex items-center gap-2">
-              {[...Array(9)].map((_, i) => (
-                <PixelDot
-                  key={i}
-                  className={`h-1.5 w-1.5 ${i === 4 ? 'text-foreground' : 'text-muted-foreground/20'}`}
-                />
-              ))}
-            </div>
+            <DotDecoration variant="horizontal" />
           </div>
         </div>
       </main>

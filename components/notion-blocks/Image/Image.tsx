@@ -1,12 +1,18 @@
+'use client';
+
+import { useState } from 'react';
 import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
+import { ImageModal } from '@/components/ui';
 import type { ImageProps } from './index';
 
 /**
  * Notion Image 블록을 렌더링하는 컴포넌트
+ * 클릭 시 모달로 확대 보기 가능
  *
  * @param block - Notion API에서 반환된 Image 블록 데이터
  */
 export function Image({ block }: ImageProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { image } = block;
 
   // Extract URL from either 'file' or 'external' type
@@ -24,20 +30,38 @@ export function Image({ block }: ImageProps) {
 
   const altText = image.name || '';
   const hasCaption = image.caption && image.caption.length > 0;
+  const captionText = hasCaption ? image.caption!.map((c) => c.plain_text).join('') : undefined;
 
   return (
-    <figure className="my-6">
-      <img
+    <>
+      <figure className="mx-12 my-6 max-w-lg">
+        <button
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+          className="focus:ring-ring w-full cursor-zoom-in rounded-lg focus:ring-2 focus:ring-offset-2 focus:outline-none"
+          aria-label={`View ${altText || 'image'} in full size`}
+        >
+          <img
+            src={imageUrl}
+            alt={altText}
+            loading="lazy"
+            className="border-border w-full rounded-lg border transition-opacity hover:opacity-90"
+          />
+        </button>
+        {hasCaption && (
+          <figcaption className="text-muted-foreground mt-2 text-center text-sm">
+            {renderRichText(image.caption!)}
+          </figcaption>
+        )}
+      </figure>
+
+      <ImageModal
         src={imageUrl}
         alt={altText}
-        loading="lazy"
-        className="w-full rounded-lg border border-border"
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        caption={captionText}
       />
-      {hasCaption && (
-        <figcaption className="mt-2 text-center text-sm text-muted-foreground">
-          {renderRichText(image.caption!)}
-        </figcaption>
-      )}
-    </figure>
+    </>
   );
 }

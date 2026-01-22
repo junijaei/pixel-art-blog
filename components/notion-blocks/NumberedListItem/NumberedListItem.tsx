@@ -12,7 +12,7 @@ export function NumberedListItem({ block, children, index = 0 }: NumberedListIte
 
   return (
     <li className={`mb-2 flex items-start gap-2 ${colorClass}`.trim()}>
-      <span className="text-muted-foreground mt-1.5 w-4 text-center font-(family-name:--font-silkscreen) text-[10px]">
+      <span className="text-muted-foreground mt-1.5 w-4 text-center font-pixel text-[10px]">
         {index + 1}
       </span>
       <span className="flex-1 leading-relaxed">

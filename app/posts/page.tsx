@@ -131,13 +131,13 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
     <div className="flex min-h-screen flex-col">
       <BlogHeader />
 
-      <main className="flex-1">
+      <main className="flex-1 ">
         {/* Header Section */}
         <section className="px-6 py-16">
-          <div className="mx-auto max-w-6xl">
+          <div className="mx-auto max-w-2xl">
             <div className="mb-6 flex items-center gap-4">
               <DotDecoration variant="horizontal" />
-              <span className="text-muted-foreground font-(family-name:--font-silkscreen) text-[10px] tracking-widest uppercase">
+              <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">
                 All Posts
               </span>
             </div>
@@ -152,9 +152,9 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 
         {/* Posts Grid */}
         {posts.length > 0 && (
-          <section className="px-6 pb-20">
-            <div className="mx-auto max-w-6xl">
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <section className="px-6 pb-20 ">
+            <div className="mx-auto max-w-2xl">
+              <div className="gap-6 flex flex-col">
                 {posts.map((post) => (
                   <PostCard
                     key={post.id}
