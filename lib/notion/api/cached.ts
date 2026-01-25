@@ -1,5 +1,3 @@
-import { cache } from 'react';
-
 import { enrichBlocksWithChildren, fetchBlockChildren } from '@/lib/notion/api/block.api';
 import { getAllCategories as fetchAllCategories } from '@/lib/notion/api/category.api';
 import { notionClient } from '@/lib/notion/api/client';
@@ -16,15 +14,11 @@ import type {
 import { ISR_CONFIG } from '../config';
 import { buildCategoryTree, parseCategoryPage } from '../util';
 
-export const getCachedCategories = cache(async (): Promise<Category[]> => {
-  const categoryPages = await fetchAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true });
-  return categoryPages.map(parseCategoryPage);
-});
-
-export const getCategoryMap = cache(async (): Promise<Map<string, Category>> => {
-  const categories = await getCachedCategories();
-  return new Map(categories.map((cat) => [cat.id, cat]));
-});
+let categoriesCache: Category[] | null = null;
+let categoryByIdMap: Map<string, CategoryWithFullPath> | null = null;
+let categoryByFullPathMap: Map<string, CategoryWithFullPath> | null = null;
+let categoryTreeCache: CategoryTreeNode[] | null = null;
+let postsCache: Post[] | null = null;
 
 function buildFullPath(categoryId: string, categoryMap: Map<string, Category>): string {
   const segments: string[] = [];
@@ -42,47 +36,70 @@ function buildFullPath(categoryId: string, categoryMap: Map<string, Category>): 
   return segments.join('/');
 }
 
-export const getCachedCategoriesWithFullPath = cache(async (): Promise<CategoryWithFullPath[]> => {
-  const categories = await getCachedCategories();
-  const categoryMap = new Map(categories.map((cat) => [cat.id, cat]));
+async function ensureCategoriesLoaded(): Promise<Category[]> {
+  if (categoriesCache) return categoriesCache;
 
-  return categories.map((cat) => ({
+  const categoryPages = await fetchAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true });
+  categoriesCache = categoryPages.map(parseCategoryPage);
+  return categoriesCache;
+}
+
+async function ensureCategoryMapsLoaded(): Promise<void> {
+  if (categoryByIdMap && categoryByFullPathMap) return;
+
+  const categories = await ensureCategoriesLoaded();
+  const baseMap = new Map(categories.map((cat) => [cat.id, cat]));
+
+  const categoriesWithFullPath: CategoryWithFullPath[] = categories.map((cat) => ({
     ...cat,
-    fullPath: buildFullPath(cat.id, categoryMap),
+    fullPath: buildFullPath(cat.id, baseMap),
   }));
-});
 
-export const getCategoryByIdMap = cache(async (): Promise<Map<string, CategoryWithFullPath>> => {
-  const categories = await getCachedCategoriesWithFullPath();
-  return new Map(categories.map((cat) => [cat.id, cat]));
-});
+  categoryByIdMap = new Map(categoriesWithFullPath.map((cat) => [cat.id, cat]));
+  categoryByFullPathMap = new Map(categoriesWithFullPath.map((cat) => [cat.fullPath, cat]));
+}
 
-export const getCategoryByFullPathMap = cache(async (): Promise<Map<string, CategoryWithFullPath>> => {
-  const categories = await getCachedCategoriesWithFullPath();
-  return new Map(categories.map((cat) => [cat.fullPath, cat]));
-});
+export async function getCachedCategories(): Promise<Category[]> {
+  return ensureCategoriesLoaded();
+}
+
+export async function getCategoryByIdMap(): Promise<Map<string, CategoryWithFullPath>> {
+  await ensureCategoryMapsLoaded();
+  return categoryByIdMap!;
+}
 
 export async function getCategoryById(categoryId: string): Promise<CategoryWithFullPath | null> {
-  const map = await getCategoryByIdMap();
-  return map.get(categoryId) || null;
+  await ensureCategoryMapsLoaded();
+  return categoryByIdMap!.get(categoryId) || null;
 }
 
 export async function getCategoryByFullPath(fullPath: string): Promise<CategoryWithFullPath | null> {
-  const map = await getCategoryByFullPathMap();
-  return map.get(fullPath) || null;
+  await ensureCategoryMapsLoaded();
+  return categoryByFullPathMap!.get(fullPath) || null;
 }
 
-export const getCachedPosts = cache(async (): Promise<Post[]> => {
-  const postPages = await fetchAllPosts(ISR_CONFIG.POST_DATABASE_ID, { publishedOnly: true });
-  return postPages.map(parsePostPage);
-});
+export async function getCachedCategoryTree(): Promise<CategoryTreeNode[]> {
+  if (categoryTreeCache) return categoryTreeCache;
 
-export const getCachedPost = cache(async (pageId: string): Promise<PostPage> => {
+  const categories = await ensureCategoriesLoaded();
+  categoryTreeCache = buildCategoryTree(categories);
+  return categoryTreeCache;
+}
+
+export async function getCachedPosts(): Promise<Post[]> {
+  if (postsCache) return postsCache;
+
+  const postPages = await fetchAllPosts(ISR_CONFIG.POST_DATABASE_ID, { publishedOnly: true });
+  postsCache = postPages.map(parsePostPage);
+  return postsCache;
+}
+
+export async function getCachedPost(pageId: string): Promise<PostPage> {
   const page = await notionClient.pages.retrieve({ page_id: pageId });
   return page as PostPage;
-});
+}
 
-export const getCachedPageBlocks = cache(async (pageId: string): Promise<Block[]> => {
+export async function getCachedPageBlocks(pageId: string): Promise<Block[]> {
   const topLevelBlocks = await fetchBlockChildren(pageId);
   const enrichedBlocks = await enrichBlocksWithChildren(topLevelBlocks, 10);
 
@@ -93,7 +110,7 @@ export const getCachedPageBlocks = cache(async (pageId: string): Promise<Block[]
   }
 
   return enrichedBlocks;
-});
+}
 
 export function formatDateKorean(dateString: string): string {
   return new Date(dateString).toLocaleDateString('ko-KR', {
@@ -103,34 +120,28 @@ export function formatDateKorean(dateString: string): string {
   });
 }
 
-export async function toPostCardData(post: Post): Promise<PostCardData> {
-  const category = await getCategoryById(post.categoryId);
-
-  return {
-    id: post.id,
-    title: post.title,
-    description: post.description || '내용이 없습니다.',
-    date: formatDateKorean(post.publishedAt),
-    categoryPath: category?.fullPath || '',
-    categoryLabel: category?.label || '',
-  };
-}
-
 export async function getPostCardsData(posts?: Post[]): Promise<PostCardData[]> {
-  const allPosts = posts || (await getCachedPosts());
-  return Promise.all(allPosts.map(toPostCardData));
-}
+  const [allPosts, catMap] = await Promise.all([
+    posts ? Promise.resolve(posts) : getCachedPosts(),
+    getCategoryByIdMap(),
+  ]);
 
-export const getCachedCategoryTree = cache(async (): Promise<CategoryTreeNode[]> => {
-  const categories = await getCachedCategories();
-  return buildCategoryTree(categories);
-});
+  return allPosts.map((post) => {
+    const category = catMap.get(post.categoryId);
+    return {
+      id: post.id,
+      title: post.title,
+      description: post.description || '내용이 없습니다.',
+      date: formatDateKorean(post.publishedAt),
+      categoryPath: category?.fullPath || '',
+      categoryLabel: category?.label || '',
+    };
+  });
+}
 
 export function findCategoryByPath(tree: CategoryTreeNode[], path: string): CategoryTreeNode | null {
   for (const node of tree) {
-    if (node.path === path) {
-      return node;
-    }
+    if (node.path === path) return node;
     if (node.children.length > 0) {
       const found = findCategoryByPath(node.children, path);
       if (found) return found;
@@ -150,12 +161,14 @@ export function getAllDescendantIds(node: CategoryTreeNode): string[] {
 export async function getBreadcrumbItems(fullPath: string): Promise<Array<{ label: string; path: string }>> {
   if (!fullPath) return [];
 
+  await ensureCategoryMapsLoaded();
+
   const segments = fullPath.split('/');
   const items: Array<{ label: string; path: string }> = [{ label: 'all', path: '' }];
 
   for (let i = 0; i < segments.length; i++) {
     const partialPath = segments.slice(0, i + 1).join('/');
-    const category = await getCategoryByFullPath(partialPath);
+    const category = categoryByFullPathMap!.get(partialPath);
     if (category) {
       items.push({ label: category.label, path: category.path });
     }
