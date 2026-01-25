@@ -46,6 +46,10 @@ export interface CategoryTreeNode extends Category {
   depth: number;
 }
 
+export interface CategoryWithFullPath extends Category {
+  fullPath: string;
+}
+
 export interface CategoryFilterOptions {
   activeOnly?: boolean;
   parentId?: string;

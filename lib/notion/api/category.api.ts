@@ -3,10 +3,10 @@
  * 카테고리 데이터베이스 서버 전용 API 함수
  */
 
+import { notionClient } from '@/lib/notion/api/client';
 import type { CategoryFilterOptions, CategoryPage } from '@/types/notion';
 import { NOTION_LIMITS } from '../config';
 import { parseCategoryPage } from '../util';
-import { notionClient } from './client';
 
 /**
  * 모든 카테고리 가져오기 (자동 페이지네이션)
@@ -85,24 +85,6 @@ export async function getCategory(pageId: string): Promise<CategoryPage> {
 }
 
 /**
- * 경로로 카테고리 찾기
- */
-export async function getCategoryByPath(databaseId: string, path: string): Promise<CategoryPage | null> {
-  const response = await notionClient.dataSources.query({
-    data_source_id: databaseId,
-    filter: {
-      property: 'path',
-      rich_text: {
-        equals: path,
-      },
-    },
-  });
-
-  const page = response.results[0] as CategoryPage | undefined;
-  return page ?? null;
-}
-
-/**
  * 카테고리 ID로 전체 경로 가져오기
  */
 export async function getCategoryPath(databaseId: string, categoryId: string): Promise<string> {
@@ -110,18 +92,4 @@ export async function getCategoryPath(databaseId: string, categoryId: string): P
   const parsed = parseCategoryPage(category as CategoryPage);
 
   return parsed.path;
-}
-
-/**
- * generateStaticParams용 모든 카테고리 경로 가져오기
- */
-export async function getAllCategoryPaths(databaseId: string): Promise<string[]> {
-  const categories = await getAllCategories(databaseId, { activeOnly: true });
-
-  return categories
-    .map((category) => {
-      const parsed = parseCategoryPage(category);
-      return parsed.path;
-    })
-    .filter((path): path is string => path !== '');
 }
