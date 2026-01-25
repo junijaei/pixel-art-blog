@@ -1,6 +1,6 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import { TableOfContents, TocItem } from './TableOfContents';
+import { TableOfContents, TocItem } from '@/components/ui/table-of-contents/TableOfContents';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
 
 // Mock IntersectionObserver
 const mockIntersectionObserver = vi.fn();

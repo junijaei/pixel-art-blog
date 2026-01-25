@@ -1,7 +1,7 @@
+import { Code } from '@/components/notion-blocks/Code/Code';
 import type { CodeBlock, RichText } from '@/types/notion';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Code } from './Code';
 
 // Helper function to create complete CodeBlock with all required fields
 const createCodeBlock = (code: string, language: string, caption: RichText[] = []): CodeBlock => ({

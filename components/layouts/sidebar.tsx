@@ -65,7 +65,7 @@ function CategoryTreeItem({
         {hasChildren ? (
           <button
             onClick={handleToggle}
-            className="hover:bg-sidebar-accent rounded p-1 transition-colors cursor-pointer"
+            className="hover:bg-sidebar-accent cursor-pointer rounded p-1 transition-colors"
             aria-label={isExpanded ? 'Collapse category' : 'Expand category'}
           >
             <PixelChevron
@@ -169,8 +169,8 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
   }, []);
 
   const isAllExpanded = useMemo(() => {
-    return expandedCategories.length === categories.filter(category => category.hasChildren).length;
-  }, [expandedCategories, categories])
+    return expandedCategories.length === categories.filter((category) => category.hasChildren).length;
+  }, [expandedCategories, categories]);
 
   // 전체 맵 열기/닫기
   const handleToggleAll = useCallback(() => {
@@ -203,24 +203,27 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
       )}
     >
       {/* Header */}
-      <div className={cn("border-sidebar-border flex shrink-0 items-center justify-between border-b", isCollapsed ? 'px-2 py-4' : 'p-4')}>
+      <div
+        className={cn(
+          'border-sidebar-border flex shrink-0 items-center justify-between border-b',
+          isCollapsed ? 'px-2 py-4' : 'p-4'
+        )}
+      >
         {!isCollapsed && (
           <div className="flex items-center gap-1">
-            <span className="text-sidebar-foreground/80 font-pixel tracking-wider uppercase text-xs">
-              Categories
-            </span>
+            <span className="text-sidebar-foreground/80 font-pixel text-xs tracking-wider uppercase">Categories</span>
             <button
               onClick={handleToggleAll}
-              className="hover:bg-sidebar-accent rounded p-1 transition-colors text-sidebar-foreground/60 cursor-pointer"
+              className="hover:bg-sidebar-accent text-sidebar-foreground/60 cursor-pointer rounded p-1 transition-colors"
               aria-label="Toggle all categories"
             >
-              {isAllExpanded ? <PixelCollapse className='h-4 w-4' /> : <PixelExpand className='h-4 w-4' />}
+              {isAllExpanded ? <PixelCollapse className="h-4 w-4" /> : <PixelExpand className="h-4 w-4" />}
             </button>
           </div>
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className={cn("hover:bg-sidebar-accent ml-auto rounded transition-colors p-2 cursor-pointer")}
+          className={cn('hover:bg-sidebar-accent ml-auto cursor-pointer rounded p-2 transition-colors')}
           aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           <PixelChevron

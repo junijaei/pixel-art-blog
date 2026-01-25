@@ -31,21 +31,25 @@ pixel-art-blog/
 ## 🔑 핵심 기능
 
 ### 1. 자동 중복 제거
+
 - Notion URL을 SHA-256 해시로 변환
 - Cloudflare에 이미 존재하는지 확인
 - 존재하면 업로드 스킵, CDN URL 즉시 반환
 
 ### 2. WebP 자동 변환
+
 - Sharp 라이브러리로 서버 사이드 변환
 - Quality 85로 최적화
 - 원본 포맷 상관없이 WebP 출력
 
 ### 3. 배치 처리
+
 - 여러 이미지를 5개씩 병렬 처리
 - 재시도 로직 (최대 3회, 지수 백오프)
 - 실패 시 에러 로깅
 
 ### 4. 반응형 이미지
+
 - srcset 자동 생성
 - Cloudflare URL 파라미터 활용
 - 다양한 화면 크기 지원
@@ -53,17 +57,20 @@ pixel-art-blog/
 ## ⚡ 빠른 시작
 
 ### 1. 패키지 설치
+
 ```bash
 pnpm add sharp
 ```
 
 ### 2. 환경 변수 설정
+
 ```bash
 cp .env.example .env.local
 # .env.local 파일에서 Cloudflare 정보 입력
 ```
 
 ### 3. 기본 사용
+
 ```typescript
 import { processNotionBlocks } from '@/lib/cloudflare';
 
@@ -73,14 +80,11 @@ const stats = await processNotionBlocks(blocks);
 ```
 
 ### 4. 컴포넌트 사용
+
 ```tsx
 import { BlogImage } from '@/components/ui/Image';
 
-<BlogImage
-  src={cloudflareUrl}
-  alt="설명"
-  caption="캡션"
-/>
+<BlogImage src={cloudflareUrl} alt="설명" caption="캡션" />;
 ```
 
 ## 🔧 설정 가이드
@@ -90,15 +94,19 @@ import { BlogImage } from '@/components/ui/Image';
 ## 📝 주요 API
 
 ### `uploadImageToCloudflare(url, filename?)`
+
 개별 이미지 업로드
 
 ### `uploadImagesInBatch(urls)`
+
 여러 이미지 배치 업로드
 
 ### `processNotionBlocks(blocks)`
+
 Notion 블록 배열의 모든 이미지 처리
 
 ### `getCloudflareImageUrl(imageId, variant?)`
+
 Cloudflare CDN URL 생성
 
 ## 🚀 프로덕션 체크리스트
@@ -115,17 +123,20 @@ Cloudflare CDN URL 생성
 ## 🛠️ 트러블슈팅
 
 **Q: Sharp 설치 오류**
+
 ```bash
 # 네이티브 모듈 재빌드
 pnpm rebuild sharp
 ```
 
 **Q: Cloudflare 업로드 실패**
+
 - API Token 권한 확인
 - Account ID/Hash 정확도 확인
 - 네트워크 연결 확인
 
 **Q: 이미지가 표시되지 않음**
+
 - Cloudflare URL variant 확인
 - `requireSignedURLs` 설정 확인 (false여야 함)
 - 브라우저 콘솔에서 이미지 URL 직접 접속 테스트

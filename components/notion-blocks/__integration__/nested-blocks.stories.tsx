@@ -1,6 +1,3 @@
-import type { Block } from '@/types/notion';
-import type { Meta, StoryObj } from '@storybook/nextjs';
-import { BlockRenderer } from '../BlockRenderer';
 import {
   calloutWithBulletedListFixture,
   calloutWithParagraphFixture,
@@ -9,7 +6,10 @@ import {
   toggleWithBulletedListFixture,
   toggleWithCodeFixture,
   toggleWithParagraphFixture,
-} from './fixtures/simple-nested';
+} from '@/components/notion-blocks/__integration__/fixtures/simple-nested';
+import type { Block } from '@/types/notion';
+import type { Meta, StoryObj } from '@storybook/nextjs';
+import { BlockRenderer } from '../BlockRenderer';
 
 const meta = {
   title: 'Integration/Nested Blocks',

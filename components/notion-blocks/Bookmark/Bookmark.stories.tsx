@@ -1,5 +1,5 @@
+import { Bookmark } from '@/components/notion-blocks/Bookmark/Bookmark';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Bookmark } from './Bookmark';
 import { createBookmarkBlock, createRichText } from '../__integration__/fixtures';
 
 const meta = {

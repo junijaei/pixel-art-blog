@@ -1,7 +1,7 @@
 'use client';
 
-import { TableOfContents, type TocItem } from './TableOfContents';
-import { useTocActiveId } from './useTocActiveId';
+import { TableOfContents, type TocItem } from '@/components/ui/table-of-contents/TableOfContents';
+import { useTocActiveId } from '@/components/ui/table-of-contents/useTocActiveId';
 
 export interface TocWithScrollSpyProps {
   items: TocItem[];

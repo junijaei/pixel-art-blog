@@ -1,12 +1,12 @@
 'use client';
 
 import type { LinkPreviewData } from '@/app/api/link-preview/route';
+import type { BookmarkProps } from '@/components/notion-blocks/Bookmark/index';
 import { PixelLink } from '@/components/ui/pixel-icons';
 import { renderRichText } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
-import type { BookmarkProps } from './index';
 
 /**
  * Notion Bookmark 블록을 렌더링하는 컴포넌트

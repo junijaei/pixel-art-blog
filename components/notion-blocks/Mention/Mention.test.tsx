@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { Mention } from './Mention';
+import { Mention } from '@/components/notion-blocks/Mention/Mention';
 import type { RichTextMention } from '@/types/notion';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 // 테스트용 mock mention 생성 헬퍼
 function createUserMention(name: string): RichTextMention {
@@ -192,8 +192,39 @@ describe('Mention', () => {
 
       render(<Mention richText={mention} />);
 
-      // 도메인만 표시됨 (초기 로딩 시 title 대신 도메인 사용)
-      expect(screen.getByText('example.com')).toBeInTheDocument();
+      expect(screen.getByText('https://example.com/some/path')).toBeInTheDocument();
+
+      // 링크로 렌더링됨
+      const link = screen.getByRole('link');
+      expect(link).toHaveAttribute('href', 'https://example.com/some/path');
+      expect(link).toHaveAttribute('target', '_blank');
+    });
+
+    it('title 정보가 있을 시 title이 보여진다.', () => {
+      const mention: RichTextMention = {
+        type: 'mention',
+        mention: {
+          type: 'link_mention',
+          link_mention: {
+            href: 'https://example.com/some/path',
+            title: 'Example Link',
+          },
+        },
+        annotations: {
+          bold: false,
+          italic: false,
+          strikethrough: false,
+          underline: false,
+          code: false,
+          color: 'default',
+        },
+        plain_text: 'https://example.com/some/path',
+        href: null,
+      };
+
+      render(<Mention richText={mention} />);
+
+      expect(screen.getByText('Example Link')).toBeInTheDocument();
 
       // 링크로 렌더링됨
       const link = screen.getByRole('link');

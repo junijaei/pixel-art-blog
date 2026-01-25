@@ -2,8 +2,8 @@
  * Notion Query Types
  */
 
-import type { Filter } from './filter';
-import type { Sorts } from './sort';
+import type { Filter } from '@/types/notion/query/filter';
+import type { Sorts } from '@/types/notion/query/sort';
 
 export * from './filter';
 export * from './sort';

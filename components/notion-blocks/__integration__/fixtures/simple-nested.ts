@@ -462,7 +462,7 @@ export const toggleWithCodeFixture: ToggleBlock[] = [
           rich_text: [
             {
               type: 'text',
-              text: { content: 'console.log("Hello World");', link: null },
+              text: { content: 'console.debug("Hello World");', link: null },
               annotations: {
                 bold: false,
                 italic: false,
@@ -471,7 +471,7 @@ export const toggleWithCodeFixture: ToggleBlock[] = [
                 code: false,
                 color: 'default',
               },
-              plain_text: 'console.log("Hello World");',
+              plain_text: 'console.debug("Hello World");',
               href: null,
             },
           ],

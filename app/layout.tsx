@@ -1,10 +1,10 @@
-import { Sidebar } from '@/components/latouts';
+import '@/app/globals.css';
+import { Sidebar } from '@/components/layouts';
 import { ThemeProvider } from '@/components/theme-provider';
-import { getAllCategories, getAllPosts, ISR_CONFIG, parseCategoryPage, parsePostPage } from '@/lib/notion';
+import { getCachedCategories, getCachedPosts } from '@/lib/notion/api/cached';
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Silkscreen } from 'next/font/google';
 import { ReactNode } from 'react';
-import './globals.css';
 
 const geistMono = Geist_Mono({
   subsets: ['latin'],
@@ -17,6 +17,7 @@ const silkscreen = Silkscreen({
   variable: '--font-silkscreen',
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: 'Bit by Bit - junijaei blog',
   description: '프론트엔드 개발자 junijaei의 블로그 입니다.',
@@ -25,6 +26,7 @@ export const metadata: Metadata = {
   },
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const viewport: Viewport = {
   themeColor: '#fafafa',
 };
@@ -34,25 +36,18 @@ export default async function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  // 빌드 타임에 모든 카테고리와 포스트 데이터를 가져옴
-  let categories: any[] = [];
-  let posts: any[] = [];
+  let categories: Awaited<ReturnType<typeof getCachedCategories>> = [];
+  let posts: Awaited<ReturnType<typeof getCachedPosts>> = [];
 
   try {
-    const [categoryPages, postPages] = await Promise.all([
-      getAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true }),
-      getAllPosts(ISR_CONFIG.POST_DATABASE_ID, { publishedOnly: true }),
-    ]);
-
-    categories = categoryPages.map(parseCategoryPage);
-    posts = postPages.map(parsePostPage);
+    [categories, posts] = await Promise.all([getCachedCategories(), getCachedPosts()]);
   } catch (error) {
     console.error('Failed to fetch initial data:', error);
   }
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistMono.variable} ${silkscreen.variable} font-sans antialiased max-w-dvw`}>
+      <body className={`${geistMono.variable} ${silkscreen.variable} max-w-dvw font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex">
             <Sidebar categories={categories} posts={posts} />

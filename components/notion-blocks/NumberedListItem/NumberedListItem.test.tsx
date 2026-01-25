@@ -1,7 +1,7 @@
+import { NumberedListItem } from '@/components/notion-blocks/NumberedListItem/NumberedListItem';
 import type { NumberedListBlock, RichText } from '@/types/notion';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { NumberedListItem } from './NumberedListItem';
 
 // 테스트용 mock 블록 생성 헬퍼
 function createMockBlock(

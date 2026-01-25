@@ -1,6 +1,6 @@
+import { Callout } from '@/components/notion-blocks/Callout/Callout';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Callout } from './Callout';
-import { createCalloutBlock, createRichText, combineRichText } from '../__integration__/fixtures';
+import { combineRichText, createCalloutBlock, createRichText } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/Callout',

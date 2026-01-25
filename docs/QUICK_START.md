@@ -13,6 +13,7 @@ pnpm dev
 ### 2. 테스트 페이지 접속
 
 브라우저에서 열기:
+
 ```
 http://localhost:3000/test-image
 ```
@@ -102,12 +103,15 @@ pnpm start
 ## ❓ 문제 해결
 
 ### Q: 이미지가 표시되지 않아요
+
 A: `/placeholder-image.png` 파일이 `public/` 폴더에 있는지 확인하세요.
 
 ### Q: "Module not found" 에러가 나요
+
 A: 개발 서버를 재시작해보세요 (`Ctrl+C` → `pnpm dev`)
 
 ### Q: 프로덕션 빌드가 실패해요
+
 A: `.env.local` 파일의 Cloudflare 환경 변수를 확인하세요.
 
 ## 🎉 다음 단계

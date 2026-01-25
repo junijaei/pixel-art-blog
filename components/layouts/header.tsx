@@ -16,24 +16,24 @@ export function BlogHeader() {
             <span className="font-pixel text-sm font-medium tracking-wider">BIT BY BIT</span>
           </Link>
 
-          <div className="flex items-center gap-6 font-pixel">
+          <div className="font-pixel flex items-center gap-6">
             <Link
               href="/"
-              className="text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors text-xs"
+              className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-xs transition-colors"
             >
               <PixelHome className="h-4 w-4" />
               <span className="hidden sm:inline">Home</span>
             </Link>
             <Link
               href="/posts"
-              className="text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors text-xs"
+              className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-xs transition-colors"
             >
               <PixelFile className="h-4 w-4" />
               <span className="hidden sm:inline">Posts</span>
             </Link>
             <Link
               href="/about"
-              className="text-muted-foreground hover:text-foreground flex items-center gap-2 transition-colors text-xs"
+              className="text-muted-foreground hover:text-foreground flex items-center gap-2 text-xs transition-colors"
             >
               <PixelUser className="h-4 w-4" />
               <span className="hidden sm:inline">About</span>

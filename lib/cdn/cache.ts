@@ -1,6 +1,6 @@
+import type { ImageCacheEntry, ImageCacheStore } from '@/types/cdn';
 import fs from 'fs/promises';
 import path from 'path';
-import type { ImageCacheStore, ImageCacheEntry } from '@/types/cdn';
 
 const CACHE_DIR = path.join(process.cwd(), '.cache');
 const CACHE_FILE = path.join(CACHE_DIR, 'cdn-images.json');
@@ -44,13 +44,13 @@ export async function loadCache(): Promise<ImageCacheStore> {
       return memoryCache;
     }
 
-    console.log(`[Cache] Loaded ${Object.keys(store.entries).length} entries from disk`);
+    console.debug(`[Cache] Loaded ${Object.keys(store.entries).length} entries from disk`);
     memoryCache = store;
     memoryCacheLoaded = true;
     return store;
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
-      console.log('[Cache] No cache file found, creating new');
+      console.debug('[Cache] No cache file found, creating new');
       memoryCache = createEmptyStore();
       memoryCacheLoaded = true;
       return memoryCache;
@@ -72,7 +72,7 @@ export async function saveCache(store: ImageCacheStore): Promise<void> {
     memoryCacheLoaded = true;
 
     await fs.writeFile(CACHE_FILE, JSON.stringify(store, null, 2), 'utf-8');
-    console.log(`[Cache] Saved ${Object.keys(store.entries).length} entries to disk`);
+    console.debug(`[Cache] Saved ${Object.keys(store.entries).length} entries to disk`);
   } catch (error) {
     console.error('[Cache] Error saving:', error);
     throw error;
@@ -88,11 +88,11 @@ export async function getCachedImage(blockId: string, lastEditedTime: string): P
   }
 
   if (entry.lastEditedTime !== lastEditedTime) {
-    console.log(`[Cache] Invalidated: ${blockId} (content changed)`);
+    console.debug(`[Cache] Invalidated: ${blockId} (content changed)`);
     return null;
   }
 
-  console.log(`[Cache] Hit: ${blockId}`);
+  console.debug(`[Cache] Hit: ${blockId}`);
   return entry;
 }
 
@@ -113,7 +113,7 @@ export async function setCachedImage(
   };
 
   await saveCache(store);
-  console.log(`[Cache] Set: ${blockId} -> ${cdnUrl}`);
+  console.debug(`[Cache] Set: ${blockId} -> ${cdnUrl}`);
 }
 
 export async function deleteCachedImage(blockId: string): Promise<void> {
@@ -122,7 +122,7 @@ export async function deleteCachedImage(blockId: string): Promise<void> {
   if (store.entries[blockId]) {
     delete store.entries[blockId];
     await saveCache(store);
-    console.log(`[Cache] Deleted: ${blockId}`);
+    console.debug(`[Cache] Deleted: ${blockId}`);
   }
 }
 
@@ -131,7 +131,7 @@ export async function clearCache(): Promise<void> {
   memoryCache = store;
   memoryCacheLoaded = true;
   await saveCache(store);
-  console.log('[Cache] Cleared');
+  console.debug('[Cache] Cleared');
 }
 
 /**

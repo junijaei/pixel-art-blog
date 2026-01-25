@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { Callout } from './Callout';
+import { Callout } from '@/components/notion-blocks/Callout/Callout';
 import type { CalloutBlock } from '@/types/notion';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 describe('Callout', () => {
   it('기본 텍스트를 렌더링한다', () => {

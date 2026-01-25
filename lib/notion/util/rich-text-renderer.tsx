@@ -1,7 +1,7 @@
 import { Mention } from '@/components/notion-blocks/Mention';
+import { getNotionColorClass } from '@/lib/notion/util/color-utils';
 import type { RichText, RichTextMention, RichTextText } from '@/types/notion';
 import { Fragment, ReactNode } from 'react';
-import { getNotionColorClass } from './color-utils';
 
 /**
  * RichText에서 표시할 콘텐츠를 추출합니다.

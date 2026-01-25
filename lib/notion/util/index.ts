@@ -1,5 +1,5 @@
-export * from './category-utils';
-export * from './category';
+export * from './category-parser';
+export * from './category-link';
 export * from './color-utils';
 export * from './extract-toc';
 export * from './rich-text-renderer';

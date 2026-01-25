@@ -3,18 +3,9 @@
  * 글 데이터베이스 서버 전용 API 함수
  */
 
-import type {
-  CategoryPage,
-  Post,
-  PostFilterOptions,
-  PostListItem,
-  PostPage,
-  PostSortOptions
-} from '@/types/notion';
+import { notionClient } from '@/lib/notion/api/client';
+import type { Post, PostFilterOptions, PostPage, PostSortOptions } from '@/types/notion';
 import { NOTION_LIMITS } from '../config';
-import { parseCategoryPage } from '../util';
-import { getCategoryPath } from './category.api';
-import { notionClient } from './client';
 
 /**
  * 포스트 페이지를 파싱된 Post 객체로 변환
@@ -165,89 +156,4 @@ export async function getPost(pageId: string): Promise<PostPage> {
   });
 
   return page as PostPage;
-}
-
-/**
- * generateStaticParams용 모든 포스트 경로 가져오기
- * 반환 형식: [{ categoryPath: "front/react/hook", slug: "example" }, ...]
- */
-export async function getAllPostPaths(
-  postDatabaseId: string,
-  categoryDatabaseId: string
-): Promise<{ categoryPath: string; slug: string; fullPath: string }[]> {
-  const posts = await getAllPosts(postDatabaseId, { publishedOnly: true });
-
-  const paths = await Promise.all(
-    posts.map(async (postPage) => {
-      const post = parsePostPage(postPage);
-
-      // 카테고리 경로 가져오기
-      const categoryPath = await getCategoryPath(categoryDatabaseId, post.categoryId);
-
-      return {
-        categoryPath,
-        slug: post.slug,
-        fullPath: `${categoryPath}/${post.slug}`,
-      };
-    })
-  );
-
-  return paths.filter((path) => path.categoryPath !== '' && path.slug !== '');
-}
-
-/**
- * 페이지 블록 가져오기 (포스트 내용)
- * @deprecated `getPageBlocksWithChildren`을 사용하세요. 이 함수는 children을 가져오지 않습니다.
- */
-export async function getPageBlocks(pageId: string) {
-  const blocks: any[] = [];
-  let cursor: string | undefined = undefined;
-  let hasMore = true;
-
-  while (hasMore) {
-    const response = await notionClient.blocks.children.list({
-      block_id: pageId,
-      page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
-      start_cursor: cursor,
-    });
-
-    blocks.push(...response.results);
-    hasMore = response.has_more;
-    cursor = response.next_cursor ?? undefined;
-  }
-
-  return blocks;
-}
-
-/**
- * 포스트 목록 아이템으로 변환 (요약 정보)
- */
-export async function getPostListItems(
-  postDatabaseId: string,
-  categoryDatabaseId: string,
-  options?: PostFilterOptions
-): Promise<PostListItem[]> {
-  const posts = await getAllPosts(postDatabaseId, options);
-
-  const items = await Promise.all(
-    posts.map(async (postPage) => {
-      const post = parsePostPage(postPage);
-
-      // 카테고리 정보 가져오기
-      const categoryPage = await notionClient.pages.retrieve({ page_id: post.categoryId });
-      const category = parseCategoryPage(categoryPage as CategoryPage);
-
-      return {
-        id: post.id,
-        title: post.title,
-        description: post.description,
-        publishedAt: post.publishedAt,
-        fullPath: `${category.path}/${post.slug}`,
-        categoryLabel: category.label,
-        tags: post.tags,
-      };
-    })
-  );
-
-  return items;
 }

@@ -1,55 +1,19 @@
-import { BlogFooter, BlogHeader } from '@/components/latouts';
+import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { DotDecoration, PixelArrow, PixelDot, PostCard } from '@/components/ui';
-import { getAllCategories, getAllPosts, ISR_CONFIG, parseCategoryPage, parsePostPage } from '@/lib/notion';
-import type { PostCardData } from '@/types/notion';
+import { getPostCardsData } from '@/lib/notion/api/cached';
 import Link from 'next/link';
 
-// ISR 재검증 설정
-export const revalidate = 3600; // ISR_CONFIG.REVALIDATE_TIME.HOME;
-
 export default async function HomePage() {
-  let posts: PostCardData[] = [];
+  let postCards: Awaited<ReturnType<typeof getPostCardsData>> = [];
 
   try {
-    // 카테고리와 포스트 데이터 가져오기
-    const [categoryPages, postPages] = await Promise.all([
-      getAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true }),
-      getAllPosts(ISR_CONFIG.POST_DATABASE_ID, { publishedOnly: true }),
-    ]);
-
-    const allPosts = postPages.map(parsePostPage);
-
-    // PostCard 컴포넌트가 기대하는 형식으로 변환
-    posts = await Promise.all(
-      allPosts.slice(0, 5).map(async (post) => {
-        const categoryPage = categoryPages.find((cp) => {
-          const parsed = parseCategoryPage(cp);
-          return parsed.id === post.categoryId;
-        });
-        const postCategory = categoryPage ? parseCategoryPage(categoryPage) : null;
-
-        return {
-          id: post.id,
-          title: post.title,
-          description: post.description || '내용이 없습니다.',
-          date: new Date(post.publishedAt).toLocaleDateString('ko-KR', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          }),
-          categoryPath: postCategory?.path || '',
-          categoryLabel: postCategory?.label || '',
-          tags: post.tags,
-        } satisfies PostCardData;
-      })
-    );
+    postCards = await getPostCardsData();
   } catch (error) {
     console.error('Failed to fetch posts from Notion:', error);
-    posts = [];
   }
 
-  const featuredPost = posts[0];
-  const recentPosts = posts.slice(1, 5);
+  const featuredPost = postCards[0];
+  const recentPosts = postCards.slice(1, 5);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -66,15 +30,16 @@ export default async function HomePage() {
               </span>
             </div>
 
-            <h1 className="mb-6 text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl font-mulmaru">
+            <h1 className="font-mulmaru mb-6 text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl">
               Bit By Bit,
               <br />
               <span className="text-muted-foreground">One bit at a time</span>
             </h1>
 
             <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
-            Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만든다는 의미를 담고 있습니다. 
-            <br className='hidden sm:inline'/> 이 블로그에는 프론트엔드를 설계하고 구현하며 쌓아온 생각과 경험을 기록합니다.
+              Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만든다는 의미를 담고 있습니다.
+              <br className="hidden sm:inline" /> 이 블로그에는 프론트엔드를 설계하고 구현하며 쌓아온 생각과 경험을
+              기록합니다.
             </p>
 
             <div className="flex items-center gap-2">
@@ -114,7 +79,7 @@ export default async function HomePage() {
 
                 <Link
                   href="/posts"
-                  className="group text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors "
+                  className="group text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
                 >
                   <span>View all</span>
                   <PixelArrow className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />

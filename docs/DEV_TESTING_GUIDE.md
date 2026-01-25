@@ -94,11 +94,11 @@ pnpm start
 
 ## 🔄 환경별 동작 차이
 
-| 환경 | 명령어 | NODE_ENV | 이미지 처리 |
-|------|--------|----------|------------|
-| 개발 | `pnpm dev` | `development` | Mock (placeholder) |
-| 빌드 | `pnpm build` | `production` | 실제 Cloudflare 업로드 |
-| 실행 | `pnpm start` | `production` | 빌드 시 이미 처리됨 |
+| 환경 | 명령어       | NODE_ENV      | 이미지 처리            |
+| ---- | ------------ | ------------- | ---------------------- |
+| 개발 | `pnpm dev`   | `development` | Mock (placeholder)     |
+| 빌드 | `pnpm build` | `production`  | 실제 Cloudflare 업로드 |
+| 실행 | `pnpm start` | `production`  | 빌드 시 이미 처리됨    |
 
 ## 🧪 특정 환경 강제하기
 

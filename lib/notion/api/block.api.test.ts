@@ -1,6 +1,6 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { enrichBlocksWithChildren } from './block.api';
+import { enrichBlocksWithChildren } from '@/lib/notion/api/block.api';
 import type { Block } from '@/types/notion';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock Notion client
 vi.mock('./client', () => ({
@@ -14,7 +14,7 @@ vi.mock('./client', () => ({
   },
 }));
 
-import { notionClient } from './client';
+import { notionClient } from '@/lib/notion/api/client';
 
 // 테스트용 mock 블록 생성 헬퍼
 function createMockBlock(id: string, hasChildren: boolean = false, type: string = 'paragraph'): Block {

@@ -1,5 +1,5 @@
+import { TableOfContents, TocItem } from '@/components/ui/table-of-contents/TableOfContents';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { TableOfContents, TocItem } from './TableOfContents';
 
 const meta: Meta<typeof TableOfContents> = {
   title: 'UI/TableOfContents',

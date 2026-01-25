@@ -27,33 +27,33 @@ export async function POST(request: NextRequest) {
         // 특정 포스트 재검증
         if (slug) {
           revalidatePath(`/posts/${slug}`);
-          console.log(`Revalidated post: /posts/${slug}`);
+          console.debug(`Revalidated post: /posts/${slug}`);
         }
         break;
 
       case 'posts':
         // 전체 포스트 목록 재검증
         revalidatePath('/posts');
-        console.log('Revalidated posts list');
+        console.debug('Revalidated posts list');
         break;
 
       case 'home':
         // 홈페이지 재검증
         revalidatePath('/');
-        console.log('Revalidated home page');
+        console.debug('Revalidated home page');
         break;
 
       case 'all':
         // 모든 페이지 재검증
         revalidatePath('/', 'layout');
-        console.log('Revalidated all pages');
+        console.debug('Revalidated all pages');
         break;
 
       case 'tag':
         // 특정 태그로 재검증
         if (tag) {
           // revalidateTag(tag);
-          console.log(`Revalidated tag: ${tag}`);
+          console.debug(`Revalidated tag: ${tag}`);
         }
         break;
 

@@ -1,4 +1,4 @@
-import type { DividerProps } from './index';
+import type { DividerProps } from '@/components/notion-blocks/Divider/index';
 import { cn } from '@/lib/utils';
 
 export function Divider({ className }: DividerProps) {

@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { Image } from './Image';
+import { Image } from '@/components/notion-blocks/Image/Image';
 import type { ImageBlock } from '@/types/notion';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 describe('Image', () => {
   it('renders image from external URL', () => {

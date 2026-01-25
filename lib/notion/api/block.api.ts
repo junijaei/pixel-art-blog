@@ -3,17 +3,11 @@
  * 블록 데이터 fetching 및 children enrichment 서버 전용 API 함수
  */
 
+import { notionClient } from '@/lib/notion/api/client';
 import type { Block } from '@/types/notion';
 import { NOTION_LIMITS } from '../config';
-import { notionClient } from './client';
 
-/**
- * 블록의 children을 가져옵니다 (페이지네이션 처리)
- *
- * @param blockId - 부모 블록의 ID
- * @returns 자식 블록 배열
- */
-async function fetchBlockChildren(blockId: string): Promise<Block[]> {
+export async function fetchBlockChildren(blockId: string): Promise<Block[]> {
   const blocks: Block[] = [];
   let cursor: string | undefined = undefined;
   let hasMore = true;
@@ -88,59 +82,4 @@ export async function enrichBlocksWithChildren(
   );
 
   return enrichedBlocks;
-}
-
-/**
- * 페이지의 모든 블록을 가져오고 children을 재귀적으로 enrichment 합니다.
- *
- * @param pageId - 페이지 ID
- * @param maxDepth - 최대 재귀 깊이 (기본값: 10)
- * @returns children이 완전히 주입된 블록 트리
- *
- * @example
- * ```ts
- * // 페이지의 전체 블록 트리 가져오기
- * const blocks = await getPageBlocksWithChildren(pageId);
- *
- * // BlockRenderer에 바로 전달 가능
- * <BlockRenderer blocks={blocks} />
- * ```
- */
-export async function getPageBlocksWithChildren(pageId: string, maxDepth: number = 10): Promise<Block[]> {
-  const topLevelBlocks = await fetchBlockChildren(pageId);
-  const enrichedBlocks = await enrichBlocksWithChildren(topLevelBlocks, maxDepth);
-
-  const { processNotionBlocks } = await import('@/lib/cdn');
-  const stats = await processNotionBlocks(enrichedBlocks);
-  if (stats.totalImages > 0) {
-    console.log(`[BlockAPI] Images: ${stats.uploaded} uploaded, ${stats.cached} cached, ${stats.failed} failed`);
-  }
-
-  return enrichedBlocks;
-}
-
-/**
- * 단일 블록과 그 children을 가져옵니다.
- *
- * @param blockId - 블록 ID
- * @param maxDepth - 최대 재귀 깊이 (기본값: 10)
- * @returns children이 주입된 블록
- */
-export async function getBlockWithChildren(blockId: string, maxDepth: number = 10): Promise<Block> {
-  // 블록 자체 가져오기
-  const block = (await notionClient.blocks.retrieve({ block_id: blockId })) as Block;
-
-  // children이 없으면 그대로 반환
-  if (!block.has_children) {
-    return block;
-  }
-
-  // children 가져오고 enrichment
-  const children = await fetchBlockChildren(blockId);
-  const enrichedChildren = await enrichBlocksWithChildren(children, maxDepth);
-
-  return {
-    ...block,
-    children: enrichedChildren,
-  };
 }

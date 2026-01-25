@@ -35,7 +35,7 @@ export function Breadcrumb({ items, currentPath, className }: BreadcrumbProps) {
             <Link
               href={href}
               className={cn(
-                'transition-colors ',
+                'transition-colors',
                 isCurrent ? 'text-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
               )}
             >

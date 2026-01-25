@@ -1,6 +1,6 @@
+import { NumberedListItem } from '@/components/notion-blocks/NumberedListItem/NumberedListItem';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { combineRichText, createNumberedListBlock, createRichText } from '../__integration__/fixtures';
-import { NumberedListItem } from './NumberedListItem';
 
 const meta = {
   title: 'Notion Blocks/NumberedListItem',

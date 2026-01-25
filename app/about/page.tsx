@@ -1,7 +1,7 @@
-import { BlogFooter } from '@/components/latouts/footer';
-import { BlogHeader } from '@/components/latouts/header';
+import { BlogFooter } from '@/components/layouts/footer';
+import { BlogHeader } from '@/components/layouts/header';
 import { DotDecoration } from '@/components/ui/dot-decoration';
-import { PixelDot, PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui/pixel-icons';
+import { PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui/pixel-icons';
 import Link from 'next/link';
 
 export default function AboutPage() {
@@ -15,13 +15,15 @@ export default function AboutPage() {
           <div className="mb-12">
             <div className="mb-6 flex items-center gap-4">
               <PixelUser className="text-muted-foreground h-5 w-5" />
-              <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">
-                About
-              </span>
+              <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">About</span>
               <DotDecoration variant="horizontal" className="opacity-30" />
             </div>
 
-            <h1 className="font-mulmaru mb-6 text-3xl font-bold sm:text-4xl">프론트엔드 개발자,<br className="inline sm:hidden"/>전희재입니다.</h1>
+            <h1 className="font-mulmaru mb-6 text-3xl font-bold sm:text-4xl">
+              프론트엔드 개발자,
+              <br className="inline sm:hidden" />
+              전희재입니다.
+            </h1>
           </div>
 
           {/* Avatar/Visual */}
@@ -35,10 +37,8 @@ export default function AboutPage() {
             </div>
 
             {/* Contact Links */}
-            <div className="flex flex-col gap-3 mr-6">
-              <span className="text-muted-foreground mb-1 font-pixel text-[10px] tracking-wider">
-                CONTACT
-              </span>
+            <div className="mr-6 flex flex-col gap-3">
+              <span className="text-muted-foreground font-pixel mb-1 text-[10px] tracking-wider">CONTACT</span>
               <div className="flex flex-col gap-2">
                 <Link
                   href="mailto:hjhj7895598@gmail.com"
@@ -73,30 +73,27 @@ export default function AboutPage() {
 
           {/* Bio Content */}
           <div className="space-y-6">
-            <p className="text-foreground/90 text-lg leading-relaxed">
+            <p className="text-foreground/90 text-md leading-relaxed sm:text-lg">
               Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만든다는 의미를 담고 있습니다.
               <br />이 블로그에는 프로젝트를 설계하고 구현하며 쌓아온 생각과 경험을 기록합니다.
             </p>
 
-            <p className="text-muted-foreground leading-relaxed">
-              정답을 정리하기보다는, 왜 그런 선택을 했는지와 그 과정에서 생긴 시행착오를 남깁니다. 크지 않은 선택 하나가
-              전체 경험에 어떤 영향을 주는지, 그 연결을 스스로 납득하기 위해 글을 씁니다.
+            <p className="text-muted-foreground sm:text-md text-sm leading-relaxed">
+              정답을 정리하기보다는, 왜 그런 선택을 했는지와 그 과정에서 생긴 시행착오를 남깁니다.
               <br />
+              선택과 선택으로 이어지는 결과들의 연결을 스스로 납득하기 위해 글을 씁니다.
               <br />
-              천천히 가더라도 방향은 분명하게 잡고 싶습니다.
-              <br />이 블로그는 제 태도와 생각을 bit 단위로 쌓아가는 기록이자, 스스로에게 설명하기 위한 기록입니다.
+              <br />이 블로그는 제 태도와 생각을 bit 단위로 쌓아가는 기록장입니다.
             </p>
 
-            <div className="py-8">
+            {/* <div className="py-8">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex gap-1.5">
                   {[...Array(3)].map((_, i) => (
                     <PixelDot key={i} className="text-foreground h-2 w-2" />
                   ))}
                 </div>
-                <span className="text-muted-foreground font-pixel text-[10px] tracking-wider">
-                  FOCUS
-                </span>
+                <span className="text-muted-foreground font-pixel text-[10px] tracking-wider">FOCUS</span>
               </div>
 
               <ul className="space-y-3">
@@ -112,7 +109,7 @@ export default function AboutPage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
 
             {/* <p className="text-muted-foreground leading-relaxed">
               Feel free to explore the posts and reach out if you'd like to discuss design, collaborate on a project, or

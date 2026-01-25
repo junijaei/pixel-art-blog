@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import type { TocItem } from './TableOfContents';
+import type { TocItem } from '@/components/ui/table-of-contents/TableOfContents';
+import { useEffect, useState } from 'react';
 
 /**
  * Custom hook to track which TOC item is currently in view

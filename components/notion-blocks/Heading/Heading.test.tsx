@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { Heading } from './Heading';
+import { Heading } from '@/components/notion-blocks/Heading/Heading';
 import type { HeadingBlock } from '@/types/notion';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 describe('Heading', () => {
   it('renders h1 for heading_1', () => {

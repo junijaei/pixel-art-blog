@@ -68,3 +68,7 @@ export function extractHeadings(content: string) {
 
   return headings;
 }
+
+export function capitalizeFirst(str: string) {
+  return str ? str[0].toUpperCase() + str.slice(1) : str;
+}

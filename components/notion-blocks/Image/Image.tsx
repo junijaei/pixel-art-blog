@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
-import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
+import type { ImageProps } from '@/components/notion-blocks/Image/index';
 import { ImageModal } from '@/components/ui';
-import type { ImageProps } from './index';
+import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
+import { useState } from 'react';
 
 /**
  * Notion Image 블록을 렌더링하는 컴포넌트

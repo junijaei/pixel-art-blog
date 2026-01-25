@@ -1,6 +1,6 @@
+import { Paragraph } from '@/components/notion-blocks/Paragraph/Paragraph';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { combineRichText, createParagraphBlock, createRichText } from '../__integration__/fixtures';
-import { Paragraph } from './Paragraph';
 
 const meta = {
   title: 'Notion Blocks/Paragraph',

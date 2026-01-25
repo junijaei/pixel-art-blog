@@ -1,5 +1,5 @@
+import { Divider } from '@/components/notion-blocks/Divider/Divider';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Divider } from './Divider';
 
 const meta = {
   title: 'Notion Blocks/Divider',

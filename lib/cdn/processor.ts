@@ -1,9 +1,9 @@
-import type { Block, ImageBlock } from '@/types/notion/content/block';
+import { uploadImage } from '@/lib/cdn/api';
+import { getCachedImage, setCachedImage } from '@/lib/cdn/cache';
+import { isDevelopment, mockProcessBlocks } from '@/lib/cdn/dev-mock';
+import type { ImageProcessingStats, ImageUploadResult } from '@/types/cdn';
 import type { NotionFile } from '@/types/notion/base';
-import type { ImageUploadResult, ImageProcessingStats } from '@/types/cdn';
-import { uploadImage } from './api';
-import { getCachedImage, setCachedImage } from './cache';
-import { isDevelopment, mockProcessBlocks } from './dev-mock';
+import type { Block, ImageBlock } from '@/types/notion/content/block';
 
 function isImageBlock(block: Block): block is ImageBlock {
   return block.type === 'image';
@@ -67,7 +67,7 @@ async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUpload
       name: block.image.name,
     };
 
-    console.log(`[Processor] Cache hit: ${blockId}`);
+    console.debug(`[Processor] Cache hit: ${blockId}`);
     return {
       success: true,
       cdnUrl: cached.cdnUrl,
@@ -75,7 +75,7 @@ async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUpload
     };
   }
 
-  console.log(`[Processor] Uploading: ${blockId}`);
+  console.debug(`[Processor] Uploading: ${blockId}`);
   const result = await uploadImage(imageUrl, blockId, lastEditedTime);
 
   if (!result.success || !result.cdnUrl) {
@@ -91,20 +91,20 @@ async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUpload
 
   await setCachedImage(blockId, lastEditedTime, result.cdnUrl, block.image.name);
 
-  console.log(`[Processor] Done: ${blockId} -> ${result.cdnUrl}`);
+  console.debug(`[Processor] Done: ${blockId} -> ${result.cdnUrl}`);
   return result;
 }
 
 export async function processNotionBlocks(blocks: Block[]): Promise<ImageProcessingStats> {
   if (isDevelopment()) {
-    console.log('[Processor] Development mode: Using mock processor');
+    console.debug('[Processor] Development mode: Using mock processor');
     return mockProcessBlocks(blocks);
   }
 
-  console.log('[Processor] Starting...');
+  console.debug('[Processor] Starting...');
 
   const imageBlocks = extractImageBlocks(blocks);
-  console.log(`[Processor] Found ${imageBlocks.length} images`);
+  console.debug(`[Processor] Found ${imageBlocks.length} images`);
 
   if (imageBlocks.length === 0) {
     return { totalImages: 0, uploaded: 0, cached: 0, failed: 0 };
@@ -123,7 +123,7 @@ export async function processNotionBlocks(blocks: Block[]): Promise<ImageProcess
     failed: results.filter((r) => !r.success).length,
   };
 
-  console.log('[Processor] Complete:', stats);
+  console.debug('[Processor] Complete:', stats);
 
   return stats;
 }

@@ -50,22 +50,6 @@ export interface Post {
   updatedAt: string;
 }
 
-export interface PostWithCategory extends Post {
-  categoryPath: string;
-  categoryLabel: string;
-  fullPath: string;
-}
-
-export interface PostListItem {
-  id: string;
-  title: string;
-  description: string;
-  publishedAt: string;
-  fullPath: string;
-  categoryLabel: string;
-  tags: string[];
-}
-
 export interface PostFilterOptions {
   publishedOnly?: boolean;
   categoryId?: string;

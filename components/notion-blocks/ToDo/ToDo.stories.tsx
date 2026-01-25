@@ -1,6 +1,6 @@
+import { ToDo } from '@/components/notion-blocks/ToDo/ToDo';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { ToDo } from './ToDo';
-import { createToDoBlock, createRichText, combineRichText } from '../__integration__/fixtures';
+import { combineRichText, createRichText, createToDoBlock } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/ToDo',

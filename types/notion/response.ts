@@ -2,8 +2,8 @@
  * Notion API Response Types
  */
 
-import type { NotionObject, UUID, ISODate, NotionUser, NotionColor } from './base';
-import type { RichText } from './content';
+import type { ISODate, NotionColor, NotionObject, NotionUser, UUID } from '@/types/notion/base';
+import type { RichText } from '@/types/notion/content';
 
 export interface PaginatedResponse<T extends NotionObject> {
   object: 'list';

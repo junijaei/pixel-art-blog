@@ -48,22 +48,6 @@ export function PixelUser({ className }: { className?: string }) {
   );
 }
 
-export function PixelSearch({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
-      <path d="M8 1H4V3H8V1Z" />
-      <path d="M4 3H2V5H4V3Z" />
-      <path d="M10 3H8V5H10V3Z" />
-      <path d="M4 5H2V7H4V5Z" />
-      <path d="M10 5H8V7H10V5Z" />
-      <path d="M8 7H4V9H8V7Z" />
-      <path d="M11 8H9V10H11V8Z" />
-      <path d="M13 10H11V12H13V10Z" />
-      <path d="M15 12H13V14H15V12Z" />
-    </svg>
-  );
-}
-
 export function PixelArrow({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 16 16" fill="currentColor">
@@ -117,16 +101,6 @@ export function PixelDot({ className }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 8 8" fill="currentColor">
       <rect x="2" y="2" width="4" height="4" />
-    </svg>
-  );
-}
-
-export function PixelMenu({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
-      <rect x="2" y="3" width="12" height="2" />
-      <rect x="2" y="7" width="12" height="2" />
-      <rect x="2" y="11" width="12" height="2" />
     </svg>
   );
 }
@@ -332,18 +306,6 @@ export function PixelLinkedin({ className }: { className?: string }) {
       <path d="M9 8H7V12H9V8Z" />
       <path d="M12 9H10V12H12V9Z" />
       <path d="M11 7H9V9H11V7Z" />
-    </svg>
-  );
-}
-
-export function PixelPhone({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
-      <path d="M11 1H5V3H11V1Z" />
-      <path d="M5 1H3V15H5V1Z" />
-      <path d="M13 1H11V15H13V1Z" />
-      <path d="M11 13H5V15H11V13Z" />
-      <path d="M9 11H7V13H9V11Z" />
     </svg>
   );
 }

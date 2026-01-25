@@ -1,6 +1,6 @@
+import { ImageModal } from '@/components/ui/image-modal/ImageModal';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
-import { ImageModal } from './ImageModal';
 
 const meta: Meta<typeof ImageModal> = {
   title: 'UI/ImageModal',

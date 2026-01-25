@@ -99,10 +99,10 @@ export function TableOfContents({ items, activeId, className }: TableOfContentsP
                 <span
                   className={cn(
                     'truncate text-xs',
-                    'transition-all p-1',
+                    'p-1 transition-all',
                     '-translate-x-2 opacity-0',
                     'group-hover:translate-x-0 group-hover:opacity-100',
-                    isActive && 'translate-x-0 font-medium opacity-100 bg-muted/50 rounded'
+                    isActive && 'bg-muted/50 translate-x-0 rounded font-medium opacity-100'
                   )}
                 >
                   {item.text}
@@ -110,7 +110,7 @@ export function TableOfContents({ items, activeId, className }: TableOfContentsP
                 <span
                   data-testid="toc-indicator"
                   className={cn(
-                    'h-0.5 bg-muted-foreground/20 rounded-full',
+                    'bg-muted-foreground/20 h-0.5 rounded-full',
                     'transition-all',
                     getIndicatorWidth(item.level),
                     'group-hover:w-0 group-hover:opacity-0',

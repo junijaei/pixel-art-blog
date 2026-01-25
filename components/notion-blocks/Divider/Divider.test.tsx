@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { Divider } from '@/components/notion-blocks/Divider/Divider';
 import { render } from '@testing-library/react';
-import { Divider } from './Divider';
+import { describe, expect, it } from 'vitest';
 
 describe('Divider', () => {
   it('hr 요소를 렌더링한다', () => {

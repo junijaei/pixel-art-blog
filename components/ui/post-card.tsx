@@ -1,10 +1,10 @@
-import { createPostLink } from '@/lib/notion/util/category';
+import { PixelClock, PixelFile } from '@/components/ui/pixel-icons';
+import { createPostLink } from '@/lib/notion/util/category-link';
 import { cn } from '@/lib/utils';
 import type { PostCardProps } from '@/types/notion';
 import Link from 'next/link';
-import { PixelClock, PixelFile } from './pixel-icons';
 
-export function PostCard({ id, title, description, date, categoryPath, categoryLabel, tags = [] }: PostCardProps) {
+export function PostCard({ id, title, description, date, categoryPath, categoryLabel }: PostCardProps) {
   const href = createPostLink(categoryPath, id);
 
   return (
@@ -19,10 +19,9 @@ export function PostCard({ id, title, description, date, categoryPath, categoryL
         </div>
         <div className="flex gap-1">
           {[...Array(3)].map((_, i) => {
-            const color = `bg-muted-foreground/${(i + 1) * 10}`
-            return (
-            <div key={i} className={cn("h-1 w-1", color)} />
-          )})}
+            const color = `bg-muted-foreground/${(i + 1) * 10}`;
+            return <div key={i} className={cn('h-1 w-1', color)} />;
+          })}
         </div>
       </div>
 

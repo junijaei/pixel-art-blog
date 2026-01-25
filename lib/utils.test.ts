@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { cn, formatRelativeTime, slugify, calculateReadingTime, extractHeadings } from './utils';
+import { calculateReadingTime, cn, extractHeadings, formatRelativeTime, slugify } from '@/lib/utils';
+import { describe, expect, it } from 'vitest';
 
 describe('cn', () => {
   it('should merge class names', () => {
@@ -7,6 +7,7 @@ describe('cn', () => {
   });
 
   it('should handle conditional classes', () => {
+    // eslint-disable-next-line no-constant-binary-expression
     expect(cn('text-base', false && 'text-lg', 'font-bold')).toBe('text-base font-bold');
   });
 });

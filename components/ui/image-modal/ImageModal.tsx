@@ -83,7 +83,7 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
           'rounded-lg p-2',
           'bg-muted/50 hover:bg-muted',
           'text-muted-foreground hover:text-foreground',
-          'transition-colors ',
+          'transition-colors',
           'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
         )}
       >

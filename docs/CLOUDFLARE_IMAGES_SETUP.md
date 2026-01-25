@@ -27,15 +27,18 @@ components/ui/
 ### 1. Cloudflare 계정 정보 확인
 
 **Account ID 확인:**
+
 1. Cloudflare Dashboard 접속
 2. 우측 사이드바에서 Account ID 확인
 
 **Account Hash 확인:**
+
 1. Cloudflare Images → 기존 이미지 URL 확인
 2. URL 형식: `https://imagedelivery.net/{ACCOUNT_HASH}/{IMAGE_ID}/public`
 3. `{ACCOUNT_HASH}` 부분을 복사
 
 **API Token 생성:**
+
 1. Cloudflare Dashboard → My Profile → API Tokens
 2. "Create Token" 클릭
 3. 권한: "Account - Cloudflare Images - Edit"
@@ -65,6 +68,7 @@ pnpm add -D @types/node
 ### 0. 개발 환경에서 테스트하기 (Mock Mode)
 
 개발 서버(`pnpm dev`)에서는 **자동으로 Mock 모드**가 활성화됩니다.
+
 - 실제 Cloudflare 업로드 없이 `/placeholder-image.png` 사용
 - 환경 변수 설정 불필요
 - 빠른 개발 및 테스트 가능
@@ -79,6 +83,7 @@ const stats = await processNotionBlocks(blocks);
 ```
 
 **프로덕션 빌드 테스트:**
+
 ```bash
 # 프로덕션 모드로 빌드 (실제 Cloudflare 업로드)
 pnpm build
@@ -182,11 +187,13 @@ Notion 블록의 URL을 Cloudflare CDN URL로 교체
 ### 왜 Block ID + last_edited_time?
 
 **Notion 이미지 URL의 특징:**
+
 - 1시간마다 URL이 만료되고 쿼리 파라미터가 변경됨
 - 같은 이미지라도 매번 다른 URL이 생성됨
 - **URL 기반 중복 검증은 불가능!**
 
 **해결 방법:**
+
 - Block ID: 이미지 블록의 고유 식별자 (불변)
 - last_edited_time: 이미지가 수정되면 변경됨
 - 두 값을 조합하여 캐시 키로 사용
@@ -195,6 +202,7 @@ Notion 블록의 URL을 Cloudflare CDN URL로 교체
 ### 캐시 파일 구조
 
 `.cache/cloudflare-images.json`:
+
 ```json
 {
   "version": "1.0.0",
@@ -232,6 +240,7 @@ const heroUrl = getCloudflareImageUrl(imageId, 'hero');
 ```
 
 Cloudflare Dashboard에서 커스텀 variant 생성 가능:
+
 - `public`: 원본 크기 (WebP)
 - `thumbnail`: 400x400 (카드용)
 - `hero`: 1920x1080 (히어로 이미지용)
@@ -244,7 +253,7 @@ Image 컴포넌트는 자동으로 srcset을 생성합니다:
 ```html
 <img
   srcset="
-    https://imagedelivery.net/{hash}/{id}/public?width=640 640w,
+    https://imagedelivery.net/{hash}/{id}/public?width=640   640w,
     https://imagedelivery.net/{hash}/{id}/public?width=1080 1080w,
     https://imagedelivery.net/{hash}/{id}/public?width=1920 1920w
   "
@@ -257,6 +266,7 @@ Image 컴포넌트는 자동으로 srcset을 생성합니다:
 ### 재시도 로직
 
 업로드 실패 시 자동으로 3회까지 재시도합니다 (지수 백오프):
+
 - 1회 실패: 1초 대기 후 재시도
 - 2회 실패: 2초 대기 후 재시도
 - 3회 실패: 4초 대기 후 재시도
@@ -334,6 +344,7 @@ if (stats.failed > 0) {
 ### Sharp 미설치 시
 
 Sharp가 설치되지 않은 경우:
+
 - 경고 로그 출력
 - WebP 변환 없이 원본 포맷으로 업로드
 - 기능은 정상 작동
@@ -341,6 +352,7 @@ Sharp가 설치되지 않은 경우:
 ### 캐시 파일 손상 시
 
 캐시 파일이 손상된 경우:
+
 - 자동으로 새 캐시 생성
 - 모든 이미지를 재처리
 
@@ -357,7 +369,7 @@ export async function generateStaticParams() {
     await processNotionBlocks(post.blocks);
   }
 
-  return posts.map(post => ({ slug: post.slug }));
+  return posts.map((post) => ({ slug: post.slug }));
 }
 
 export const revalidate = 3600; // 1시간마다 ISR
@@ -373,14 +385,17 @@ export const revalidate = 3600; // 1시간마다 ISR
 ### 캐시 효율성
 
 **시나리오 1: 새 포스트 추가**
+
 - 새 이미지만 업로드
 - 기존 이미지는 모두 캐시에서 가져옴
 
 **시나리오 2: 포스트 수정 (이미지 변경 없음)**
+
 - `last_edited_time`이 동일하므로 캐시 사용
 - 업로드 없이 즉시 완료
 
 **시나리오 3: 이미지 교체**
+
 - `last_edited_time`이 변경되어 캐시 무효화
 - 새 이미지 다운로드 및 업로드
 - 새 캐시 엔트리 생성
@@ -418,10 +433,10 @@ interface ImageUploadResult {
 
 // 처리 통계
 interface ProcessingStats {
-  totalImages: number;  // 전체 이미지 수
-  uploaded: number;     // 새로 업로드된 수
-  cached: number;       // 캐시에서 가져온 수
-  failed: number;       // 실패한 수
+  totalImages: number; // 전체 이미지 수
+  uploaded: number; // 새로 업로드된 수
+  cached: number; // 캐시에서 가져온 수
+  failed: number; // 실패한 수
 }
 ```
 
@@ -436,10 +451,12 @@ interface ProcessingStats {
 ### Block ID 기반 캐싱으로 변경
 
 **이전 (URL 기반):**
+
 - Notion URL을 해시하여 중복 검증
 - ❌ 1시간마다 URL이 변경되어 중복 검증 불가능
 
 **현재 (Block ID 기반):**
+
 - Block ID + last_edited_time으로 캐시 키 생성
 - ✅ 이미지가 수정되지 않았다면 캐시 사용
 - ✅ 이미지가 수정되면 자동으로 재업로드

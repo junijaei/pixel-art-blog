@@ -11,10 +11,7 @@ export function DotDecoration({
     return (
       <div className={cn('flex items-center gap-1.5', className)}>
         {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className={cn('bg-muted-foreground/30 h-1 w-1', i === 2 && 'bg-muted-foreground/60')}
-          />
+          <div key={i} className={cn('bg-muted-foreground/30 h-1 w-1', i === 2 && 'bg-muted-foreground/60')} />
         ))}
       </div>
     );
@@ -24,10 +21,7 @@ export function DotDecoration({
     return (
       <div className={cn('flex flex-col items-center gap-1.5', className)}>
         {[...Array(5)].map((_, i) => (
-          <div
-            key={i}
-            className={cn('bg-muted-foreground/30 h-1 w-1', i === 2 && 'bg-muted-foreground/60')}
-          />
+          <div key={i} className={cn('bg-muted-foreground/30 h-1 w-1', i === 2 && 'bg-muted-foreground/60')} />
         ))}
       </div>
     );
@@ -53,10 +47,7 @@ export function DotDecoration({
   return (
     <div className={cn('grid grid-cols-4 gap-2', className)}>
       {gridPattern.map((val, i) => (
-        <div
-          key={i}
-          className={cn('h-1 w-1', val ? 'bg-muted-foreground/40' : 'bg-muted-foreground/20')}
-        />
+        <div key={i} className={cn('h-1 w-1', val ? 'bg-muted-foreground/40' : 'bg-muted-foreground/20')} />
       ))}
     </div>
   );

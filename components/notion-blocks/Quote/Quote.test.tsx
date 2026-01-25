@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { Quote } from './Quote';
+import { Quote } from '@/components/notion-blocks/Quote/Quote';
 import type { QuoteBlock } from '@/types/notion';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 describe('Quote', () => {
   it('renders plain text', () => {

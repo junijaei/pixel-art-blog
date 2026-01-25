@@ -1,5 +1,5 @@
+import { Breadcrumb, type BreadcrumbItem } from '@/components/ui/breadcrumb/Breadcrumb';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Breadcrumb, type BreadcrumbItem } from './Breadcrumb';
 
 const meta: Meta<typeof Breadcrumb> = {
   title: 'UI/Breadcrumb',

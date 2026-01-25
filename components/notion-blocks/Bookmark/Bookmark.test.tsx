@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
-import { Bookmark } from './Bookmark';
+import { Bookmark } from '@/components/notion-blocks/Bookmark/Bookmark';
 import type { BookmarkBlock } from '@/types/notion';
+import { render, screen, waitFor } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock fetch API
 global.fetch = vi.fn();

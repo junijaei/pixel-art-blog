@@ -1,49 +1,49 @@
 #!/usr/bin/env node
 
-import { checkImageExists, getCdnUrl } from '../lib/cdn/api';
+import { checkImageExists } from '../lib/cdn/api';
 import { getCacheStats, loadCache } from '../lib/cdn/cache';
 import { CDN_BASE_URL } from '../types/cdn';
 
 async function main() {
-  console.log('=== CDN Images Verification ===\n');
-  console.log(`CDN Base URL: ${CDN_BASE_URL}\n`);
+  console.debug('=== CDN Images Verification ===\n');
+  console.debug(`CDN Base URL: ${CDN_BASE_URL}\n`);
 
-  console.log('[1] Checking CDN connectivity...');
+  console.debug('[1] Checking CDN connectivity...');
   try {
     const response = await fetch(CDN_BASE_URL, { method: 'HEAD' });
-    console.log(`    CDN Status: ${response.status} ${response.statusText}\n`);
+    console.debug(`    CDN Status: ${response.status} ${response.statusText}\n`);
   } catch (error) {
     console.error('    CDN unreachable:', error);
   }
 
-  console.log('[2] Checking local cache...');
+  console.debug('[2] Checking local cache...');
   try {
     const stats = await getCacheStats();
-    console.log(`    Cache version: ${stats.cacheVersion}`);
-    console.log(`    Entries: ${stats.totalEntries}`);
-    console.log(`    Last updated: ${stats.lastUpdated}\n`);
+    console.debug(`    Cache version: ${stats.cacheVersion}`);
+    console.debug(`    Entries: ${stats.totalEntries}`);
+    console.debug(`    Last updated: ${stats.lastUpdated}\n`);
 
     const cache = await loadCache();
     const entries = Object.values(cache.entries);
     if (entries.length > 0) {
-      console.log('    Recent 5 cache entries:');
+      console.debug('    Recent 5 cache entries:');
       entries.slice(0, 5).forEach((entry, i) => {
-        console.log(`    ${i + 1}. ${entry.blockId.slice(0, 8)}... -> ${entry.cdnUrl}`);
+        console.debug(`    ${i + 1}. ${entry.blockId.slice(0, 8)}... -> ${entry.cdnUrl}`);
       });
-      console.log('');
+      console.debug('');
 
-      console.log('[3] Verifying cached images exist on CDN...');
+      console.debug('[3] Verifying cached images exist on CDN...');
       for (const entry of entries.slice(0, 3)) {
         const fileName = entry.cdnUrl.replace(`${CDN_BASE_URL}/`, '');
         const exists = await checkImageExists(fileName);
-        console.log(`    ${fileName}: ${exists ? 'EXISTS' : 'NOT FOUND'}`);
+        console.debug(`    ${fileName}: ${exists ? 'EXISTS' : 'NOT FOUND'}`);
       }
     }
   } catch (error) {
     console.error('    Failed to read cache:', error);
   }
 
-  console.log('\n=== Verification Complete ===');
+  console.debug('\n=== Verification Complete ===');
 }
 
 main().catch(console.error);

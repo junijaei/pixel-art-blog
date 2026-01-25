@@ -1,11 +1,11 @@
-import { describe, expect, it } from 'vitest';
 import {
+  extractBaseColor,
+  getBlockBackgroundClass,
   getColorClass,
   getNotionColorClass,
-  getBlockBackgroundClass,
   isBackgroundColor,
-  extractBaseColor,
-} from './color-utils';
+} from '@/lib/notion/util/color-utils';
+import { describe, expect, it } from 'vitest';
 
 describe('getColorClass', () => {
   describe('text variant', () => {

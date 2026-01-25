@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import { BulletedListItem } from './BulletedListItem';
+import { BulletedListItem } from '@/components/notion-blocks/BulletedListItem/BulletedListItem';
 import type { BulletedListBlock, RichText } from '@/types/notion';
+import { render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 // 테스트용 mock 블록 생성 헬퍼
 function createMockBlock(

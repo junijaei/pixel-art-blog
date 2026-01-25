@@ -1,9 +1,9 @@
 'use client';
 
+import type { ToggleProps } from '@/components/notion-blocks/Toggle/index';
 import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
-import type { ToggleProps } from './index';
 
 export function Toggle({ block, children }: ToggleProps) {
   const { rich_text } = block.toggle;

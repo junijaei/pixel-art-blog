@@ -1,6 +1,6 @@
+import { BulletedListItem } from '@/components/notion-blocks/BulletedListItem/BulletedListItem';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { BulletedListItem } from './BulletedListItem';
-import { createBulletedListBlock, createRichText, combineRichText } from '../__integration__/fixtures';
+import { combineRichText, createBulletedListBlock, createRichText } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/BulletedListItem',

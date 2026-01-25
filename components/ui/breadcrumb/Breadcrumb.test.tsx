@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { Breadcrumb, type BreadcrumbItem } from '@/components/ui/breadcrumb/Breadcrumb';
 import { render, screen } from '@testing-library/react';
-import { Breadcrumb, type BreadcrumbItem } from './Breadcrumb';
+import { describe, expect, it } from 'vitest';
 
 describe('Breadcrumb', () => {
   const mockItems: BreadcrumbItem[] = [

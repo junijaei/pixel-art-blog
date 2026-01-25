@@ -1,9 +1,9 @@
 'use client';
 
+import { PixelMoon, PixelSun } from '@/components/ui/pixel-icons';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { PixelMoon, PixelSun } from './pixel-icons';
 
 export interface ThemeToggleProps {
   className?: string;
@@ -26,7 +26,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     // 서버 렌더링 시 placeholder
     return (
       <button
-        className={cn('hover:bg-secondary rounded-lg p-2 transition-colors cursor-pointer', className)}
+        className={cn('hover:bg-secondary cursor-pointer rounded-lg p-2 transition-colors', className)}
         aria-label="Toggle theme"
       >
         <div className="h-4 w-4" />
@@ -43,7 +43,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
   return (
     <button
       onClick={toggleTheme}
-      className={cn('hover:bg-secondary rounded-lg p-2 transition-colors cursor-pointer', className)}
+      className={cn('hover:bg-secondary cursor-pointer rounded-lg p-2 transition-colors', className)}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {isDark ? (

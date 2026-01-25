@@ -1,6 +1,6 @@
+import { Image } from '@/components/notion-blocks/Image/Image';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { createImageBlock, createRichText } from '../__integration__/fixtures';
-import { Image } from './Image';
 
 const meta = {
   title: 'Notion Blocks/Image',
@@ -16,11 +16,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    block: createImageBlock(
-      '/placeholder-image.png',
-      'external',
-      'Example image'
-    ),
+    block: createImageBlock('/placeholder-image.png', 'external', 'Example image'),
   },
 };
 
@@ -37,36 +33,24 @@ export const WithCaption: Story = {
 
 export const WithStyledCaption: Story = {
   args: {
-    block: createImageBlock(
-      '/placeholder-image.png',
-      'external',
-      'Image with styled caption',
-      [
-        ...createRichText('Photo by '),
-        ...createRichText('John Doe', { bold: true }),
-        ...createRichText(' - '),
-        ...createRichText('View original', { link: 'https://example.com' }),
-      ]
-    ),
+    block: createImageBlock('/placeholder-image.png', 'external', 'Image with styled caption', [
+      ...createRichText('Photo by '),
+      ...createRichText('John Doe', { bold: true }),
+      ...createRichText(' - '),
+      ...createRichText('View original', { link: 'https://example.com' }),
+    ]),
   },
 };
 
 export const FromNotionFile: Story = {
   args: {
-    block: createImageBlock(
-      '/placeholder-image.png',
-      'file',
-      'Notion uploaded image'
-    ),
+    block: createImageBlock('/placeholder-image.png', 'file', 'Notion uploaded image'),
   },
 };
 
 export const WithoutAltText: Story = {
   args: {
-    block: createImageBlock(
-      '/placeholder-image.png',
-      'external'
-    ),
+    block: createImageBlock('/placeholder-image.png', 'external'),
   },
 };
 
@@ -89,13 +73,7 @@ export const MultipleImages: Story = {
           createRichText('Second image caption')
         )}
       />
-      <Image
-        block={createImageBlock(
-          '/placeholder-image.png',
-          'external',
-          'Third image'
-        )}
-      />
+      <Image block={createImageBlock('/placeholder-image.png', 'external', 'Third image')} />
     </div>
   ),
 };

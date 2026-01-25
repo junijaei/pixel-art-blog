@@ -1,4 +1,4 @@
-import type { ImageUploadResult, ImageProcessingStats } from '@/types/cdn';
+import type { ImageProcessingStats, ImageUploadResult } from '@/types/cdn';
 import type { Block, ImageBlock } from '@/types/notion';
 
 const PLACEHOLDER_IMAGE = '/placeholder-image.png';
@@ -12,7 +12,7 @@ export async function mockUploadImage(
   _blockId: string,
   _lastEditedTime: string
 ): Promise<ImageUploadResult> {
-  console.log('[Dev Mock] Using placeholder image');
+  console.debug('[Dev Mock] Using placeholder image');
   return {
     success: true,
     cdnUrl: PLACEHOLDER_IMAGE,
@@ -36,7 +36,7 @@ export async function mockProcessBlocks(blocks: Block[]): Promise<ImageProcessin
       };
 
       imageCount++;
-      console.log(`[Dev Mock] Replaced image ${imageBlock.id} with placeholder`);
+      console.debug(`[Dev Mock] Replaced image ${imageBlock.id} with placeholder`);
     }
 
     if (block.has_children && block.children) {
@@ -55,6 +55,6 @@ export async function mockProcessBlocks(blocks: Block[]): Promise<ImageProcessin
 }
 
 export function mockValidateConfig(): boolean {
-  console.log('[Dev Mock] Skipping CDN config validation in development');
+  console.debug('[Dev Mock] Skipping CDN config validation in development');
   return true;
 }

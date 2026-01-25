@@ -1,6 +1,6 @@
+import { Code } from '@/components/notion-blocks/Code/Code';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { createCodeBlock, createRichText } from '../__integration__/fixtures';
-import { Code } from './Code';
 
 const meta = {
   title: 'Notion Blocks/Code',

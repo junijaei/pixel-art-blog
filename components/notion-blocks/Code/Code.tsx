@@ -1,10 +1,10 @@
 'use client';
 
+import type { CodeBlock, CodeProps } from '@/components/notion-blocks/Code/index';
 import { highlightCode, renderRichText } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import type { CodeBlock, CodeProps } from './index';
 
 const COLLAPSE_LINE_THRESHOLD = 50;
 const COLLAPSED_MAX_HEIGHT = 200; // px

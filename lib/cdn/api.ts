@@ -73,7 +73,7 @@ async function uploadWithRetry(
         throw new Error('Worker returned empty URL');
       }
 
-      console.log(`[CDN] Uploaded: ${fileName} (attempt ${attempt})`);
+      console.debug(`[CDN] Uploaded: ${fileName} (attempt ${attempt})`);
       return result;
     } catch (error) {
       lastError = error as Error;
@@ -102,7 +102,7 @@ export async function uploadImage(
   try {
     const fileName = generateFileName(blockId, lastEditedTime);
 
-    console.log(`[CDN] Uploading: ${fileName}`);
+    console.debug(`[CDN] Uploading: ${fileName}`);
     const result = await uploadWithRetry(imageUrl, fileName);
 
     return {

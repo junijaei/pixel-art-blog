@@ -1,15 +1,15 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { BlockRenderer } from '../BlockRenderer';
 import {
+  calloutWithBulletedListFixture,
+  calloutWithParagraphFixture,
   nestedBulletedListFixture,
   nestedNumberedListFixture,
-  toggleWithParagraphFixture,
   toggleWithBulletedListFixture,
   toggleWithCodeFixture,
-  calloutWithParagraphFixture,
-  calloutWithBulletedListFixture,
-} from './fixtures/simple-nested';
+  toggleWithParagraphFixture,
+} from '@/components/notion-blocks/__integration__/fixtures/simple-nested';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
+import { BlockRenderer } from '../BlockRenderer';
 
 describe('Nested Blocks Integration - Phase 1', () => {
   describe('BulletedList Nesting', () => {

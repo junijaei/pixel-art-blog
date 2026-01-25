@@ -1,6 +1,6 @@
+import { Toggle } from '@/components/notion-blocks/Toggle/Toggle';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Toggle } from './Toggle';
-import { createToggleBlock, createRichText } from '../__integration__/fixtures';
+import { createRichText, createToggleBlock } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/Toggle',

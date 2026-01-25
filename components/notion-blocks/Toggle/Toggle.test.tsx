@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
-import { Toggle } from './Toggle';
+import { Toggle } from '@/components/notion-blocks/Toggle/Toggle';
 import type { ToggleBlock } from '@/types/notion';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it } from 'vitest';
 
 describe('Toggle', () => {
   it('기본 텍스트를 렌더링한다', () => {

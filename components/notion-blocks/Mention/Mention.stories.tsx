@@ -1,6 +1,6 @@
+import { Mention } from '@/components/notion-blocks/Mention/Mention';
 import type { RichTextMention } from '@/types/notion';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Mention } from './Mention';
 
 const meta: Meta<typeof Mention> = {
   title: 'Notion Blocks/Mention',

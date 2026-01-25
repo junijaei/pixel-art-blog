@@ -1,6 +1,6 @@
+import { Heading } from '@/components/notion-blocks/Heading/Heading';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Heading } from './Heading';
-import { createHeadingBlock, createRichText, combineRichText } from '../__integration__/fixtures';
+import { combineRichText, createHeadingBlock, createRichText } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/Heading',

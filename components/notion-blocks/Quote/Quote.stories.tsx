@@ -1,6 +1,6 @@
+import { Quote } from '@/components/notion-blocks/Quote/Quote';
 import type { Meta, StoryObj } from '@storybook/nextjs';
-import { Quote } from './Quote';
-import { createQuoteBlock, createRichText, combineRichText } from '../__integration__/fixtures';
+import { combineRichText, createQuoteBlock, createRichText } from '../__integration__/fixtures';
 
 const meta = {
   title: 'Notion Blocks/Quote',

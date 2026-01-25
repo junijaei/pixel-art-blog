@@ -1,5 +1,5 @@
-import { getColorClass, renderRichText } from '@/lib/notion/util';
-import type { HeadingProps } from './index';
+import type { HeadingProps } from '@/components/notion-blocks/Heading/index';
+import { getNotionColorClass, renderRichText } from '@/lib/notion/util';
 
 /**
  * Notion Heading 블록을 렌더링하는 컴포넌트
@@ -16,7 +16,7 @@ export function Heading({ block }: HeadingProps) {
   if (!content) return null;
 
   const { rich_text, color } = content;
-  const colorClass = getColorClass(color);
+  const colorClass = getNotionColorClass(color);
 
   // 공통 스타일 - scroll-mt for fixed header offset
   const baseClass = 'font-bold mb-4 mt-8 scroll-mt-24';

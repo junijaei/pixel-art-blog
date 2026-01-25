@@ -1,6 +1,6 @@
+import type { ToDoProps } from '@/components/notion-blocks/ToDo/index';
 import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
 import { cn } from '@/lib/utils';
-import type { ToDoProps } from './index';
 
 export function ToDo({ block, children }: ToDoProps) {
   const { rich_text, checked } = block.to_do;
