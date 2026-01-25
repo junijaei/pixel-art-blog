@@ -83,7 +83,7 @@ describe('TableOfContents', () => {
       render(<TableOfContents items={sampleItems} activeId="heading-2" />);
       const activeLink = screen.getByRole('link', { name: 'Getting Started' });
       // Active items should have different styling
-      expect(activeLink.className).toContain('text-foreground');
+      expect(activeLink.className).toContain('text-muted-foreground');
     });
   });
 

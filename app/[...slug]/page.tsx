@@ -107,7 +107,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             <header className="mb-12">
               <div className="mb-6 flex items-center gap-4">
-                <Breadcrumb items={breadcrumbItems} currentPath={fullPath} />
+                <Breadcrumb items={breadcrumbItems} currentPath={category?.path || ''} />
                 <DotDecoration variant="horizontal" className="opacity-30" />
               </div>
 

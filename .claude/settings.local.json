@@ -24,7 +24,8 @@
       "Bash(timeout 15 pnpm dev:*)",
       "Bash(git add:*)",
       "Bash(git reset:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(pnpm lint:fix:*)"
     ]
   }
 }

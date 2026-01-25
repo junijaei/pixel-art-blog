@@ -61,7 +61,6 @@ export default async function HomePage() {
                 date={featuredPost.date}
                 categoryPath={featuredPost.categoryPath}
                 categoryLabel={featuredPost.categoryLabel}
-                tags={featuredPost.tags}
               />
             </div>
           </section>
@@ -96,7 +95,6 @@ export default async function HomePage() {
                     date={post.date}
                     categoryPath={post.categoryPath}
                     categoryLabel={post.categoryLabel}
-                    tags={post.tags}
                   />
                 ))}
               </div>
