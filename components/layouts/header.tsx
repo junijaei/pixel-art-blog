@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PixelDot, PixelFile, PixelHome, PixelUser } from '../ui/pixel-icons';
+import { PixelDot, PixelFile, PixelHome, PixelUser } from '../ui/pixel/pixel-icons';
 import { ThemeToggle } from '../ui/theme-toggle';
 
 export function BlogHeader() {

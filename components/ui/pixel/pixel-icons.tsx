@@ -309,3 +309,18 @@ export function PixelLinkedin({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function PixelQuotation({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 16 16" fill="currentColor">
+      <path d="M7 4H5V6H7V4Z" />
+      <path d="M5 6H3V8H5V6Z" />
+      <path d="M5 8H3V12H5V8Z" />
+      <path d="M7 8H5V12H7V8Z" />
+      <path d="M13 4H11V6H13V4Z" />
+      <path d="M11 8H9V12H11V8Z" />
+      <path d="M13 8H11V12H13V8Z" />
+      <path d="M11 6H9V8H11V6Z" />
+    </svg>
+  );
+}

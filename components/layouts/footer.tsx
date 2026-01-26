@@ -1,5 +1,5 @@
-import { DotDecoration } from '../ui/dot-decoration';
-import { PixelDot } from '../ui/pixel-icons';
+import { PixelDecoration } from '../ui/dot-decoration';
+import { PixelDot } from '../ui/pixel/pixel-icons';
 
 export function BlogFooter() {
   return (
@@ -15,7 +15,7 @@ export function BlogFooter() {
             <span className="text-muted-foreground font-pixel text-xs tracking-wider">BIT BY BIT</span>
           </div>
 
-          <DotDecoration variant="horizontal" className="hidden sm:flex" />
+          <PixelDecoration variant="horizontal" className="hidden sm:flex" />
 
           <p className="text-muted-foreground text-sm">
             © {new Date().getFullYear()} Bit by Bit Blog. All rights reserved.

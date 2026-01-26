@@ -1,4 +1,4 @@
-import { PixelChevronRight, PixelTag } from '@/components/ui/pixel-icons';
+import { PixelChevronRight, PixelTag } from '@/components/ui/pixel';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 

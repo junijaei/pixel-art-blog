@@ -13,10 +13,6 @@
 
 import type { NotionColor } from '@/types/notion';
 
-// 색상 이름 목록
-const NOTION_COLORS = ['gray', 'brown', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink', 'red'] as const;
-type NotionColorName = (typeof NOTION_COLORS)[number];
-
 /**
  * Notion color 값이 배경 색상인지 확인합니다.
  */
@@ -73,15 +69,15 @@ const TEXT_COLOR_MAP: Record<string, string> = {
  * 배경 색상 클래스 매핑 (inline 스타일용 - 패딩 포함)
  */
 const BACKGROUND_COLOR_MAP: Record<string, string> = {
-  gray: 'bg-notion-gray-bg rounded px-1 py-0.5',
-  brown: 'bg-notion-brown-bg rounded px-1 py-0.5',
-  orange: 'bg-notion-orange-bg rounded px-1 py-0.5',
-  yellow: 'bg-notion-yellow-bg rounded px-1 py-0.5',
-  green: 'bg-notion-green-bg rounded px-1 py-0.5',
-  blue: 'bg-notion-blue-bg rounded px-1 py-0.5',
-  purple: 'bg-notion-purple-bg rounded px-1 py-0.5',
-  pink: 'bg-notion-pink-bg rounded px-1 py-0.5',
-  red: 'bg-notion-red-bg rounded px-1 py-0.5',
+  gray: 'bg-notion-gray-bg',
+  brown: 'bg-notion-brown-bg',
+  orange: 'bg-notion-orange-bg',
+  yellow: 'bg-notion-yellow-bg',
+  green: 'bg-notion-green-bg',
+  blue: 'bg-notion-blue-bg',
+  purple: 'bg-notion-purple-bg',
+  pink: 'bg-notion-pink-bg',
+  red: 'bg-notion-red-bg',
 };
 
 /**
@@ -110,28 +106,4 @@ export function getBlockBackgroundClass(color: NotionColor | string | undefined)
 
   const baseColor = extractBaseColor(color);
   return BLOCK_BACKGROUND_COLOR_MAP[baseColor] || BLOCK_BACKGROUND_COLOR_MAP.gray;
-}
-
-// ============================================
-// 하위 호환성을 위한 레거시 함수들
-// ============================================
-
-export type NotionColorVariant = 'text' | 'background';
-
-/**
- * @deprecated `getNotionColorClass`를 사용하세요.
- * 하위 호환성을 위해 유지됩니다.
- */
-export function getColorClass(color: NotionColor | string | undefined, variant: NotionColorVariant = 'text'): string {
-  if (!color || color === 'default') {
-    return '';
-  }
-
-  const baseColor = extractBaseColor(color);
-
-  if (variant === 'text') {
-    return TEXT_COLOR_MAP[baseColor] || '';
-  } else {
-    return BLOCK_BACKGROUND_COLOR_MAP[baseColor] || BLOCK_BACKGROUND_COLOR_MAP.gray;
-  }
 }

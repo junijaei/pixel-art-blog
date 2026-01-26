@@ -1,11 +1,11 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
-import { DotDecoration, PostCard } from '@/components/ui';
+import { PixelDecoration, PostCard } from '@/components/ui';
 import {
-  findCategoryByPath,
-  getAllDescendantIds,
-  getCachedCategoryTree,
-  getCachedPosts,
-  getPostCardsData,
+    findCategoryByPath,
+    getAllDescendantIds,
+    getCachedCategoryTree,
+    getCachedPosts,
+    getPostCardsData,
 } from '@/lib/notion/api/cached';
 import { capitalizeFirst } from '@/lib/utils';
 import type { PostCardData } from '@/types/notion';
@@ -45,7 +45,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
         <section className="px-6 py-16">
           <div className="mx-auto max-w-2xl">
             <div className="mb-6 flex items-center gap-4">
-              <DotDecoration variant="horizontal" />
+              <PixelDecoration variant="horizontal" />
               <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">
                 {categoryLabel} Posts
               </span>

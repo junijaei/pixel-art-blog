@@ -1,6 +1,6 @@
 'use client';
 
-import { PixelMoon, PixelSun } from '@/components/ui/pixel-icons';
+import { PixelMoon, PixelSun } from '@/components/ui/pixel';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';

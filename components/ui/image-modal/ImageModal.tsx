@@ -1,6 +1,6 @@
 'use client';
 
-import { PixelClose } from '@/components/ui/pixel-icons';
+import { PixelClose } from '@/components/ui/pixel';
 import { cn } from '@/lib/utils';
 import { useCallback, useEffect } from 'react';
 

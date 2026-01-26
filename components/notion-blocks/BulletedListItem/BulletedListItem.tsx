@@ -1,6 +1,7 @@
 import type { BulletedListItemProps } from '@/components/notion-blocks/BulletedListItem/index';
-import { PixelDot } from '@/components/ui/pixel-icons';
+import { PixelDot } from '@/components/ui/pixel';
 import { getNotionColorClass, renderRichText } from '@/lib/notion/util';
+import { cn } from '@/lib/utils';
 
 /**
  * Notion BulletedListItem 블록을 렌더링하는 컴포넌트
@@ -14,7 +15,7 @@ export function BulletedListItem({ block, children }: BulletedListItemProps) {
   const colorClass = getNotionColorClass(color) || 'text-foreground/90';
 
   return (
-    <li className={`mb-2 flex items-start gap-2 ${colorClass}`.trim()}>
+    <li className={cn('mb-2 flex items-start gap-2 rounded', colorClass)}>
       <PixelDot className="text-muted-foreground/60 mt-2.5 h-1.5 w-1.5 shrink-0" />
       <span className="flex-1 leading-relaxed">
         {renderRichText(rich_text)}

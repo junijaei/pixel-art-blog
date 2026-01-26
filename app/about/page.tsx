@@ -1,7 +1,7 @@
 import { BlogFooter } from '@/components/layouts/footer';
 import { BlogHeader } from '@/components/layouts/header';
-import { DotDecoration } from '@/components/ui/dot-decoration';
-import { PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui/pixel-icons';
+import { PixelDecoration } from '@/components/ui/dot-decoration';
+import { PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui/pixel';
 import Link from 'next/link';
 
 export default function AboutPage() {
@@ -16,7 +16,7 @@ export default function AboutPage() {
             <div className="mb-6 flex items-center gap-4">
               <PixelUser className="text-muted-foreground h-5 w-5" />
               <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">About</span>
-              <DotDecoration variant="horizontal" className="opacity-30" />
+              <PixelDecoration variant="horizontal" className="opacity-30" />
             </div>
 
             <h1 className="font-mulmaru mb-6 text-3xl font-bold sm:text-4xl">
@@ -68,7 +68,7 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <DotDecoration variant="corner" className="absolute -right-2 -bottom-2 hidden sm:grid" />
+            <PixelDecoration variant="corner" className="absolute -right-2 -bottom-2 hidden sm:grid" />
           </div>
 
           {/* Bio Content */}
@@ -119,7 +119,7 @@ export default function AboutPage() {
 
           {/* Decorative Footer */}
           <div className="mt-16 flex justify-center">
-            <DotDecoration variant="horizontal" />
+            <PixelDecoration variant="horizontal" />
           </div>
         </div>
       </main>

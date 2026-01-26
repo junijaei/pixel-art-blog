@@ -2,7 +2,7 @@
 
 import type { LinkPreviewData } from '@/app/api/link-preview/route';
 import type { BookmarkProps } from '@/components/notion-blocks/Bookmark/index';
-import { PixelLink } from '@/components/ui/pixel-icons';
+import { PixelLink } from '@/components/ui/pixel';
 import { renderRichText } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';

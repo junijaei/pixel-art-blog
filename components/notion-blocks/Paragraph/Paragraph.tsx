@@ -12,5 +12,5 @@ export function Paragraph({ block }: ParagraphProps) {
   const { rich_text, color } = block.paragraph;
   const colorClass = getNotionColorClass(color);
 
-  return <p className={cn('mb-4 leading-relaxed', colorClass)}>{renderRichText(rich_text)}</p>;
+  return <p className={cn('mb-4 leading-relaxed rounded', colorClass)}>{renderRichText(rich_text)}</p>;
 }

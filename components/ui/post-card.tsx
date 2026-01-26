@@ -1,4 +1,4 @@
-import { PixelClock, PixelFile } from '@/components/ui/pixel-icons';
+import { PixelClock, PixelFile } from '@/components/ui/pixel';
 import { createPostLink } from '@/lib/notion/util/category-link';
 import { cn } from '@/lib/utils';
 import type { PostCardProps } from '@/types/notion';

@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 
-export function DotDecoration({
+export function PixelDecoration({
   className,
   variant = 'horizontal',
 }: {

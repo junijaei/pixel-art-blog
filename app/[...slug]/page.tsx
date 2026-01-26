@@ -1,6 +1,6 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { BlockRenderer } from '@/components/notion-blocks';
-import { Breadcrumb, DotDecoration, PixelArrow, PixelClock, TocWithScrollSpy } from '@/components/ui';
+import { Breadcrumb, PixelArrow, PixelClock, PixelDecoration, TocWithScrollSpy } from '@/components/ui';
 import { parsePostPage } from '@/lib/notion';
 import {
   formatDateKorean,
@@ -108,7 +108,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <header className="mb-12">
               <div className="mb-6 flex items-center gap-4">
                 <Breadcrumb items={breadcrumbItems} currentPath={category?.path || ''} />
-                <DotDecoration variant="horizontal" className="opacity-30" />
+                <PixelDecoration variant="horizontal" className="opacity-30" />
               </div>
 
               <h1 className="mb-6 text-3xl leading-tight font-bold break-keep sm:text-4xl">{post.title}</h1>
@@ -142,7 +142,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             <div className="mb-12 flex items-center gap-3">
               <div className="bg-border h-px flex-1" />
-              <DotDecoration variant="horizontal" className="opacity-50" />
+              <PixelDecoration variant="horizontal" className="opacity-50" />
               <div className="bg-border h-px flex-1" />
             </div>
 
@@ -153,7 +153,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <footer className="border-border mt-16 border-t pt-8">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <DotDecoration variant="corner" />
+                  <PixelDecoration variant="corner" />
                 </div>
                 <Link
                   href="/posts"

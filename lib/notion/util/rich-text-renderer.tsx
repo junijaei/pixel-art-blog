@@ -1,5 +1,6 @@
 import { Mention } from '@/components/notion-blocks/Mention';
 import { getNotionColorClass } from '@/lib/notion/util/color-utils';
+import { cn } from '@/lib/utils';
 import type { RichText, RichTextMention, RichTextText } from '@/types/notion';
 import { Fragment, ReactNode } from 'react';
 
@@ -103,7 +104,7 @@ export function renderRichText(richTextArray: RichText[]): ReactNode {
 
       if (colorClass) {
         element = (
-          <span key={index} className={colorClass}>
+          <span key={index} className={cn('rounded', colorClass)}>
             {element}
           </span>
         );

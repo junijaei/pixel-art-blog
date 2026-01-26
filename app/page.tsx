@@ -1,5 +1,5 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
-import { DotDecoration, PixelArrow, PixelDot, PostCard } from '@/components/ui';
+import { PixelArrow, PixelDecoration, PixelDot, PostCard } from '@/components/ui';
 import { getPostCardsData } from '@/lib/notion/api/cached';
 import Link from 'next/link';
 
@@ -24,7 +24,7 @@ export default async function HomePage() {
         <section className="px-6 py-20">
           <div className="mx-auto max-w-2xl">
             <div className="mb-6 flex items-center gap-4">
-              <DotDecoration variant="horizontal" />
+              <PixelDecoration variant="horizontal" />
               <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">
                 Frontend Blog
               </span>
@@ -73,7 +73,7 @@ export default async function HomePage() {
               <div className="mb-8 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <h2 className="font-pixel text-xs tracking-wider">RECENT POSTS</h2>
-                  <DotDecoration variant="horizontal" className="opacity-50" />
+                  <PixelDecoration variant="horizontal" className="opacity-50" />
                 </div>
 
                 <Link
@@ -102,7 +102,6 @@ export default async function HomePage() {
           </section>
         )}
       </main>
-
       <BlogFooter />
     </div>
   );
