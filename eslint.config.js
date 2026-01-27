@@ -3,7 +3,6 @@
 import js from '@eslint/js';
 import prettierConfig from 'eslint-config-prettier';
 import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths';
-import prettier from 'eslint-plugin-prettier';
 import reactHooks from 'eslint-plugin-react-hooks';
 import reactRefresh from 'eslint-plugin-react-refresh';
 import { defineConfig, globalIgnores } from 'eslint/config';
@@ -23,14 +22,12 @@ export default defineConfig([
     ],
     plugins: {
       'no-relative-import-paths': noRelativeImportPaths,
-      prettier,
     },
     rules: {
       'no-relative-import-paths/no-relative-import-paths': [
         'error',
-        { allowSameFolder: false, rootDir: 'src', prefix: '@' },
+        { allowSameFolder: true, rootDir: 'src', prefix: '@' },
       ],
-      'prettier/prettier': 'error',
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@next/next/no-html-link-for-pages': 'off',
