@@ -1,44 +1,9 @@
+import { createMockNumberListBlock as createMockBlock } from '@/__test__/fixture';
 import { NumberedListItem } from '@/components/notion-blocks/NumberedListItem/NumberedListItem';
-import type { NumberedListBlock, RichText } from '@/types/notion';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 // 테스트용 mock 블록 생성 헬퍼
-function createMockBlock(
-  richTextContent: string,
-  options: {
-    bold?: boolean;
-    color?: string;
-    hasChildren?: boolean;
-  } = {}
-): NumberedListBlock {
-  const { bold = false, color = 'default', hasChildren = false } = options;
-  return {
-    type: 'numbered_list_item',
-    numbered_list_item: {
-      rich_text: richTextContent
-        ? [
-            {
-              type: 'text',
-              text: { content: richTextContent, link: null },
-              annotations: {
-                bold,
-                italic: false,
-                strikethrough: false,
-                underline: false,
-                code: false,
-                color: 'default',
-              },
-              plain_text: richTextContent,
-              href: null,
-            } as RichText,
-          ]
-        : [],
-      color,
-    },
-    has_children: hasChildren,
-  } as NumberedListBlock;
-}
 
 describe('NumberedListItem', () => {
   it('renders plain text', () => {

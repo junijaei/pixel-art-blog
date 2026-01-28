@@ -1,6 +1,7 @@
 import type { CalloutProps } from '@/components/notion-blocks/Callout/index';
-import { getBlockBackgroundClass, renderRichText } from '@/lib/notion/util';
+import { getBlockBackgroundClass } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
+import { RichText } from '../RichText';
 
 export function Callout({ block, children }: CalloutProps) {
   const { rich_text, icon, color } = block.callout;
@@ -14,7 +15,9 @@ export function Callout({ block, children }: CalloutProps) {
         </div>
       )}
       <div className="min-w-0 flex-1">
-        <div className="leading-relaxed">{renderRichText(rich_text)}</div>
+        <div className="leading-relaxed">
+          <RichText richTextArray={rich_text} />
+        </div>
         {children && <div className="mt-2 space-y-1">{children}</div>}
       </div>
     </div>

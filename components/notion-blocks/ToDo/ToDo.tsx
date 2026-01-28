@@ -1,5 +1,5 @@
+import { RichText } from '@/components/notion-blocks/RichText/RichText';
 import type { ToDoProps } from '@/components/notion-blocks/ToDo/index';
-import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
 import { cn } from '@/lib/utils';
 
 export function ToDo({ block, children }: ToDoProps) {
@@ -39,7 +39,7 @@ export function ToDo({ block, children }: ToDoProps) {
         {/* Content */}
         <div className="min-w-0 flex-1">
           <div className={cn('leading-relaxed', checked && 'text-muted-foreground line-through')}>
-            {renderRichText(rich_text)}
+            <RichText richTextArray={rich_text} />
           </div>
 
           {/* Nested children */}

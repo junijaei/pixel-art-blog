@@ -1,7 +1,7 @@
 'use client';
 
+import { RichText } from '@/components/notion-blocks/RichText/RichText';
 import type { ToggleProps } from '@/components/notion-blocks/Toggle/index';
-import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
 
@@ -40,7 +40,9 @@ export function Toggle({ block, children }: ToggleProps) {
         </span>
 
         {/* Content */}
-        <span className="flex-1 leading-relaxed">{renderRichText(rich_text)}</span>
+        <span className="flex-1 leading-relaxed">
+          <RichText richTextArray={rich_text} />
+        </span>
       </button>
 
       {/* Expandable children */}

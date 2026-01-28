@@ -1,6 +1,7 @@
 import type { NumberedListItemProps } from '@/components/notion-blocks/NumberedListItem/index';
-import { getNotionColorClass, renderRichText } from '@/lib/notion/util';
+import { getNotionColorClass } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
+import { RichText } from '../RichText';
 
 /**
  * Notion NumberedListItem 블록을 렌더링하는 컴포넌트
@@ -14,7 +15,7 @@ export function NumberedListItem({ block, children, index = 0 }: NumberedListIte
     <li className={cn('mb-2 flex items-start gap-2 rounded', colorClass)}>
       <span className="text-muted-foreground font-pixel mt-1.5 w-4 text-center text-[10px]">{index + 1}</span>
       <span className="flex-1 leading-relaxed">
-        {renderRichText(rich_text)}
+        <RichText richTextArray={rich_text} />
         {children && <ol className="mt-2 space-y-2">{children}</ol>}
       </span>
     </li>

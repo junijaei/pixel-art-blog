@@ -1,6 +1,8 @@
 import type { HeadingProps } from '@/components/notion-blocks/Heading/index';
-import { getNotionColorClass, renderRichText } from '@/lib/notion/util';
+import { getNotionColorClass } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
+import type { RichText } from '@/types/notion';
+import { RichText as RichTextRenderer } from '../RichText';
 
 /**
  * Notion Heading 블록을 렌더링하는 컴포넌트
@@ -13,7 +15,7 @@ export function Heading({ block }: HeadingProps) {
   const type = block.type;
 
   // 블록 타입에 따라 콘텐츠 추출
-  const content = block[type] as { rich_text: Parameters<typeof renderRichText>[0]; color: string } | undefined;
+  const content = block[type] as { rich_text: RichText[]; color: string } | undefined;
   if (!content) return null;
 
   const { rich_text, color } = content;
@@ -26,7 +28,7 @@ export function Heading({ block }: HeadingProps) {
     heading_3: 'text-2xl',
   };
 
-  const renderedText = renderRichText(rich_text);
+  const renderedText = <RichTextRenderer richTextArray={rich_text} />;
 
   // Use block id for anchor link (TOC integration)
   const headingId = `heading-${block.id}`;
@@ -35,19 +37,19 @@ export function Heading({ block }: HeadingProps) {
   switch (type) {
     case 'heading_1':
       return (
-        <h1 id={headingId} className={cn('font-bold mb-4 mt-8 scroll-mt-24 rounded', headingClasses[type], colorClass)}>
+        <h1 id={headingId} className={cn('mt-8 mb-4 scroll-mt-24 rounded font-bold', headingClasses[type], colorClass)}>
           {renderedText}
         </h1>
       );
     case 'heading_2':
       return (
-        <h2 id={headingId} className={cn('font-bold mb-4 mt-8 scroll-mt-24 rounded', headingClasses[type], colorClass)}>
+        <h2 id={headingId} className={cn('mt-8 mb-4 scroll-mt-24 rounded font-bold', headingClasses[type], colorClass)}>
           {renderedText}
         </h2>
       );
     case 'heading_3':
       return (
-        <h3 id={headingId} className={cn('font-bold mb-4 mt-8 scroll-mt-24 rounded', headingClasses[type], colorClass)}>
+        <h3 id={headingId} className={cn('mt-8 mb-4 scroll-mt-24 rounded font-bold', headingClasses[type], colorClass)}>
           {renderedText}
         </h3>
       );

@@ -1,8 +1,8 @@
 'use client';
 
 import type { ImageProps } from '@/components/notion-blocks/Image/index';
+import { RichText } from '@/components/notion-blocks/RichText/RichText';
 import { ImageModal } from '@/components/ui';
-import { renderRichText } from '@/lib/notion/util/rich-text-renderer';
 import { useState } from 'react';
 
 /**
@@ -50,7 +50,7 @@ export function Image({ block }: ImageProps) {
         </button>
         {hasCaption && (
           <figcaption className="text-muted-foreground mt-2 text-center text-sm">
-            {renderRichText(image.caption!)}
+            <RichText richTextArray={image.caption!} />
           </figcaption>
         )}
       </figure>

@@ -39,3 +39,5 @@ export type { ImageBlock, ImageProps } from './Image';
 
 export { BlockRenderer } from './BlockRenderer';
 export type { BlockRendererProps } from './BlockRenderer';
+
+export { RichText } from './RichText';

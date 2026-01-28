@@ -3,10 +3,10 @@
 import type { LinkPreviewData } from '@/app/api/link-preview/route';
 import type { BookmarkProps } from '@/components/notion-blocks/Bookmark/index';
 import { PixelLink } from '@/components/ui/pixel';
-import { renderRichText } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
+import { RichText } from '../RichText';
 
 /**
  * Notion Bookmark 블록을 렌더링하는 컴포넌트
@@ -99,7 +99,7 @@ export function Bookmark({ block }: BookmarkProps) {
             {/* Caption */}
             {caption.length > 0 && (
               <div className="caption-container text-muted-foreground mt-2 text-xs leading-relaxed">
-                {renderRichText(caption)}
+                <RichText richTextArray={caption} />
               </div>
             )}
           </div>

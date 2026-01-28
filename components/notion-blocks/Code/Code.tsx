@@ -1,10 +1,11 @@
 'use client';
 
 import type { CodeBlock, CodeProps } from '@/components/notion-blocks/Code/index';
-import { highlightCode, renderRichText } from '@/lib/notion/util';
+import { highlightCode } from '@/lib/notion/util';
 import { cn } from '@/lib/utils';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
+import { RichText } from '../RichText';
 
 const COLLAPSE_LINE_THRESHOLD = 50;
 const COLLAPSED_MAX_HEIGHT = 200; // px
@@ -120,7 +121,9 @@ export function Code({ block }: CodeProps) {
       </div>
 
       {caption && caption.length > 0 && (
-        <div className="text-muted-foreground mt-2 text-center text-sm">{renderRichText(caption)}</div>
+        <div className="text-muted-foreground mt-2 text-center text-sm">
+          <RichText richTextArray={caption} />
+        </div>
       )}
     </div>
   );
