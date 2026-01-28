@@ -11,7 +11,7 @@ export function PixelDecoration({
     return (
       <div className={cn('flex items-center gap-1.5', className)}>
         {[...Array(5)].map((_, i) => (
-          <div key={i} className={cn('bg-muted-foreground/30 h-1 w-1', i === 2 && 'bg-muted-foreground/60')} />
+          <div key={i} className={cn('bg-muted-foreground/20 h-1 w-1', i === 2 && 'bg-muted-foreground/40')} />
         ))}
       </div>
     );
@@ -21,7 +21,7 @@ export function PixelDecoration({
     return (
       <div className={cn('flex flex-col items-center gap-1.5', className)}>
         {[...Array(5)].map((_, i) => (
-          <div key={i} className={cn('bg-muted-foreground/30 h-1 w-1', i === 2 && 'bg-muted-foreground/60')} />
+          <div key={i} className={cn('bg-muted-foreground/20 h-1 w-1', i === 2 && 'bg-muted-foreground/40')} />
         ))}
       </div>
     );
