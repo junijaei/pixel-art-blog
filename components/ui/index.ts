@@ -5,4 +5,3 @@ export * from './pixel/pixel-icons';
 export * from './post-card';
 export * from './table-of-contents';
 export * from './theme-toggle';
-

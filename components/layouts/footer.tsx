@@ -1,9 +1,8 @@
-import { PixelDecoration } from '../ui/dot-decoration';
-import { PixelDot } from '../ui/pixel/pixel-icons';
+import { PixelDecoration, PixelDot } from '@/components/ui';
 
 export function BlogFooter() {
   return (
-    <footer className="border-border mt-12 border-t py-12 sm:mt-24">
+    <footer className="border-border mt-12 border-t py-12">
       <div className="mx-auto max-w-6xl px-6">
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
           <div className="hidden items-center gap-3 sm:flex">

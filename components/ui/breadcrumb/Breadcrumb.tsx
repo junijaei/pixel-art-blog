@@ -1,5 +1,5 @@
 import { PixelChevronRight, PixelTag } from '@/components/ui/pixel';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import Link from 'next/link';
 
 export interface BreadcrumbItem {

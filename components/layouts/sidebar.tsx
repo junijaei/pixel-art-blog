@@ -2,15 +2,14 @@
 
 import { PixelChevron, PixelCollapse, PixelExpand, PixelFolder, PixelFolderOpen } from '@/components/ui';
 import { useStorage } from '@/hooks/use-storage';
-import { buildCategoryTree } from '@/lib/notion';
-import { cn } from '@/lib/utils';
-import type { Category, CategoryTreeNode, Post } from '@/types/notion';
+import type { CategoryTreeNode, Post } from '@/types/notion';
+import { cn } from '@/utils/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface SidebarProps {
-  categories: Category[];
+  categories: CategoryTreeNode[];
   posts: Post[];
   className?: string;
 }
@@ -124,9 +123,6 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [expandedCategories, setExpandedCategories] = useStorage<string[]>('expanded-categories', ['all']);
 
-  // 카테고리 트리 메모이제이션
-  const categoryTree = useMemo(() => buildCategoryTree(categories), [categories]);
-
   // 카테고리별 포스트 개수 계산 (자식 카테고리 포함)
   const postCountMap = useMemo(() => {
     const map = new Map<string, number>();
@@ -149,10 +145,10 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
       node.children.forEach(processNode);
     };
 
-    categoryTree.forEach(processNode);
+    categories.forEach(processNode);
 
     return map;
-  }, [categoryTree, posts]);
+  }, [categories, posts]);
 
   useEffect(() => {}, []);
 
@@ -188,10 +184,10 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
           }
         });
       };
-      collectIds(categoryTree);
+      collectIds(categories);
       setExpandedCategories(allIds);
     }
-  }, [expandedCategories.length, categoryTree]);
+  }, [isAllExpanded, setExpandedCategories, categories]);
 
   return (
     <aside
@@ -237,10 +233,10 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
       {/* Category Tree */}
       {!isCollapsed && (
         <div className="flex-1 overflow-y-auto px-2 py-2">
-          {categoryTree.length === 0 ? (
+          {categories.length === 0 ? (
             <div className="text-sidebar-foreground/50 px-3 py-4 text-center text-sm">No categories found</div>
           ) : (
-            categoryTree.map((node) => (
+            categories.map((node) => (
               <CategoryTreeItem
                 key={node.id}
                 node={node}
