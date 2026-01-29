@@ -3,17 +3,17 @@
  */
 
 import type {
-  DatabasePage,
-  PropertyValue,
-  TitlePropertyValue,
-  RichTextPropertyValue,
-  RelationPropertyValue,
-  StatusPropertyValue,
   CheckboxPropertyValue,
-  DatePropertyValue,
-  MultiSelectPropertyValue,
   CreatedTimePropertyValue,
+  DatabasePage,
+  DatePropertyValue,
   LastEditedTimePropertyValue,
+  MultiSelectPropertyValue,
+  PropertyValue,
+  RelationPropertyValue,
+  RichTextPropertyValue,
+  StatusPropertyValue,
+  TitlePropertyValue,
 } from '@/types/notion';
 
 export type PostStatus = 'scheduled' | 'draft' | 'completed';
@@ -52,7 +52,7 @@ export interface Post {
 
 export interface PostFilterOptions {
   publishedOnly?: boolean;
-  categoryId?: string;
+  categoryId?: string | string[];
   tag?: string;
   status?: PostStatus;
 }
