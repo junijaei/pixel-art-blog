@@ -1,7 +1,6 @@
 import { BlogFooter } from '@/components/layouts/footer';
 import { BlogHeader } from '@/components/layouts/header';
-import { PixelDecoration } from '@/components/ui/dot-decoration';
-import { PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui/pixel';
+import { PixelDecoration, PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui';
 import Link from 'next/link';
 
 export default function AboutPage() {

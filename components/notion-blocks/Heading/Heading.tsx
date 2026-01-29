@@ -1,7 +1,7 @@
 import type { HeadingProps } from '@/components/notion-blocks/Heading/index';
-import { getNotionColorClass } from '@/lib/notion/util';
-import { cn } from '@/lib/utils';
+import { getNotionColorClass } from '@/lib/notion/shared';
 import type { RichText } from '@/types/notion';
+import { cn } from '@/utils/utils';
 import { RichText as RichTextRenderer } from '../RichText';
 
 /**

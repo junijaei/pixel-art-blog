@@ -3,11 +3,11 @@
  * 블록 데이터 fetching 및 children enrichment 서버 전용 API 함수
  */
 
-import { notionClient } from '@/lib/notion/api/client';
+import { notionClient } from '@/lib/notion/core/client';
 import type { Block } from '@/types/notion';
-import { NOTION_LIMITS } from '../config';
+import { NOTION_LIMITS } from './config';
 
-export async function fetchBlockChildren(blockId: string): Promise<Block[]> {
+export async function fetchBlocks(blockId: string): Promise<Block[]> {
   const blocks: Block[] = [];
   let cursor: string | undefined = undefined;
   let hasMore = true;
@@ -38,18 +38,18 @@ export async function fetchBlockChildren(blockId: string): Promise<Block[]> {
  * @example
  * ```ts
  * const topLevelBlocks = await getPageBlocks(pageId);
- * const enrichedBlocks = await enrichBlocksWithChildren(topLevelBlocks);
+ * const enrichedBlocks = await fetchBlocksChildren(topLevelBlocks);
  * // 이제 enrichedBlocks의 모든 블록은 children이 주입됨
  * ```
  */
-export async function enrichBlocksWithChildren(
+export async function fetchBlocksChildren(
   blocks: Block[],
   maxDepth: number = 10,
   currentDepth: number = 0
 ): Promise<Block[]> {
   // 최대 깊이 도달 시 children 없이 반환 (무한 루프 방지)
   if (currentDepth >= maxDepth) {
-    console.warn(`[enrichBlocksWithChildren] Max depth (${maxDepth}) reached. Stopping recursion.`);
+    console.warn(`[fetchBlocksChildren] Max depth (${maxDepth}) reached. Stopping recursion.`);
     return blocks;
   }
 
@@ -63,10 +63,10 @@ export async function enrichBlocksWithChildren(
 
       try {
         // 자식 블록 가져오기
-        const children = await fetchBlockChildren(block.id);
+        const children = await fetchBlocks(block.id);
 
         // 자식 블록도 재귀적으로 처리
-        const enrichedChildren = await enrichBlocksWithChildren(children, maxDepth, currentDepth + 1);
+        const enrichedChildren = await fetchBlocksChildren(children, maxDepth, currentDepth + 1);
 
         // children 주입하여 반환
         return {
@@ -74,7 +74,7 @@ export async function enrichBlocksWithChildren(
           children: enrichedChildren,
         };
       } catch (error) {
-        console.error(`[enrichBlocksWithChildren] Failed to fetch children for block ${block.id}:`, error);
+        console.error(`[fetchBlocksChildren] Failed to fetch children for block ${block.id}:`, error);
         // 에러 발생 시 children 없이 원본 블록 반환
         return block;
       }

@@ -1,7 +1,7 @@
 import { Mention } from '@/components/notion-blocks/Mention';
-import { getNotionColorClass } from '@/lib/notion/util/color-utils';
-import { cn } from '@/lib/utils';
+import { getNotionColorClass } from '@/lib/notion/shared';
 import type { RichText, RichTextMention, RichTextText } from '@/types/notion';
+import { cn } from '@/utils/utils';
 import { Fragment, ReactNode } from 'react';
 
 /**

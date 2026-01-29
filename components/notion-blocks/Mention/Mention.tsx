@@ -1,8 +1,8 @@
 'use client';
 
 import { PixelLink } from '@/components/ui';
-import { cn } from '@/lib/utils';
 import type { LinkPreviewMention, RichTextMention } from '@/types/notion';
+import { cn } from '@/utils/utils';
 import Image from 'next/image';
 import { useState } from 'react';
 

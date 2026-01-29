@@ -1,5 +1,5 @@
 import type { ImageProcessingStats, ImageUploadResult } from '@/types/cdn';
-import type { Block, ImageBlock } from '@/types/notion';
+import type { ImageBlock } from '@/types/notion';
 
 const PLACEHOLDER_IMAGE = '/placeholder-image.png';
 
@@ -20,31 +20,22 @@ export async function mockUploadImage(
   };
 }
 
-export async function mockProcessBlocks(blocks: Block[]): Promise<ImageProcessingStats> {
+export async function mockProcessBlocks(imageBlocks: ImageBlock[]): Promise<ImageProcessingStats> {
   let imageCount = 0;
 
-  function processBlock(block: Block) {
-    if (block.type === 'image') {
-      const imageBlock = block as ImageBlock;
-      const originalImage = imageBlock.image;
+  imageBlocks.forEach((imageBlock: ImageBlock) => {
+    const originalImage = imageBlock.image;
 
-      imageBlock.image = {
-        type: 'external',
-        external: { url: PLACEHOLDER_IMAGE },
-        name: originalImage.name,
-        caption: originalImage.caption,
-      };
+    imageBlock.image = {
+      type: 'external',
+      external: { url: PLACEHOLDER_IMAGE },
+      name: originalImage.name,
+      caption: originalImage.caption,
+    };
 
-      imageCount++;
-      console.debug(`[Dev Mock] Replaced image ${imageBlock.id} with placeholder`);
-    }
-
-    if (block.has_children && block.children) {
-      block.children.forEach(processBlock);
-    }
-  }
-
-  blocks.forEach(processBlock);
+    imageCount++;
+    console.debug(`[Dev Mock] Replaced image ${imageBlock.id} with placeholder`);
+  });
 
   return {
     totalImages: imageCount,

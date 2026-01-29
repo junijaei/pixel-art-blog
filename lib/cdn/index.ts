@@ -1,16 +1,16 @@
-export { uploadImage, generateFileName, getCdnUrl, checkImageExists } from './api';
+export { checkImageExists, generateFileName, getCdnUrl, uploadImage } from './api';
 
-export { processNotionBlocks, processSingleImageBlock } from './processor';
+export { processImageBlocks } from './processor';
 
 export {
-  loadCache,
-  saveCache,
-  getCachedImage,
-  setCachedImage,
-  deleteCachedImage,
   clearCache,
+  deleteCachedImage,
+  getCachedImage,
   getCacheStats,
+  loadCache,
   resetMemoryCache,
+  saveCache,
+  setCachedImage,
 } from './cache';
 
-export { isDevelopment, mockUploadImage, mockProcessBlocks, mockValidateConfig } from './dev-mock';
+export { isDevelopment, mockProcessBlocks, mockUploadImage, mockValidateConfig } from './dev-mock';

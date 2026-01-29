@@ -1,8 +1,8 @@
 'use client';
 
 import type { CodeBlock, CodeProps } from '@/components/notion-blocks/Code/index';
-import { highlightCode } from '@/lib/notion/util';
-import { cn } from '@/lib/utils';
+import { highlightCode } from '@/lib/notion/shared';
+import { cn } from '@/utils/utils';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { RichText } from '../RichText';

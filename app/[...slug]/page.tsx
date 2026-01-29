@@ -1,28 +1,25 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { BlockRenderer } from '@/components/notion-blocks';
 import { Breadcrumb, PixelArrow, PixelClock, PixelDecoration, TocWithScrollSpy } from '@/components/ui';
-import { parsePostPage } from '@/lib/notion';
 import {
-  formatDateKorean,
-  getBreadcrumbItems,
-  getCachedPageBlocks,
-  getCachedPost,
-  getCachedPosts,
-  getCategoryById,
-  getCategoryByIdMap,
-} from '@/lib/notion/api/cached';
-import { parsePostLink } from '@/lib/notion/util/category-link';
-import { extractTocItems } from '@/lib/notion/util/extract-toc';
+  getCategoryDataBundle,
+  getCategoryMaps,
+  getPostBySlug,
+  getPostWithContent,
+  getPosts,
+  parsePostLink,
+} from '@/lib/notion';
+import { formatDateKorean } from '@/utils/utils';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function generateStaticParams() {
   try {
-    const [posts, categoryMap] = await Promise.all([getCachedPosts(), getCategoryByIdMap()]);
+    const [posts, categoryMaps] = await Promise.all([getPosts(), getCategoryMaps()]);
 
     return posts.map((post) => {
-      const category = categoryMap.get(post.categoryId);
+      const category = categoryMaps.byId.get(post.categoryId);
       const fullPath = category?.fullPath || '';
       const slugPath = fullPath ? `${fullPath}/${post.id}` : post.id;
       return { slug: slugPath.split('/').filter(Boolean) };
@@ -47,8 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 
   try {
-    const postPage = await getCachedPost(parsed.postId);
-    const post = parsePostPage(postPage);
+    const post = await getPostBySlug(parsed.postId);
 
     return {
       title: post.title + ' | Bit by Bit',
@@ -80,21 +76,18 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   }
 
   try {
-    const postPage = await getCachedPost(parsed.postId);
-    const post = parsePostPage(postPage);
+    // 카테고리 데이터 먼저 로드 (캐시됨)
+    const categoryData = await getCategoryDataBundle();
 
-    const [category, blocks] = await Promise.all([getCategoryById(post.categoryId), getCachedPageBlocks(post.id)]);
-
-    const fullPath = category?.fullPath || '';
-    const breadcrumbItems = await getBreadcrumbItems(fullPath);
-    const tocItems = extractTocItems(blocks);
+    // 포스트 상세 정보 가져오기 (새 서비스 사용)
+    const { post, blocks, metadata, category } = await getPostWithContent(parsed.postId, categoryData);
 
     return (
       <div className="flex min-h-screen flex-col">
         <BlogHeader />
 
         <main className="max-w-dvw flex-1 px-6 py-16">
-          {tocItems.length > 0 && <TocWithScrollSpy items={tocItems} />}
+          {metadata.tocItems.length > 0 && <TocWithScrollSpy items={metadata.tocItems} />}
 
           <div className="mx-auto max-w-2xl">
             <Link
@@ -107,7 +100,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             <header className="mb-12">
               <div className="mb-6 flex items-center gap-4">
-                <Breadcrumb items={breadcrumbItems} currentPath={category?.path || ''} />
+                <Breadcrumb items={metadata.breadcrumbs} currentPath={category?.path || ''} />
                 <PixelDecoration variant="horizontal" className="opacity-30" />
               </div>
 
@@ -123,7 +116,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                   <time dateTime={post.publishedAt}>{formatDateKorean(post.publishedAt)}</time>
                 </div>
                 <span>·</span>
-                <span>5 min read</span>
+                <span>{metadata.readingTime}</span>
               </div>
 
               {post.tags.length > 0 && (

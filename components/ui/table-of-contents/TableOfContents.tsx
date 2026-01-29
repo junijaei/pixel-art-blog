@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 
 export interface TocItem {
   /** Unique identifier (used for anchor link) */

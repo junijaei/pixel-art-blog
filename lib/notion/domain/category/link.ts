@@ -1,3 +1,9 @@
+/**
+ * Category Link - URL policy functions
+ *
+ * Pure functions for URL generation/parsing
+ */
+
 export function createPostLink(categoryPath: string, postId: string): string {
   if (!categoryPath) {
     return `/${postId}`;

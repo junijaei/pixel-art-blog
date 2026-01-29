@@ -1,7 +1,7 @@
 import type { BulletedListItemProps } from '@/components/notion-blocks/BulletedListItem/index';
 import { PixelDot } from '@/components/ui/pixel';
-import { getNotionColorClass } from '@/lib/notion/util';
-import { cn } from '@/lib/utils';
+import { getNotionColorClass } from '@/lib/notion/shared';
+import { cn } from '@/utils/utils';
 import { RichText } from '../RichText';
 
 /**

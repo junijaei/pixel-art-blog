@@ -1,14 +1,8 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { PixelDecoration, PostCard } from '@/components/ui';
-import {
-    findCategoryByPath,
-    getAllDescendantIds,
-    getCachedCategoryTree,
-    getCachedPosts,
-    getPostCardsData,
-} from '@/lib/notion/api/cached';
-import { capitalizeFirst } from '@/lib/utils';
+import { findCategoryByPath, getAllDescendantIds, getCategoryTree, getPostCardsData, getPosts } from '@/lib/notion';
 import type { PostCardData } from '@/types/notion';
+import { capitalizeFirst } from '@/utils/utils';
 
 interface PostsPageProps {
   searchParams: Promise<{ category?: string }>;
@@ -21,7 +15,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
 
   try {
     if (category) {
-      const [allPosts, categoryTree] = await Promise.all([getCachedPosts(), getCachedCategoryTree()]);
+      const [allPosts, categoryTree] = await Promise.all([getPosts(), getCategoryTree()]);
 
       const categoryNode = findCategoryByPath(categoryTree, category);
       if (categoryNode) {
@@ -46,8 +40,8 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
           <div className="mx-auto max-w-2xl">
             <div className="mb-6 flex items-center gap-4">
               <PixelDecoration variant="horizontal" />
-              <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">
-                {categoryLabel} Posts
+              <span className="text-muted-foreground font-galmuri9 text-[10px] tracking-widest uppercase">
+                {capitalizeFirst(categoryLabel)} Posts
               </span>
             </div>
 
@@ -72,6 +66,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
                     title={post.title}
                     description={post.description}
                     date={post.date}
+                    slug={post.slug}
                     categoryPath={post.categoryPath}
                     categoryLabel={post.categoryLabel}
                   />

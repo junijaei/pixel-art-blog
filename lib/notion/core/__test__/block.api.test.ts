@@ -1,5 +1,4 @@
-import { enrichBlocksWithChildren } from '@/lib/notion/api/block.api';
-import type { Block } from '@/types/notion';
+import { fetchBlocksChildren } from '@/lib/notion/core/block.api';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock Notion client
@@ -14,42 +13,10 @@ vi.mock('./client', () => ({
   },
 }));
 
-import { notionClient } from '@/lib/notion/api/client';
+import { createMockBlock } from '@/__test__/fixture';
+import { notionClient } from '@/lib/notion/core/client';
 
-// 테스트용 mock 블록 생성 헬퍼
-function createMockBlock(id: string, hasChildren: boolean = false, type: string = 'paragraph'): Block {
-  return {
-    object: 'block',
-    id,
-    type,
-    has_children: hasChildren,
-    archived: false,
-    parent: { type: 'page_id', page_id: 'parent-page' },
-    created_time: '2024-01-01T00:00:00.000Z',
-    last_edited_time: '2024-01-01T00:00:00.000Z',
-    paragraph: {
-      rich_text: [
-        {
-          type: 'text',
-          text: { content: `Block ${id}`, link: null },
-          annotations: {
-            bold: false,
-            italic: false,
-            strikethrough: false,
-            underline: false,
-            code: false,
-            color: 'default',
-          },
-          plain_text: `Block ${id}`,
-          href: null,
-        },
-      ],
-      color: 'default',
-    },
-  } as Block;
-}
-
-describe('enrichBlocksWithChildren', () => {
+describe('fetchBlocksChildren', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
@@ -57,7 +24,7 @@ describe('enrichBlocksWithChildren', () => {
   it('has_children이 false인 블록은 그대로 반환한다', async () => {
     const blocks = [createMockBlock('block-1', false), createMockBlock('block-2', false)];
 
-    const result = await enrichBlocksWithChildren(blocks);
+    const result = await fetchBlocksChildren(blocks);
 
     expect(result).toEqual(blocks);
     expect(notionClient.blocks.children.list).not.toHaveBeenCalled();
@@ -76,7 +43,7 @@ describe('enrichBlocksWithChildren', () => {
       block: {},
     } as any);
 
-    const result = await enrichBlocksWithChildren([parentBlock]);
+    const result = await fetchBlocksChildren([parentBlock]);
 
     expect(result[0].children).toEqual(childBlocks);
     expect(notionClient.blocks.children.list).toHaveBeenCalledWith({
@@ -111,7 +78,7 @@ describe('enrichBlocksWithChildren', () => {
       block: {},
     } as any);
 
-    const result = await enrichBlocksWithChildren([parentBlock]);
+    const result = await fetchBlocksChildren([parentBlock]);
 
     expect(result[0].children).toHaveLength(1);
     expect(result[0].children![0].children).toEqual([grandchildBlock]);
@@ -131,7 +98,7 @@ describe('enrichBlocksWithChildren', () => {
     } as any);
 
     // maxDepth를 2로 설정
-    const result = await enrichBlocksWithChildren([block], 2);
+    const result = await fetchBlocksChildren([block], 2);
 
     // depth 0 -> depth 1 -> depth 2 (stop)
     // 즉, 2번만 호출되어야 함
@@ -145,7 +112,7 @@ describe('enrichBlocksWithChildren', () => {
 
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
-    const result = await enrichBlocksWithChildren([parentBlock]);
+    const result = await fetchBlocksChildren([parentBlock]);
 
     expect(result[0]).toEqual(parentBlock);
     expect(result[0].children).toBeUndefined();
@@ -179,7 +146,7 @@ describe('enrichBlocksWithChildren', () => {
       block: {},
     } as any);
 
-    const result = await enrichBlocksWithChildren([parentBlock]);
+    const result = await fetchBlocksChildren([parentBlock]);
 
     expect(result[0].children).toHaveLength(2);
     expect(result[0].children![0].id).toBe('child-1');
@@ -188,7 +155,7 @@ describe('enrichBlocksWithChildren', () => {
   });
 
   it('빈 배열을 처리한다', async () => {
-    const result = await enrichBlocksWithChildren([]);
+    const result = await fetchBlocksChildren([]);
 
     expect(result).toEqual([]);
     expect(notionClient.blocks.children.list).not.toHaveBeenCalled();
@@ -219,7 +186,7 @@ describe('enrichBlocksWithChildren', () => {
         block: {},
       } as any);
 
-    const result = await enrichBlocksWithChildren(blocks);
+    const result = await fetchBlocksChildren(blocks);
 
     expect(result[0].children).toBeDefined();
     expect(result[1].children).toBeDefined();

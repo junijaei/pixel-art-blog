@@ -1,6 +1,6 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { PixelArrow, PixelDecoration, PixelDot, PostCard } from '@/components/ui';
-import { getPostCardsData } from '@/lib/notion/api/cached';
+import { getPostCardsData } from '@/lib/notion';
 import Link from 'next/link';
 
 export default async function HomePage() {
@@ -59,6 +59,7 @@ export default async function HomePage() {
                 title={featuredPost.title}
                 description={featuredPost.description}
                 date={featuredPost.date}
+                slug={featuredPost.slug}
                 categoryPath={featuredPost.categoryPath}
                 categoryLabel={featuredPost.categoryLabel}
               />
@@ -93,6 +94,7 @@ export default async function HomePage() {
                     title={post.title}
                     description={post.description}
                     date={post.date}
+                    slug={post.slug}
                     categoryPath={post.categoryPath}
                     categoryLabel={post.categoryLabel}
                   />

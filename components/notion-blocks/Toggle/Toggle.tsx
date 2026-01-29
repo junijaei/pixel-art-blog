@@ -2,7 +2,7 @@
 
 import { RichText } from '@/components/notion-blocks/RichText/RichText';
 import type { ToggleProps } from '@/components/notion-blocks/Toggle/index';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import { useState } from 'react';
 
 export function Toggle({ block, children }: ToggleProps) {

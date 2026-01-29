@@ -1,11 +1,20 @@
 import { PixelClock, PixelFile } from '@/components/ui/pixel';
-import { createPostLink } from '@/lib/notion/util/category-link';
-import { cn } from '@/lib/utils';
+import { createPostLink } from '@/lib/notion/shared';
 import type { PostCardProps } from '@/types/notion';
+import { cn } from '@/utils/utils';
 import Link from 'next/link';
 
-export function PostCard({ id, title, description, date, categoryPath, categoryLabel }: PostCardProps) {
-  const href = createPostLink(categoryPath, id);
+export function PostCard({
+  id,
+  title,
+  description,
+  date,
+  slug,
+  categoryPath,
+  categoryLabel,
+  readingTime,
+}: PostCardProps) {
+  const href = createPostLink(categoryPath, slug);
 
   return (
     <Link
@@ -36,6 +45,12 @@ export function PostCard({ id, title, description, date, categoryPath, categoryL
           <PixelClock className="h-2.5 w-2.5" />
           <span>{date}</span>
         </div>
+        {readingTime && (
+          <>
+            <span>·</span>
+            <span>{readingTime}</span>
+          </>
+        )}
       </div>
     </Link>
   );

@@ -1,6 +1,6 @@
 import type { CalloutProps } from '@/components/notion-blocks/Callout/index';
-import { getBlockBackgroundClass } from '@/lib/notion/util';
-import { cn } from '@/lib/utils';
+import { getBlockBackgroundClass } from '@/lib/notion/shared';
+import { cn } from '@/utils/utils';
 import { RichText } from '../RichText';
 
 export function Callout({ block, children }: CalloutProps) {

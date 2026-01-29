@@ -1,7 +1,8 @@
 import '@/app/globals.css';
 import { Sidebar } from '@/components/layouts';
 import { ThemeProvider } from '@/components/theme-provider';
-import { getCachedCategories, getCachedPosts } from '@/lib/notion/api/cached';
+import { getCategoryTree, getPosts } from '@/lib/notion';
+import { CategoryTreeNode, Post } from '@/types/notion';
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Silkscreen } from 'next/font/google';
 import { ReactNode } from 'react';
@@ -36,11 +37,12 @@ export default async function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
-  let categories: Awaited<ReturnType<typeof getCachedCategories>> = [];
-  let posts: Awaited<ReturnType<typeof getCachedPosts>> = [];
+  let categories: CategoryTreeNode[] = [];
+  let posts: Post[] = [];
 
   try {
-    [categories, posts] = await Promise.all([getCachedCategories(), getCachedPosts()]);
+    [categories, posts] = await Promise.all([getCategoryTree(), getPosts()]);
+    console.log(categories);
   } catch (error) {
     console.error('Failed to fetch initial data:', error);
   }

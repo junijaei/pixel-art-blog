@@ -3,7 +3,7 @@
 import type { LinkPreviewData } from '@/app/api/link-preview/route';
 import type { BookmarkProps } from '@/components/notion-blocks/Bookmark/index';
 import { PixelLink } from '@/components/ui/pixel';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils/utils';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { RichText } from '../RichText';

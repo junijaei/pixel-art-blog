@@ -1,12 +1,12 @@
+/**
+ * Shiki Code Highlighter - Server only
+ */
+
 import type { BundledLanguage } from 'shiki';
 import { createHighlighter } from 'shiki';
 
 let highlighterInstance: Awaited<ReturnType<typeof createHighlighter>> | null = null;
 
-/**
- * Shiki highlighter 싱글톤 인스턴스 가져오기
- * 모노크롬 디자인에 맞는 테마 설정
- */
 export async function getShikiHighlighter() {
   if (!highlighterInstance) {
     highlighterInstance = await createHighlighter({
@@ -44,17 +44,9 @@ export async function getShikiHighlighter() {
   return highlighterInstance;
 }
 
-/**
- * 코드를 Shiki로 하이라이팅
- * @param code - 하이라이팅할 코드
- * @param language - 언어 (Notion API 형식)
- * @param isDark - 다크모드 여부
- * @returns HTML 문자열
- */
 export async function highlightCode(code: string, language: string, isDark = false): Promise<string> {
   const highlighter = await getShikiHighlighter();
 
-  // Notion 언어명을 Shiki 언어명으로 매핑
   const langMap: Record<string, BundledLanguage> = {
     'plain text': 'text' as BundledLanguage,
     javascript: 'javascript',
@@ -89,23 +81,9 @@ export async function highlightCode(code: string, language: string, isDark = fal
   const theme = isDark ? 'vitesse-dark' : 'vitesse-light';
 
   try {
-    const html = highlighter.codeToHtml(code, {
-      lang: shikiLang,
-      theme,
-    });
-    return html;
+    return highlighter.codeToHtml(code, { lang: shikiLang, theme });
   } catch (error) {
     console.error('Shiki highlighting error:', error);
-    // Fallback to plain text
-    return `<pre><code>${escapeHtml(code)}</code></pre>`;
+    return `<pre><code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`;
   }
-}
-
-function escapeHtml(text: string): string {
-  return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;');
 }

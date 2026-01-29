@@ -1,7 +1,7 @@
 import type { ParagraphProps } from '@/components/notion-blocks/Paragraph/index';
 import { RichText } from '@/components/notion-blocks/RichText/RichText';
-import { getNotionColorClass } from '@/lib/notion/util/color-utils';
-import { cn } from '@/lib/utils';
+import { getNotionColorClass } from '@/lib/notion/shared';
+import { cn } from '@/utils/utils';
 
 /**
  * Notion Paragraph 블록을 렌더링하는 컴포넌트

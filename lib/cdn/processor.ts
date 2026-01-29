@@ -2,22 +2,8 @@ import { uploadImage } from '@/lib/cdn/api';
 import { getCachedImage, setCachedImage } from '@/lib/cdn/cache';
 import { isDevelopment, mockProcessBlocks } from '@/lib/cdn/dev-mock';
 import type { ImageProcessingStats, ImageUploadResult } from '@/types/cdn';
-import type { NotionFile } from '@/types/notion/base';
-import type { Block, ImageBlock } from '@/types/notion/content/block';
-
-function isImageBlock(block: Block): block is ImageBlock {
-  return block.type === 'image';
-}
-
-function extractImageUrl(file: NotionFile): string | null {
-  if (file.type === 'file' && file.file?.url) {
-    return file.file.url;
-  }
-  if (file.type === 'external' && file.external?.url) {
-    return file.external.url;
-  }
-  return null;
-}
+import type { ImageBlock } from '@/types/notion/content/block';
+import { extractImageUrl } from '../notion';
 
 interface ImageBlockInfo {
   block: ImageBlock;
@@ -26,34 +12,16 @@ interface ImageBlockInfo {
   imageUrl: string;
 }
 
-function extractImageBlocks(blocks: Block[], maxDepth: number = 10, currentDepth: number = 0): ImageBlockInfo[] {
-  if (currentDepth >= maxDepth) {
-    console.warn('[Processor] Max recursion depth reached');
-    return [];
+function extractImageInfo(imageBlock: ImageBlock): ImageBlockInfo | undefined {
+  const imageUrl = extractImageUrl(imageBlock.image);
+  if (imageUrl) {
+    return {
+      block: imageBlock,
+      blockId: imageBlock.id,
+      lastEditedTime: imageBlock.last_edited_time,
+      imageUrl,
+    };
   }
-
-  const imageBlocks: ImageBlockInfo[] = [];
-
-  for (const block of blocks) {
-    if (isImageBlock(block)) {
-      const imageUrl = extractImageUrl(block.image);
-      if (imageUrl) {
-        imageBlocks.push({
-          block,
-          blockId: block.id,
-          lastEditedTime: block.last_edited_time,
-          imageUrl,
-        });
-      }
-    }
-
-    if (block.has_children && block.children && block.children.length > 0) {
-      const childImages = extractImageBlocks(block.children, maxDepth, currentDepth + 1);
-      imageBlocks.push(...childImages);
-    }
-  }
-
-  return imageBlocks;
 }
 
 async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUploadResult> {
@@ -95,29 +63,28 @@ async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUpload
   return result;
 }
 
-export async function processNotionBlocks(blocks: Block[]): Promise<ImageProcessingStats> {
+export async function processImageBlocks(imageBlocks: ImageBlock[]): Promise<ImageProcessingStats> {
   if (isDevelopment()) {
     console.debug('[Processor] Development mode: Using mock processor');
-    return mockProcessBlocks(blocks);
+    return mockProcessBlocks(imageBlocks);
   }
 
   console.debug('[Processor] Starting...');
 
-  const imageBlocks = extractImageBlocks(blocks);
-  console.debug(`[Processor] Found ${imageBlocks.length} images`);
+  const imageInfos = imageBlocks.map(extractImageInfo).filter(Boolean);
 
-  if (imageBlocks.length === 0) {
+  if (imageInfos.length === 0) {
     return { totalImages: 0, uploaded: 0, cached: 0, failed: 0 };
   }
 
   const results: ImageUploadResult[] = [];
-  for (const imageInfo of imageBlocks) {
-    const result = await processImageBlock(imageInfo);
+  for (const imageInfo of imageInfos) {
+    const result = await processImageBlock(imageInfo!);
     results.push(result);
   }
 
   const stats: ImageProcessingStats = {
-    totalImages: imageBlocks.length,
+    totalImages: imageInfos.length,
     uploaded: results.filter((r) => r.success && !r.fromCache).length,
     cached: results.filter((r) => r.success && r.fromCache).length,
     failed: results.filter((r) => !r.success).length,
@@ -126,24 +93,4 @@ export async function processNotionBlocks(blocks: Block[]): Promise<ImageProcess
   console.debug('[Processor] Complete:', stats);
 
   return stats;
-}
-
-export async function processSingleImageBlock(block: Block): Promise<ImageUploadResult | null> {
-  if (!isImageBlock(block)) {
-    return null;
-  }
-
-  const imageUrl = extractImageUrl(block.image);
-  if (!imageUrl) {
-    return null;
-  }
-
-  const imageInfo: ImageBlockInfo = {
-    block,
-    blockId: block.id,
-    lastEditedTime: block.last_edited_time,
-    imageUrl,
-  };
-
-  return processImageBlock(imageInfo);
 }
