@@ -5,6 +5,7 @@ import {
   getCategoryDataBundle,
   getCategoryMaps,
   getPostBySlug,
+  getPostThumbnailUrl,
   getPostWithContent,
   getPosts,
   parsePostLink,
@@ -12,6 +13,7 @@ import {
 import { formatDateKorean } from '@/utils/utils';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import NotFound from '../not-found';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function generateStaticParams() {
@@ -21,7 +23,7 @@ export async function generateStaticParams() {
     return posts.map((post) => {
       const category = categoryMaps.byId.get(post.categoryId);
       const fullPath = category?.fullPath || '';
-      const slugPath = fullPath ? `${fullPath}/${post.id}` : post.id;
+      const slugPath = fullPath ? `${fullPath}/${post.slug}` : post.slug;
       return { slug: slugPath.split('/').filter(Boolean) };
     });
   } catch (error) {
@@ -34,17 +36,14 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug: slugSegments } = await params;
 
-  if (slugSegments.length === 0) {
-    return { title: 'Post Not Found' };
-  }
+  if (slugSegments.length === 0) return { title: 'Post Not Found' };
 
   const parsed = parsePostLink(slugSegments);
-  if (!parsed) {
-    return { title: 'Post Not Found' };
-  }
+  if (!parsed) return { title: 'Post Not Found' };
 
   try {
-    const post = await getPostBySlug(parsed.postId);
+    const [post, thumbnailUrl] = await Promise.all([getPostBySlug(parsed.postId), getPostThumbnailUrl(parsed.postId)]);
+    if (!post) return { title: 'Post Not Found' };
 
     return {
       title: post.title + ' | Bit by Bit',
@@ -55,6 +54,9 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         type: 'article',
         publishedTime: post.publishedAt,
         tags: post.tags,
+        ...(thumbnailUrl && {
+          images: [{ url: thumbnailUrl, alt: post.title }],
+        }),
       },
     };
   } catch (error) {
@@ -80,7 +82,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     const categoryData = await getCategoryDataBundle();
 
     // 포스트 상세 정보 가져오기 (새 서비스 사용)
-    const { post, blocks, metadata, category } = await getPostWithContent(parsed.postId, categoryData);
+    const postData = await getPostWithContent(parsed.postId, categoryData);
+    if (!postData) return <NotFound />;
+
+    const { post, blocks, metadata, category } = postData;
 
     return (
       <div className="flex min-h-screen flex-col">

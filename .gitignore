@@ -34,3 +34,4 @@ tmpclaude-*
 .history
 *storybook.log
 storybook-static
+.vscode

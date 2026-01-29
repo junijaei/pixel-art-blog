@@ -42,7 +42,6 @@ export default async function RootLayout({
 
   try {
     [categories, posts] = await Promise.all([getCategoryTree(), getPosts()]);
-    console.log(categories);
   } catch (error) {
     console.error('Failed to fetch initial data:', error);
   }

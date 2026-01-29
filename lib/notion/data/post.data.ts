@@ -10,6 +10,7 @@ import { fetchPost, fetchPosts } from '@/lib/notion/core/post.api';
 import { processBlockTree } from '@/lib/notion/domain/block';
 import { buildBreadcrumbItems } from '@/lib/notion/domain/category';
 import type { BreadcrumbItem, TocItem } from '@/lib/notion/shared/types';
+import { extractThumbnailUrl } from '@/lib/notion/shared/utils';
 import type {
   Block,
   Category,
@@ -20,7 +21,8 @@ import type {
   PostFilterOptions,
   PostSortOptions,
 } from '@/types/notion';
-import { calculateReadingTime, formatDateKorean } from '@/utils/utils';
+import { calculateReadingTime, formatRelativeTime } from '@/utils/utils';
+import { getBlocks, getBlocksWithChildren } from './block.data';
 import { getCategoryMaps } from './category.data';
 import { memoizeWithArgs } from './utils';
 
@@ -34,7 +36,8 @@ export interface PostWithContent {
     tocItems: TocItem[];
     readingTime: string;
     breadcrumbs: BreadcrumbItem[];
-    thumbnail: ImageBlock | null;
+    /** Thumbnail URL (first image block's URL after CDN processing) */
+    thumbnailUrl: string | null;
   };
   category: CategoryWithFullPath | null;
 }
@@ -58,9 +61,9 @@ export const getPost = memoizeWithArgs(async (pageId: string): Promise<Post> => 
 /**
  * Get post by slug (memoized)
  */
-export const getPostBySlug = memoizeWithArgs(async (slug: string): Promise<Post> => {
+export const getPostBySlug = memoizeWithArgs(async (slug: string): Promise<Post | undefined> => {
   const allPosts = await getPosts();
-  return allPosts.find((post) => post.slug === slug)!;
+  return allPosts.find((post) => post.slug === slug);
 });
 
 /**
@@ -75,7 +78,7 @@ export async function getPostCardsData(posts?: Post[]): Promise<PostCardData[]> 
       id: post.id,
       title: post.title,
       description: post.description || '내용이 없습니다.',
-      date: formatDateKorean(post.publishedAt),
+      date: formatRelativeTime(post.publishedAt),
       slug: post.slug,
       categoryPath: category?.fullPath || '',
       categoryLabel: category?.label || '',
@@ -95,10 +98,11 @@ export async function getPostWithContent(
       byFullPath: Map<string, CategoryWithFullPath>;
     };
   }
-): Promise<PostWithContent> {
-  // 1. Get post metadata and blocks in parallel
+): Promise<PostWithContent | null> {
+  // 1. Get post metadata and blocks
   const post = await getPostBySlug(postId);
-  const rawBlocks = await fetchBlocks(post.id).then((blocks) => fetchBlocksChildren(blocks, 10));
+  if (!post) return null;
+  const rawBlocks = await getBlocksWithChildren(post.id, 10);
 
   // 2. Process blocks (single pass)
   const { blocks, metadata: blockMetadata } = processBlockTree(rawBlocks);
@@ -122,6 +126,9 @@ export async function getPostWithContent(
   // 6. Calculate reading time
   const readingTime = calculateReadingTime(blockMetadata.plainText);
 
+  // Extract thumbnail URL from first image block (after CDN processing)
+  const thumbnailUrl = extractThumbnailUrl(blockMetadata.imageBlocks?.[0]);
+
   return {
     post,
     blocks,
@@ -129,7 +136,7 @@ export async function getPostWithContent(
       tocItems: blockMetadata.tocItems,
       readingTime,
       breadcrumbs,
-      thumbnail: blockMetadata.imageBlocks?.[0] || null,
+      thumbnailUrl,
     },
     category,
   };
@@ -155,4 +162,67 @@ export async function getPostsWithReadingTime(posts: Post[]): Promise<Array<Post
   );
 
   return results;
+}
+
+/**
+ * Find first image block from blocks (shallow search for performance)
+ */
+function findFirstImageBlock(blocks: Block[]): ImageBlock | null {
+  for (const block of blocks) {
+    if (block.type === 'image') {
+      return block as ImageBlock;
+    }
+    // Check children if present (depth-first)
+    if ('children' in block && Array.isArray(block.children)) {
+      const found = findFirstImageBlock(block.children);
+      if (found) return found;
+    }
+  }
+  return null;
+}
+
+/**
+ * Get thumbnail URL for a post (lightweight, for metadata)
+ * Returns CDN-processed URL if available
+ *
+ * @param slug - Post slug
+ * @returns Thumbnail URL or null if no image found
+ */
+export const getPostThumbnailUrl = memoizeWithArgs(async (slug: string): Promise<string | null> => {
+  try {
+    const post = await getPostBySlug(slug);
+    if (!post) return null;
+    const blocks = await getBlocks(post.id);
+
+    // Find first image block (shallow search)
+    const imageBlock = findFirstImageBlock(blocks);
+    if (!imageBlock) return null;
+
+    // Process through CDN if in production
+    const { processImageBlocks } = await import('@/lib/cdn');
+    await processImageBlocks([imageBlock]);
+
+    // Return CDN URL (block.image is mutated by processImageBlocks)
+    return extractThumbnailUrl(imageBlock);
+  } catch (error) {
+    console.error(`[PostData] Failed to get thumbnail for ${slug}:`, error);
+    return null;
+  }
+});
+
+/**
+ * Get thumbnails for multiple posts (batch, for list pages)
+ *
+ * @param posts - Posts to get thumbnails for
+ * @returns Map of slug -> thumbnailUrl
+ */
+export async function getPostsThumbnails(posts: Post[]): Promise<Map<string, string | null>> {
+  const results = await Promise.all(
+    posts.map(async (post) => {
+      const thumbnailUrl = await getPostThumbnailUrl(post.slug);
+      return [post.slug, thumbnailUrl] as const;
+    })
+  );
+
+  return new Map(results);
 }

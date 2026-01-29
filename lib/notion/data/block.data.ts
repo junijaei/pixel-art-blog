@@ -14,7 +14,8 @@ export const getBlocks = memoizeWithArgs(async (blockId: string): Promise<Block[
 });
 
 /**
- * Get blocks with children enriched (memoized)
+ * Get blocks with children enriched by blockId (memoized)
+ * Fetches blocks and enriches with children in one call
  */
 export const getBlocksWithChildren = memoizeWithArgs(
   async (blockId: string, maxDepth: number = 10): Promise<Block[]> => {
@@ -22,3 +23,10 @@ export const getBlocksWithChildren = memoizeWithArgs(
     return await fetchBlocksChildren(blocks, maxDepth);
   }
 );
+
+/**
+ * Enrich existing blocks with children (not memoized, use sparingly)
+ */
+export async function enrichBlocksWithChildren(blocks: Block[], maxDepth: number = 10): Promise<Block[]> {
+  return await fetchBlocksChildren(blocks, maxDepth);
+}

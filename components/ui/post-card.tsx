@@ -1,19 +1,10 @@
-import { PixelClock, PixelFile } from '@/components/ui/pixel';
+import { PixelClock, PixelTag } from '@/components/ui/pixel';
 import { createPostLink } from '@/lib/notion/shared';
 import type { PostCardProps } from '@/types/notion';
 import { cn } from '@/utils/utils';
 import Link from 'next/link';
 
-export function PostCard({
-  id,
-  title,
-  description,
-  date,
-  slug,
-  categoryPath,
-  categoryLabel,
-  readingTime,
-}: PostCardProps) {
+export function PostCard({ title, description, date, slug, categoryPath, categoryLabel, readingTime }: PostCardProps) {
   const href = createPostLink(categoryPath, slug);
 
   return (
@@ -23,7 +14,7 @@ export function PostCard({
     >
       <div className="mb-3 flex items-start justify-between">
         <div className="text-muted-foreground flex items-center gap-2">
-          <PixelFile className="h-3 w-3" />
+          <PixelTag className="h-3 w-3" />
           <span className="text-xs">{categoryLabel}</span>
         </div>
         <div className="flex gap-1">

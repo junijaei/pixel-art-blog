@@ -9,4 +9,4 @@ export interface PostCardData {
   readingTime?: string;
 }
 
-export type PostCardProps = PostCardData;
+export type PostCardProps = Omit<PostCardData, 'id'>;

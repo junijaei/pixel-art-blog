@@ -34,6 +34,8 @@ export {
   getPostCardsData,
   getPosts,
   getPostsWithReadingTime,
+  getPostsThumbnails,
+  getPostThumbnailUrl,
   getPostWithContent,
 } from './data/post.data';
 export type { PostWithContent } from './data/post.data';

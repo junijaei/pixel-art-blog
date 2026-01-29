@@ -62,7 +62,6 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
                 {posts.map((post) => (
                   <PostCard
                     key={post.id}
-                    id={post.id}
                     title={post.title}
                     description={post.description}
                     date={post.date}

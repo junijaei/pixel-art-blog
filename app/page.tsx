@@ -55,7 +55,6 @@ export default async function HomePage() {
           <section className="mb-16 px-6">
             <div className="mx-auto max-w-2xl">
               <PostCard
-                id={featuredPost.id}
                 title={featuredPost.title}
                 description={featuredPost.description}
                 date={featuredPost.date}
@@ -90,7 +89,6 @@ export default async function HomePage() {
                 {recentPosts.map((post) => (
                   <PostCard
                     key={post.id}
-                    id={post.id}
                     title={post.title}
                     description={post.description}
                     date={post.date}
