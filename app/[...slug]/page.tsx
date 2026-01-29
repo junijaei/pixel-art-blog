@@ -13,7 +13,6 @@ import {
 import { formatDateKorean } from '@/utils/utils';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import NotFound from '../not-found';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function generateStaticParams() {
@@ -83,7 +82,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
     // 포스트 상세 정보 가져오기 (새 서비스 사용)
     const postData = await getPostWithContent(parsed.postId, categoryData);
-    if (!postData) return <NotFound />;
+    if (!postData) notFound();
 
     const { post, blocks, metadata, category } = postData;
 
