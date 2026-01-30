@@ -82,8 +82,11 @@ describe('TableOfContents', () => {
     it('highlights active item when activeId is provided', () => {
       render(<TableOfContents items={sampleItems} activeId="heading-2" />);
       const activeLink = screen.getByRole('link', { name: 'Getting Started' });
-      // Active items should have different styling
-      expect(activeLink.className).toContain('text-muted-foreground');
+      // Active items should have highlighted styling (text-foreground on link)
+      expect(activeLink.className).toContain('text-foreground');
+      // font-medium is applied to the inner text span
+      const textSpan = activeLink.querySelector('span');
+      expect(textSpan?.className).toContain('font-medium');
     });
   });
 

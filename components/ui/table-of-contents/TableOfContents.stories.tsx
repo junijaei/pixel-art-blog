@@ -1,5 +1,6 @@
 import { TableOfContents, TocItem } from '@/components/ui/table-of-contents/TableOfContents';
 import type { Meta, StoryObj } from '@storybook/nextjs';
+import { useState } from 'react';
 
 const meta: Meta<typeof TableOfContents> = {
   title: 'UI/TableOfContents',
@@ -90,13 +91,63 @@ export const LongTitles: Story = {
 };
 
 /**
- * Interactive demo with simulated scroll content
+ * Interactive demo showing hierarchical collapse/expand behavior
+ * Click buttons to simulate scrolling to different sections
  */
 export const InteractiveDemo: Story = {
+  render: function InteractiveDemoComponent() {
+    const [activeId, setActiveId] = useState<string>('introduction');
+
+    return (
+      <div className="relative">
+        {/* Section selector */}
+        <div className="max-w-2xl space-y-4 p-8">
+          <h3 className="mb-4 text-lg font-semibold">Click to simulate active section:</h3>
+          <div className="flex flex-wrap gap-2">
+            {sampleItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setActiveId(item.id)}
+                className={`rounded px-3 py-1 text-sm transition-colors ${
+                  activeId === item.id ? 'bg-primary text-primary-foreground' : 'bg-muted hover:bg-muted/80'
+                }`}
+              >
+                {item.text}
+              </button>
+            ))}
+          </div>
+
+          <div className="bg-muted/50 mt-8 rounded-lg p-4">
+            <p className="text-muted-foreground text-sm">
+              <strong>Behavior:</strong> When a Level 1 heading is active, its child Level 2/3 items expand. Other
+              sections collapse to show only their Level 1 heading.
+            </p>
+            <p className="text-muted-foreground mt-2 text-sm">
+              <strong>Current active:</strong> <code className="bg-muted rounded px-1">{activeId}</code>
+            </p>
+          </div>
+        </div>
+
+        {/* TOC (normally positioned fixed, but inline for story) */}
+        <div className="fixed top-1/4 right-8">
+          <TableOfContents items={sampleItems} activeId={activeId} />
+        </div>
+      </div>
+    );
+  },
+};
+
+/**
+ * Simple demo with scroll content
+ */
+export const ScrollDemo: Story = {
   render: () => {
     const items: TocItem[] = [
       { id: 'section-1', text: 'Section One', level: 1 },
+      { id: 'section-1-1', text: 'Subsection 1.1', level: 2 },
+      { id: 'section-1-2', text: 'Subsection 1.2', level: 2 },
       { id: 'section-2', text: 'Section Two', level: 1 },
+      { id: 'section-2-1', text: 'Subsection 2.1', level: 2 },
       { id: 'section-3', text: 'Section Three', level: 1 },
     ];
 
@@ -115,7 +166,7 @@ export const InteractiveDemo: Story = {
         </div>
 
         {/* TOC (normally positioned fixed, but inline for story) */}
-        <div className="fixed top-1/2 right-8 -translate-y-1/2">
+        <div className="fixed top-1/4 right-8">
           <TableOfContents items={items} activeId="section-1" />
         </div>
       </div>
