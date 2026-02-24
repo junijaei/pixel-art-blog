@@ -77,11 +77,7 @@ export async function processImageBlocks(imageBlocks: ImageBlock[]): Promise<Ima
     return { totalImages: 0, uploaded: 0, cached: 0, failed: 0 };
   }
 
-  const results: ImageUploadResult[] = [];
-  for (const imageInfo of imageInfos) {
-    const result = await processImageBlock(imageInfo!);
-    results.push(result);
-  }
+  const results = await Promise.all(imageInfos.map((imageInfo) => processImageBlock(imageInfo!)));
 
   const stats: ImageProcessingStats = {
     totalImages: imageInfos.length,

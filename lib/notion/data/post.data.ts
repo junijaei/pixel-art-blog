@@ -22,9 +22,9 @@ import type {
   PostSortOptions,
 } from '@/types/notion';
 import { calculateReadingTime, formatRelativeTime } from '@/utils/utils';
+import { cache } from 'react';
 import { getBlocks, getBlocksWithChildren } from './block.data';
 import { getCategoryMaps } from './category.data';
-import { memoizeWithArgs } from './utils';
 
 /**
  * Post detail with content
@@ -45,23 +45,21 @@ export interface PostWithContent {
 /**
  * Get all posts (memoized)
  */
-export const getPosts = memoizeWithArgs(
-  async (options?: PostFilterOptions, sortOptions?: PostSortOptions): Promise<Post[]> => {
-    return await fetchPosts(ISR_CONFIG.POST_DATABASE_ID, options, sortOptions);
-  }
-);
+export const getPosts = cache(async (options?: PostFilterOptions, sortOptions?: PostSortOptions): Promise<Post[]> => {
+  return await fetchPosts(ISR_CONFIG.POST_DATABASE_ID, options, sortOptions);
+});
 
 /**
  * Get single post by page ID (memoized)
  */
-export const getPost = memoizeWithArgs(async (pageId: string): Promise<Post> => {
+export const getPost = cache(async (pageId: string): Promise<Post> => {
   return await fetchPost(pageId);
 });
 
 /**
  * Get post by slug (memoized)
  */
-export const getPostBySlug = memoizeWithArgs(async (slug: string): Promise<Post | undefined> => {
+export const getPostBySlug = cache(async (slug: string): Promise<Post | undefined> => {
   const allPosts = await getPosts();
   return allPosts.find((post) => post.slug === slug);
 });
@@ -188,7 +186,7 @@ function findFirstImageBlock(blocks: Block[]): ImageBlock | null {
  * @param slug - Post slug
  * @returns Thumbnail URL or null if no image found
  */
-export const getPostThumbnailUrl = memoizeWithArgs(async (slug: string): Promise<string | null> => {
+export const getPostThumbnailUrl = cache(async (slug: string): Promise<string | null> => {
   try {
     const post = await getPostBySlug(slug);
     if (!post) return null;
