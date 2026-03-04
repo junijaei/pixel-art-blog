@@ -4,8 +4,8 @@
  * NO I/O, NO SDK - pure data transformation
  */
 
-import type { Category, CategoryTreeNode, CategoryWithFullPath } from '@/types/notion';
 import type { BreadcrumbItem } from '@/lib/notion/shared/types';
+import type { Category, CategoryTreeNode, CategoryWithFullPath } from '@/types/notion';
 
 /**
  * Build fullPath from categoryId
@@ -114,6 +114,7 @@ export function buildCategoryTree(categories: Category[]): CategoryTreeNode[] {
       ...category,
       children: [],
       depth: 0,
+      cumulativePostCount: 0,
     });
   });
 
@@ -130,6 +131,17 @@ export function buildCategoryTree(categories: Category[]): CategoryTreeNode[] {
       rootCategories.push(node);
     }
   });
+
+  // Bottom-up aggregation: compute cumulativePostCount for every node.
+  // Post-order DFS — children are fully computed before their parent.
+  function computeCumulative(node: CategoryTreeNode): number {
+    const childSum = node.children.reduce((sum, child) => sum + computeCumulative(child), 0);
+    node.cumulativePostCount = node.postCount + childSum;
+    console.log('compute cumulative', node.cumulativePostCount, childSum, node.postCount);
+    return node.cumulativePostCount;
+  }
+
+  rootCategories.forEach(computeCumulative);
 
   return rootCategories;
 }
