@@ -5,4 +5,5 @@ export type { ImageBlock };
 
 export interface ImageProps {
   block: ImageBlock;
+  priority?: boolean;
 }

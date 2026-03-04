@@ -11,7 +11,7 @@ import { useState } from 'react';
  *
  * @param block - Notion API에서 반환된 Image 블록 데이터
  */
-export function Image({ block }: ImageProps) {
+export function Image({ block, priority = false }: ImageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { image } = block;
 
@@ -44,7 +44,8 @@ export function Image({ block }: ImageProps) {
           <img
             src={imageUrl}
             alt={altText}
-            loading="lazy"
+            loading={priority ? 'eager' : 'lazy'}
+            fetchPriority={priority ? 'high' : 'auto'}
             className="border-border w-full rounded-lg border transition-opacity hover:opacity-90"
           />
         </button>

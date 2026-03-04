@@ -29,6 +29,8 @@ export interface BlockRendererProps {
 export function BlockRenderer({ blocks }: BlockRendererProps) {
   // numbered_list_item의 순번을 계산하기 위해 연속된 항목들을 추적
   let numberedListIndex = 0;
+  // LCP 최적화: 첫 번째 이미지 블록에 priority 힌트 부여
+  let firstImageSeen = false;
 
   return (
     <div className="notion-content">
@@ -40,7 +42,17 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
           numberedListIndex = 0;
         }
 
-        return <BlockComponent key={block.id || index} block={block} numberedListIndex={numberedListIndex} />;
+        const isFirstImage = block.type === 'image' && !firstImageSeen;
+        if (isFirstImage) firstImageSeen = true;
+
+        return (
+          <BlockComponent
+            key={block.id || index}
+            block={block}
+            numberedListIndex={numberedListIndex}
+            firstImage={isFirstImage}
+          />
+        );
       })}
     </div>
   );
@@ -49,9 +61,10 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
 interface BlockComponentProps {
   block: Block;
   numberedListIndex: number;
+  firstImage?: boolean;
 }
 
-function BlockComponent({ block, numberedListIndex }: BlockComponentProps) {
+function BlockComponent({ block, numberedListIndex, firstImage = false }: BlockComponentProps) {
   // children이 있는 경우 재귀적으로 렌더링
   const children = block.has_children && block.children ? <BlockRenderer blocks={block.children} /> : undefined;
 
@@ -84,7 +97,7 @@ function BlockComponent({ block, numberedListIndex }: BlockComponentProps) {
       return <Code block={block} />;
 
     case 'image':
-      return <Image block={block} />;
+      return <Image block={block} priority={firstImage} />;
 
     case 'to_do':
       return <ToDo block={block}>{children}</ToDo>;

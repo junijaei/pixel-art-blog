@@ -192,6 +192,36 @@ describe('Image', () => {
     expect(img).toHaveAttribute('loading', 'lazy');
   });
 
+  it('applies loading="eager" and fetchPriority="high" when priority=true', () => {
+    const block: ImageBlock = {
+      object: 'block',
+      id: 'test-image-priority',
+      type: 'image',
+      image: {
+        type: 'external',
+        external: {
+          url: 'https://example.com/lcp-image.png',
+        },
+        name: 'LCP image',
+      },
+      parent: {
+        type: 'page_id',
+        page_id: 'test-page',
+      },
+      created_time: '2024-01-01T00:00:00.000Z',
+      last_edited_time: '2024-01-01T00:00:00.000Z',
+      has_children: false,
+      archived: false,
+    };
+
+    render(<Image block={block} priority />);
+
+    const img = screen.getByRole('img');
+    expect(img).toHaveAttribute('loading', 'eager');
+    expect(img).toHaveAttribute('fetchpriority', 'high');
+  });
+
+
   it('renders figure element with proper structure', () => {
     const block: ImageBlock = {
       object: 'block',
