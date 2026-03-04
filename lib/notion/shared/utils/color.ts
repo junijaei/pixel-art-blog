@@ -65,7 +65,7 @@ export function getNotionColorClass(color: NotionColor | string | undefined): st
 }
 
 export function getBlockBackgroundClass(color: NotionColor | string | undefined): string {
-  if (!color || color === 'default') {
+  if (!color || color === 'default_background') {
     return '';
   }
 

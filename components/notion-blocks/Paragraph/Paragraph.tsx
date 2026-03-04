@@ -13,7 +13,7 @@ export function Paragraph({ block }: ParagraphProps) {
   const colorClass = getNotionColorClass(color);
 
   return (
-    <p className={cn('mb-4 rounded leading-relaxed', colorClass)}>
+    <p className={cn('rounded leading-relaxed not-last:mb-4', colorClass)}>
       <RichText richTextArray={rich_text} />
     </p>
   );

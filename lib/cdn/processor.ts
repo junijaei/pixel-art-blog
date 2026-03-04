@@ -33,6 +33,7 @@ async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUpload
       type: 'external',
       external: { url: cached.cdnUrl },
       name: block.image.name,
+      caption: block.image.caption,
     };
 
     console.debug(`[Processor] Cache hit: ${blockId}`);
@@ -55,6 +56,7 @@ async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUpload
     type: 'external',
     external: { url: result.cdnUrl },
     name: block.image.name,
+    caption: block.image.caption,
   };
 
   await setCachedImage(blockId, lastEditedTime, result.cdnUrl, block.image.name);

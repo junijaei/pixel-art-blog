@@ -6,7 +6,7 @@ import type { CategoryTreeNode, Post } from '@/types/notion';
 import { cn } from '@/utils/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 interface SidebarProps {
   categories: CategoryTreeNode[];
@@ -150,8 +150,6 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
     return map;
   }, [categories, posts]);
 
-  useEffect(() => {}, []);
-
   // 카테고리 확장/축소 토글
   const handleToggleExpanded = useCallback((categoryId: string) => {
     setExpandedCategories((prev) => {
@@ -164,9 +162,31 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
     });
   }, []);
 
+  const collectExpandableIds = useCallback((categories: CategoryTreeNode[]): string[] => {
+    const result: string[] = [];
+
+    const traverse = (nodes: CategoryTreeNode[]) => {
+      for (const node of nodes) {
+        if (node.hasChildren) {
+          result.push(node.id);
+        }
+
+        if (node.children?.length) {
+          traverse(node.children);
+        }
+      }
+    };
+
+    traverse(categories);
+    return result;
+  }, []);
+
+  const expandableIds = useMemo(() => collectExpandableIds(categories), [categories, collectExpandableIds]);
+
   const isAllExpanded = useMemo(() => {
-    return expandedCategories.length === categories.filter((category) => category.hasChildren).length;
-  }, [expandedCategories, categories]);
+    const expandedSet = new Set(expandedCategories);
+    return expandableIds.every((id) => expandedSet.has(id));
+  }, [expandedCategories, expandableIds]);
 
   // 전체 맵 열기/닫기
   const handleToggleAll = useCallback(() => {

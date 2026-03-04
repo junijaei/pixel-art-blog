@@ -18,7 +18,7 @@ export function Callout({ block, children }: CalloutProps) {
         <div className="leading-relaxed">
           <RichText richTextArray={rich_text} />
         </div>
-        {children && <div className="mt-2 space-y-1">{children}</div>}
+        {children && <div className="mt-4">{children}</div>}
       </div>
     </div>
   );
