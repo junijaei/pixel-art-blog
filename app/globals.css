@@ -19,7 +19,7 @@
   font-family: 'Galmuri11';
   font-weight: 400;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   src: url('/fonts/Galmuri11.woff2') format('woff2');
 }
 
@@ -27,7 +27,7 @@
   font-family: 'Galmuri9';
   font-weight: 400;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   src: url('/fonts/Galmuri9.woff2') format('woff2');
 }
 
@@ -35,7 +35,7 @@
   font-family: 'Mulmaru';
   font-weight: 400;
   font-style: normal;
-  font-display: optional;
+  font-display: swap;
   src: url('/fonts/Mulmaru.woff2') format('woff2');
 }
 
@@ -51,9 +51,15 @@
     'Segoe UI Symbol', sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
   --font-pixel: 'Silkscreen', cursive;
-  --font-galmuri11: 'Galmuri11', 'Silkscreen', cursive;
-  --font-galmuri9: 'Galmuri9', 'Silkscreen', cursive;
-  --font-mulmaru: 'mulmaru', 'Silkscreen', cursive;
+  --font-galmuri11:
+    'Galmuri11', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR',
+    'Silkscreen', cursive;
+  --font-galmuri9:
+    'Galmuri9', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', 'Silkscreen',
+    cursive;
+  --font-mulmaru:
+    'mulmaru', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', 'Silkscreen',
+    cursive;
 
   /* Core Colors */
   --color-background: var(--background);
