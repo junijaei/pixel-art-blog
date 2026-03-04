@@ -202,10 +202,11 @@ export function createMockImageBlock(id: string, url: string): ImageBlock {
 export function createMockCategory(
   overrides: Partial<Category> & { id: string; label: string; path: string }
 ): Category {
-  return {
+return {
     parentId: null,
     hasChildren: false,
     isActive: true,
+    postCount: 0,
     createdAt: '',
     updatedAt: '',
     ...overrides,

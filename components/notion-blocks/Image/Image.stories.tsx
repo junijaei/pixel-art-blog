@@ -55,6 +55,9 @@ export const WithoutAltText: Story = {
 };
 
 export const MultipleImages: Story = {
+  args: {
+    block: createImageBlock('/placeholder-image.png', 'external', 'Multiple images demo'),
+  },
   render: () => (
     <div>
       <Image
@@ -76,4 +79,4 @@ export const MultipleImages: Story = {
       <Image block={createImageBlock('/placeholder-image.png', 'external', 'Third image')} />
     </div>
   ),
-};
+}
