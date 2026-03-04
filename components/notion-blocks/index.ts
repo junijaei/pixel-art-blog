@@ -28,7 +28,7 @@ export type { ToggleBlock, ToggleProps } from './Toggle';
 export { Divider } from './Divider';
 export type { DividerProps } from './Divider';
 
-export { Bookmark } from './Bookmark';
+export { Bookmark, BookmarkServer } from './Bookmark';
 export type { BookmarkBlock, BookmarkProps } from './Bookmark';
 
 export { Mention } from './Mention';

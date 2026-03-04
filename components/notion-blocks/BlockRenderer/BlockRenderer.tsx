@@ -1,11 +1,10 @@
 import {
-  Bookmark,
+  BookmarkServer,
   BulletedListItem,
   Callout,
   Code,
   Divider,
   Heading,
-  Image,
   NumberedListItem,
   Paragraph,
   Quote,
@@ -13,6 +12,11 @@ import {
   Toggle,
 } from '@/components/notion-blocks';
 import type { Block } from '@/types/notion';
+import dynamic from 'next/dynamic';
+
+// Image 블록은 모달(useState)을 포함한 클라이언트 컴포넌트이므로
+// next/dynamic으로 코드 분할하여 초기 번들에서 제외합니다.
+const Image = dynamic(() => import('../Image/Image').then((m) => ({ default: m.Image })));
 
 export interface BlockRendererProps {
   blocks: Block[];
@@ -92,7 +96,7 @@ function BlockComponent({ block, numberedListIndex }: BlockComponentProps) {
       return <Divider />;
 
     case 'bookmark':
-      return <Bookmark block={block} />;
+      return <BookmarkServer block={block} />;
 
     default:
       // Unknown block type - gracefully skip or show placeholder
