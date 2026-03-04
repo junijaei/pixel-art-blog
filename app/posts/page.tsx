@@ -4,6 +4,8 @@ import { findCategoryByPath, getAllDescendantIds, getCategoryTree, getPostCardsD
 import type { PostCardData } from '@/types/notion';
 import { capitalizeFirst } from '@/utils/utils';
 
+export const revalidate = 3600;
+
 interface PostsPageProps {
   searchParams: Promise<{ category?: string }>;
 }

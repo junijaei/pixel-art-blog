@@ -4,12 +4,12 @@
 
 import { fetchBlocks, fetchBlocksChildren } from '@/lib/notion/core/block.api';
 import type { Block } from '@/types/notion';
-import { memoizeWithArgs } from './utils';
+import { cache } from 'react';
 
 /**
  * Get blocks for a page/block (memoized)
  */
-export const getBlocks = memoizeWithArgs(async (blockId: string): Promise<Block[]> => {
+export const getBlocks = cache(async (blockId: string): Promise<Block[]> => {
   return await fetchBlocks(blockId);
 });
 
@@ -17,12 +17,10 @@ export const getBlocks = memoizeWithArgs(async (blockId: string): Promise<Block[
  * Get blocks with children enriched by blockId (memoized)
  * Fetches blocks and enriches with children in one call
  */
-export const getBlocksWithChildren = memoizeWithArgs(
-  async (blockId: string, maxDepth: number = 10): Promise<Block[]> => {
-    const blocks = await fetchBlocks(blockId);
-    return await fetchBlocksChildren(blocks, maxDepth);
-  }
-);
+export const getBlocksWithChildren = cache(async (blockId: string, maxDepth: number = 10): Promise<Block[]> => {
+  const blocks = await fetchBlocks(blockId);
+  return await fetchBlocksChildren(blocks, maxDepth);
+});
 
 /**
  * Enrich existing blocks with children (not memoized, use sparingly)

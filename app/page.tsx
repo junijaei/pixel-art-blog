@@ -3,6 +3,8 @@ import { PixelArrow, PixelDecoration, PostCard } from '@/components/ui';
 import { getPostCardsData } from '@/lib/notion';
 import Link from 'next/link';
 
+export const revalidate = 3600;
+
 export default async function HomePage() {
   let postCards: Awaited<ReturnType<typeof getPostCardsData>> = [];
 

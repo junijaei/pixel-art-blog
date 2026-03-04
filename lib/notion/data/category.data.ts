@@ -8,27 +8,27 @@ import { fetchAllCategories } from '@/lib/notion/core/category.api';
 import { ISR_CONFIG } from '@/lib/notion/core/config';
 import { buildCategoryMaps, buildCategoryTree } from '@/lib/notion/domain/category';
 import type { Category, CategoryTreeNode, CategoryWithFullPath } from '@/types/notion';
-import { memoize } from './utils';
+import { cache } from 'react';
 
 /**
- * Get all categories (memoized)
+ * Get all categories (cached)
  */
-export const getCategories = memoize(async (): Promise<Category[]> => {
+export const getCategories = cache(async (): Promise<Category[]> => {
   return await fetchAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true });
 });
 
 /**
- * Get category maps (memoized)
+ * Get category maps (cached)
  */
-export const getCategoryMaps = memoize(async () => {
+export const getCategoryMaps = cache(async () => {
   const categories = await getCategories();
   return buildCategoryMaps(categories);
 });
 
 /**
- * Get category tree (memoized)
+ * Get category tree (cached)
  */
-export const getCategoryTree = memoize(async (): Promise<CategoryTreeNode[]> => {
+export const getCategoryTree = cache(async (): Promise<CategoryTreeNode[]> => {
   const categories = await getCategories();
   return buildCategoryTree(categories);
 });
