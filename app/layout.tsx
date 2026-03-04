@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Silkscreen } from 'next/font/google';
 import localFont from 'next/font/local';
+import { preload } from 'react-dom';
 import { ReactNode, Suspense } from 'react';
 
 const geistMono = Geist_Mono({
@@ -47,6 +48,10 @@ export default function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
+  // Mulmaru.woff2 is discovered late (after CSS parse) without a preload hint.
+  // Preloading it breaks the critical chain: HTML → CSS → font.
+  preload('/fonts/Mulmaru.woff2', { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' });
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
