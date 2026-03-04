@@ -12,7 +12,6 @@ import { CATEGORY_PROPERTIES, CATEGORY_STATUS, NOTION_LIMITS } from './config';
  */
 function parseCategoryPage(page: CategoryPage): Category {
   const props = page.properties;
-  console.log(props);
 
   // label (title 타입)
   const labelProp = props[CATEGORY_PROPERTIES.LABEL];

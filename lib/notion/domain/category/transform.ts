@@ -137,7 +137,6 @@ export function buildCategoryTree(categories: Category[]): CategoryTreeNode[] {
   function computeCumulative(node: CategoryTreeNode): number {
     const childSum = node.children.reduce((sum, child) => sum + computeCumulative(child), 0);
     node.cumulativePostCount = node.postCount + childSum;
-    console.log('compute cumulative', node.cumulativePostCount, childSum, node.postCount);
     return node.cumulativePostCount;
   }
 

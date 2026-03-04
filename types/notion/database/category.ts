@@ -6,7 +6,6 @@ import type {
   CreatedTimePropertyValue,
   DatabasePage,
   LastEditedTimePropertyValue,
-  NumberPropertyValue,
   PropertyValue,
   RelationPropertyValue,
   RichTextPropertyValue,

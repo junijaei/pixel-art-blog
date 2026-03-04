@@ -33,7 +33,6 @@ function CategoryTreeItem({
 
   // Use server-precomputed cumulative count — no posts[] needed on the client
   const postCount = node.cumulativePostCount;
-  console.log(node.cumulativePostCount);
 
   // 현재 경로가 이 카테고리의 경로와 일치하는지 확인
   const isActive = useMemo(() => {
@@ -178,10 +177,6 @@ export function Sidebar({ categories, className }: SidebarProps) {
       setExpandedCategories(allIds);
     }
   }, [isAllExpanded, setExpandedCategories, categories]);
-
-  useEffect(() => {
-    console.log(categories);
-  }, [categories]);
 
   return (
     <aside
