@@ -6,9 +6,11 @@ import type {
   CreatedTimePropertyValue,
   DatabasePage,
   LastEditedTimePropertyValue,
+  NumberPropertyValue,
   PropertyValue,
   RelationPropertyValue,
   RichTextPropertyValue,
+  RollupPropertyValue,
   SelectPropertyValue,
   TitlePropertyValue,
 } from '@/types/notion';
@@ -22,6 +24,7 @@ export interface CategoryProperties {
   children: RelationPropertyValue;
   path: RichTextPropertyValue;
   isActive: SelectPropertyValue;
+  postCount: RollupPropertyValue;
   createdAt: CreatedTimePropertyValue;
   updatedAt: LastEditedTimePropertyValue;
 }
@@ -37,6 +40,7 @@ export interface Category {
   hasChildren: boolean;
   path: string;
   isActive: boolean;
+  postCount: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -44,6 +48,8 @@ export interface Category {
 export interface CategoryTreeNode extends Category {
   children: CategoryTreeNode[];
   depth: number;
+  /** Self post count + all descendant counts (computed server-side) */
+  cumulativePostCount: number;
 }
 
 export interface CategoryWithFullPath extends Category {

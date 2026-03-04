@@ -32,6 +32,7 @@ export const CATEGORY_PROPERTIES = {
   CHILDREN: 'children',
   PATH: 'path',
   IS_ACTIVE: 'isActive',
+  POST_COUNT: 'postCount',
   CREATED_AT: 'createdAt',
   UPDATED_AT: 'updatedAt',
 } as const;

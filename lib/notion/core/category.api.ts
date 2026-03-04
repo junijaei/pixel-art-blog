@@ -12,6 +12,7 @@ import { CATEGORY_PROPERTIES, CATEGORY_STATUS, NOTION_LIMITS } from './config';
  */
 function parseCategoryPage(page: CategoryPage): Category {
   const props = page.properties;
+  console.log(props);
 
   // label (title 타입)
   const labelProp = props[CATEGORY_PROPERTIES.LABEL];
@@ -33,6 +34,13 @@ function parseCategoryPage(page: CategoryPage): Category {
   const isActiveProp = props[CATEGORY_PROPERTIES.IS_ACTIVE];
   const isActive = isActiveProp?.type === 'select' && isActiveProp.select?.name === CATEGORY_STATUS.ACTIVE;
 
+  // postCount (number 타입)
+  const postCountProp = props[CATEGORY_PROPERTIES.POST_COUNT];
+  const postCount =
+    postCountProp?.type === 'rollup' && postCountProp.rollup?.type === 'number'
+      ? (postCountProp.rollup?.number ?? 0)
+      : 0;
+
   // createdAt
   const createdAtProp = props[CATEGORY_PROPERTIES.CREATED_AT];
   const createdAt = createdAtProp?.type === 'created_time' ? createdAtProp.created_time : '';
@@ -48,6 +56,7 @@ function parseCategoryPage(page: CategoryPage): Category {
     hasChildren,
     path,
     isActive,
+    postCount,
     createdAt,
     updatedAt,
   };
