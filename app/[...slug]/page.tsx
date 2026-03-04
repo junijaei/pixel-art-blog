@@ -105,7 +105,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <header className="mb-12">
               <div className="mb-6 flex items-center gap-4">
                 <Breadcrumb items={metadata.breadcrumbs} currentPath={category?.path || ''} />
-                <PixelDecoration variant="horizontal" className="opacity-30" />
+                <PixelDecoration layout="horizontal" gradientStart="center" className="opacity-30" />
               </div>
 
               <h1 className="mb-6 text-3xl leading-tight font-bold break-keep sm:text-4xl">{post.title}</h1>
@@ -139,7 +139,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             <div className="mb-12 flex items-center gap-3">
               <div className="bg-border h-px flex-1" />
-              <PixelDecoration variant="horizontal" className="opacity-50" />
+              <PixelDecoration layout="horizontal" gradientStart="center" className="opacity-50" />
               <div className="bg-border h-px flex-1" />
             </div>
 
@@ -150,7 +150,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <footer className="border-border mt-16 border-t pt-8">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <PixelDecoration variant="corner" />
+                  <PixelDecoration layout="corner" />
                 </div>
                 <Link
                   href="/posts"

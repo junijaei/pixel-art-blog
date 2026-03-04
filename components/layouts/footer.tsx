@@ -14,7 +14,7 @@ export function BlogFooter() {
             <span className="text-muted-foreground font-pixel text-xs tracking-wider">BIT BY BIT</span>
           </div>
 
-          <PixelDecoration variant="horizontal" className="hidden sm:flex" />
+          <PixelDecoration layout="horizontal" gradientStart="center" className="hidden sm:flex" />
 
           <p className="text-muted-foreground text-sm">
             © {new Date().getFullYear()} Bit by Bit Blog. All rights reserved.

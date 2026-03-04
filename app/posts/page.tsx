@@ -39,7 +39,7 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
         <section className="px-6 py-16">
           <div className="mx-auto max-w-2xl">
             <div className="mb-6 flex items-center gap-4">
-              <PixelDecoration variant="horizontal" />
+              <PixelDecoration layout="horizontal" gradientStart="center" />
               <span className="text-muted-foreground font-galmuri9 text-[10px] tracking-widest uppercase">
                 {capitalizeFirst(categoryLabel)} Posts
               </span>

@@ -1,7 +1,6 @@
-import { PixelClock, PixelTag } from '@/components/ui/pixel';
+import { PixelClock, PixelDecoration, PixelTag } from '@/components/ui/pixel';
 import { createPostLink } from '@/lib/notion/shared';
 import type { PostCardProps } from '@/types/notion';
-import { cn } from '@/utils/utils';
 import Link from 'next/link';
 
 export function PostCard({ title, description, date, slug, categoryPath, categoryLabel, readingTime }: PostCardProps) {
@@ -17,12 +16,7 @@ export function PostCard({ title, description, date, slug, categoryPath, categor
           <PixelTag className="h-3 w-3" />
           <span className="text-xs">{categoryLabel}</span>
         </div>
-        <div className="flex gap-1">
-          {[...Array(3)].map((_, i) => {
-            const color = `bg-muted-foreground/${(i + 1) * 10}`;
-            return <div key={i} className={cn('h-1 w-1', color)} />;
-          })}
-        </div>
+        <PixelDecoration layout='horizontal' dotCount={3} gradientStart='end' />
       </div>
 
       <h3 className="group-hover:text-muted-foreground mb-2 text-lg leading-relaxed font-medium transition-colors">

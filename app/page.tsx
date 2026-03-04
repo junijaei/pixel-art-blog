@@ -1,5 +1,5 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
-import { PixelArrow, PixelDecoration, PixelDot, PostCard } from '@/components/ui';
+import { PixelArrow, PixelDecoration, PostCard } from '@/components/ui';
 import { getPostCardsData } from '@/lib/notion';
 import Link from 'next/link';
 
@@ -24,7 +24,7 @@ export default async function HomePage() {
         <section className="px-6 py-20">
           <div className="mx-auto max-w-2xl">
             <div className="mb-6 flex items-center gap-4">
-              <PixelDecoration variant="horizontal" />
+              <PixelDecoration layout="horizontal" gradientStart="center" />
               <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">
                 Frontend Blog
               </span>
@@ -42,11 +42,7 @@ export default async function HomePage() {
               기록합니다.
             </p>
 
-            <div className="flex items-center gap-2">
-              {[...Array(8)].map((_, i) => (
-                <PixelDot key={i} className={`h-2 w-2 ${i < 3 ? 'text-foreground' : 'text-muted-foreground/30'}`} />
-              ))}
-            </div>
+            <PixelDecoration className="h-2 gap-2" size="md" layout="horizontal" dotCount={8} />
           </div>
         </section>
 
@@ -73,7 +69,7 @@ export default async function HomePage() {
               <div className="mb-8 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <h2 className="font-pixel text-xs tracking-wider">RECENT POSTS</h2>
-                  <PixelDecoration variant="horizontal" className="opacity-50" />
+                  <PixelDecoration layout="horizontal" gradientStart="center" className="opacity-50" />
                 </div>
 
                 <Link

@@ -19,7 +19,7 @@ export default function ErrorLayout({
         <div className="mx-auto max-w-2xl text-center">
           {/* Pixel Dot Decoration */}
           <div className="mb-8 flex justify-center">
-            <PixelDecoration variant="grid" />
+            <PixelDecoration layout="grid" />
           </div>
           {/* 404 Label */}
           <span className="text-muted-foreground font-pixel mb-4 inline-block text-xs tracking-widest uppercase">
@@ -31,7 +31,7 @@ export default function ErrorLayout({
           <p className="text-muted-foreground mx-auto mb-10 max-w-md text-lg leading-relaxed">{description}</p>
           {/* Dot Divider */}
           <div className="mb-10 flex items-center justify-center gap-2">
-            <PixelDecoration />
+            <PixelDecoration layout="horizontal" gradientStart="center" />
           </div>
           {/* Navigation Links */}
           <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">

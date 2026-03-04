@@ -15,7 +15,7 @@ export default function AboutPage() {
             <div className="mb-6 flex items-center gap-4">
               <PixelUser className="text-muted-foreground h-5 w-5" />
               <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">About</span>
-              <PixelDecoration variant="horizontal" className="opacity-30" />
+              <PixelDecoration layout="horizontal" gradientStart="center" className="opacity-30" />
             </div>
 
             <h1 className="font-mulmaru mb-6 text-3xl font-bold sm:text-4xl">
@@ -67,7 +67,7 @@ export default function AboutPage() {
               </div>
             </div>
 
-            <PixelDecoration variant="corner" className="absolute -right-2 -bottom-2 hidden sm:grid" />
+            <PixelDecoration layout="corner" className="absolute -right-2 -bottom-2 hidden sm:grid" />
           </div>
 
           {/* Bio Content */}
@@ -118,7 +118,7 @@ export default function AboutPage() {
 
           {/* Decorative Footer */}
           <div className="mt-16 flex justify-center">
-            <PixelDecoration variant="horizontal" />
+            <PixelDecoration layout="horizontal" gradientStart="center" />
           </div>
         </div>
       </main>
