@@ -2,15 +2,14 @@
 
 import { PixelChevron, PixelCollapse, PixelExpand, PixelFolder, PixelFolderOpen } from '@/components/ui';
 import { useStorage } from '@/hooks/use-storage';
-import type { CategoryTreeNode, Post } from '@/types/notion';
+import type { CategoryTreeNode } from '@/types/notion';
 import { cn } from '@/utils/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface SidebarProps {
   categories: CategoryTreeNode[];
-  posts: Post[];
   className?: string;
 }
 
@@ -19,7 +18,6 @@ interface CategoryTreeItemProps {
   level?: number;
   expandedCategories: string[];
   onToggleExpanded: (categoryId: string) => void;
-  postCountMap: Map<string, number>;
   currentPath: string;
 }
 
@@ -28,12 +26,14 @@ function CategoryTreeItem({
   level = 0,
   expandedCategories,
   onToggleExpanded,
-  postCountMap,
   currentPath,
 }: CategoryTreeItemProps) {
   const isExpanded = expandedCategories.includes(node.id);
   const hasChildren = node.children && node.children.length > 0;
-  const postCount = postCountMap.get(node.id) || 0;
+
+  // Use server-precomputed cumulative count — no posts[] needed on the client
+  const postCount = node.cumulativePostCount;
+  console.log(node.cumulativePostCount);
 
   // 현재 경로가 이 카테고리의 경로와 일치하는지 확인
   const isActive = useMemo(() => {
@@ -108,7 +108,6 @@ function CategoryTreeItem({
               level={level + 1}
               expandedCategories={expandedCategories}
               onToggleExpanded={onToggleExpanded}
-              postCountMap={postCountMap}
               currentPath={currentPath}
             />
           ))}
@@ -118,37 +117,10 @@ function CategoryTreeItem({
   );
 }
 
-export function Sidebar({ categories, posts, className }: SidebarProps) {
+export function Sidebar({ categories, className }: SidebarProps) {
   const pathname = usePathname();
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [expandedCategories, setExpandedCategories] = useStorage<string[]>('expanded-categories', ['all']);
-
-  // 카테고리별 포스트 개수 계산 (자식 카테고리 포함)
-  const postCountMap = useMemo(() => {
-    const map = new Map<string, number>();
-
-    // 각 카테고리에 대해 자신과 모든 자식 카테고리의 ID 수집
-    const getAllDescendantIds = (node: CategoryTreeNode): string[] => {
-      const ids = [node.id];
-      node.children.forEach((child) => {
-        ids.push(...getAllDescendantIds(child));
-      });
-      return ids;
-    };
-
-    // 트리의 모든 노드를 순회하며 포스트 개수 계산
-    const processNode = (node: CategoryTreeNode) => {
-      const descendantIds = new Set(getAllDescendantIds(node));
-      const categoryPosts = posts.filter((post) => descendantIds.has(post.categoryId));
-      map.set(node.id, categoryPosts.length);
-
-      node.children.forEach(processNode);
-    };
-
-    categories.forEach(processNode);
-
-    return map;
-  }, [categories, posts]);
 
   // 카테고리 확장/축소 토글
   const handleToggleExpanded = useCallback((categoryId: string) => {
@@ -191,10 +163,8 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
   // 전체 맵 열기/닫기
   const handleToggleAll = useCallback(() => {
     if (isAllExpanded) {
-      // 모두 열려있으면 모두 닫기
       setExpandedCategories([]);
     } else {
-      // 모두 열기
       const allIds: string[] = [];
       const collectIds = (nodes: CategoryTreeNode[]) => {
         nodes.forEach((node) => {
@@ -208,6 +178,10 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
       setExpandedCategories(allIds);
     }
   }, [isAllExpanded, setExpandedCategories, categories]);
+
+  useEffect(() => {
+    console.log(categories);
+  }, [categories]);
 
   return (
     <aside
@@ -262,7 +236,6 @@ export function Sidebar({ categories, posts, className }: SidebarProps) {
                 node={node}
                 expandedCategories={expandedCategories}
                 onToggleExpanded={handleToggleExpanded}
-                postCountMap={postCountMap}
                 currentPath={pathname}
               />
             ))
