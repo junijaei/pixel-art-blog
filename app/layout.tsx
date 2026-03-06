@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Silkscreen } from 'next/font/google';
 import localFont from 'next/font/local';
+import NextTopLoader from 'nextjs-toploader';
 import { preload } from 'react-dom';
 import { ReactNode, Suspense } from 'react';
 
@@ -57,6 +58,15 @@ export default function RootLayout({
       <body
         className={`${geistMono.variable} ${silkscreen.variable} ${pretendard.variable} max-w-dvw font-sans antialiased`}
       >
+        <NextTopLoader
+          color="var(--foreground)"
+          height={2}
+          showSpinner={false}
+          shadow={false}
+          easing="ease"
+          speed={200}
+          crawlSpeed={200}
+        />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex">
             <Suspense fallback={<SidebarSkeleton />}>

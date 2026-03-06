@@ -3,6 +3,7 @@
 import type { ImageProps } from '@/components/notion-blocks/Image/index';
 import { RichText } from '@/components/notion-blocks/RichText/RichText';
 import { ImageModal } from '@/components/ui';
+import { cn } from '@/utils/utils';
 import { useState } from 'react';
 
 /**
@@ -13,6 +14,7 @@ import { useState } from 'react';
  */
 export function Image({ block, priority = false }: ImageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { image } = block;
 
   // Extract URL from either 'file' or 'external' type
@@ -41,13 +43,20 @@ export function Image({ block, priority = false }: ImageProps) {
           className="focus:ring-ring w-full cursor-zoom-in rounded-lg focus:ring-2 focus:ring-offset-2 focus:outline-none"
           aria-label={`View ${altText || 'image'} in full size`}
         >
-          <img
-            src={imageUrl}
-            alt={altText}
-            loading={priority ? 'eager' : 'lazy'}
-            fetchPriority={priority ? 'high' : 'auto'}
-            className="border-border w-full rounded-lg border transition-opacity hover:opacity-90"
-          />
+          <div className="relative">
+            {!isLoaded && <div className="bg-muted aspect-video w-full animate-pulse rounded-lg" />}
+            <img
+              src={imageUrl}
+              alt={altText}
+              loading={priority ? 'eager' : 'lazy'}
+              fetchPriority={priority ? 'high' : 'auto'}
+              onLoad={() => setIsLoaded(true)}
+              className={cn(
+                'border-border w-full rounded-lg border transition-opacity hover:opacity-90',
+                !isLoaded && 'absolute inset-0 h-full opacity-0'
+              )}
+            />
+          </div>
         </button>
         {hasCaption && (
           <figcaption className="text-muted-foreground mt-2 text-center text-sm">

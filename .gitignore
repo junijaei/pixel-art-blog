@@ -35,3 +35,7 @@ tmpclaude-*
 *storybook.log
 storybook-static
 .vscode
+.omc
+.claude/settings.local.json
+
+BLOG_POST_*
