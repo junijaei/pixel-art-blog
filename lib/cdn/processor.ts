@@ -24,7 +24,7 @@ function extractImageInfo(imageBlock: ImageBlock): ImageBlockInfo | undefined {
   }
 }
 
-async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUploadResult> {
+async function processImageBlock(imageInfo: ImageBlockInfo, postSlugId: string): Promise<ImageUploadResult> {
   const { block, blockId, lastEditedTime, imageUrl } = imageInfo;
 
   const cached = await getCachedImage(blockId, lastEditedTime);
@@ -45,7 +45,7 @@ async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUpload
   }
 
   console.debug(`[Processor] Uploading: ${blockId}`);
-  const result = await uploadImage(imageUrl, blockId, lastEditedTime);
+  const result = await uploadImage(imageUrl, blockId, lastEditedTime, postSlugId);
 
   if (!result.success || !result.cdnUrl) {
     console.error(`[Processor] Failed: ${blockId}`, result.error);
@@ -65,7 +65,7 @@ async function processImageBlock(imageInfo: ImageBlockInfo): Promise<ImageUpload
   return result;
 }
 
-export async function processImageBlocks(imageBlocks: ImageBlock[]): Promise<ImageProcessingStats> {
+export async function processImageBlocks(imageBlocks: ImageBlock[], postSlugId: string): Promise<ImageProcessingStats> {
   if (isDevelopment()) {
     console.debug('[Processor] Development mode: Using mock processor');
     return mockProcessBlocks(imageBlocks);
@@ -79,7 +79,7 @@ export async function processImageBlocks(imageBlocks: ImageBlock[]): Promise<Ima
     return { totalImages: 0, uploaded: 0, cached: 0, failed: 0 };
   }
 
-  const results = await Promise.all(imageInfos.map((imageInfo) => processImageBlock(imageInfo!)));
+  const results = await Promise.all(imageInfos.map((imageInfo) => processImageBlock(imageInfo!, postSlugId)));
 
   const stats: ImageProcessingStats = {
     totalImages: imageInfos.length,

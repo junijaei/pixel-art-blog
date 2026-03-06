@@ -6,5 +6,3 @@ export type {
   ImageUploadResult,
   ImageProcessingStats,
 } from './image';
-
-export { CDN_BASE_URL } from './image';

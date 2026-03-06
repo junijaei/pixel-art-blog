@@ -1,5 +1,4 @@
 import type { CdnUploadResponse, ImageUploadResult } from '@/types/cdn';
-import { CDN_BASE_URL } from '@/types/cdn';
 import crypto from 'crypto';
 
 const DEFAULT_TIMEOUT = 30000;
@@ -10,14 +9,16 @@ const MAX_RETRIES = 3;
  * blockId + lastEditedTime을 해시하여 일관된 파일명을 생성합니다.
  * 이미지가 수정되면 lastEditedTime이 변경되어 새 파일명이 생성됩니다.
  */
-export function generateFileName(blockId: string, lastEditedTime: string): string {
+export function generateFileName(blockId: string, lastEditedTime: string, postSlugId: string): string {
   const contentHash = crypto.createHash('sha256').update(`${blockId}:${lastEditedTime}`).digest('hex').slice(0, 8);
   const sanitizedBlockId = blockId.replace(/-/g, '');
-  return `${sanitizedBlockId}_${contentHash}.webp`;
+  return `blog/post/${postSlugId}/${sanitizedBlockId}_${contentHash}.webp`;
 }
 
 export function getCdnUrl(fileName: string): string {
-  return `${CDN_BASE_URL}/${fileName}`;
+  const baseUrl = process.env.NEXT_PUBLIC_IMG_URL;
+  if (!baseUrl) throw new Error('NEXT_PUBLIC_IMG_URL environment variable is not set');
+  return `${baseUrl}/${fileName}`;
 }
 
 async function fetchWithTimeout(url: string, options: RequestInit, timeout: number): Promise<Response> {
@@ -47,10 +48,15 @@ async function uploadWithRetry(
     throw new Error('CLOUDFLARE_API_KEY environment variable is not set');
   }
 
+  const uploadUrl = process.env.NEXT_PUBLIC_IMG_UPLOAD_URL;
+  if (!uploadUrl) {
+    throw new Error('NEXT_PUBLIC_IMG_UPLOAD_URL environment variable is not set');
+  }
+
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
       const response = await fetchWithTimeout(
-        CDN_BASE_URL,
+        uploadUrl,
         {
           method: 'POST',
           headers: {
@@ -97,10 +103,11 @@ async function uploadWithRetry(
 export async function uploadImage(
   imageUrl: string,
   blockId: string,
-  lastEditedTime: string
+  lastEditedTime: string,
+  postSlugId: string
 ): Promise<ImageUploadResult> {
   try {
-    const fileName = generateFileName(blockId, lastEditedTime);
+    const fileName = generateFileName(blockId, lastEditedTime, postSlugId);
 
     console.debug(`[CDN] Uploading: ${fileName}`);
     const result = await uploadWithRetry(imageUrl, fileName);

@@ -1,5 +1,3 @@
-export const CDN_BASE_URL = 'https://cdn.junijaei.co.kr';
-
 export interface CdnUploadRequest {
   imageUrl: string;
   fileName: string;

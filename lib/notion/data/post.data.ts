@@ -108,7 +108,7 @@ export async function getPostWithContent(
   // 3. CDN image processing (side effect)
   if (blockMetadata.imageBlocks.length > 0) {
     const { processImageBlocks } = await import('@/lib/cdn');
-    const stats = await processImageBlocks(blockMetadata.imageBlocks);
+    const stats = await processImageBlocks(blockMetadata.imageBlocks, post.slug);
     if (stats.totalImages > 0) {
       console.debug(`[PostData] Images: ${stats.uploaded} uploaded, ${stats.cached} cached, ${stats.failed} failed`);
     }
@@ -198,7 +198,7 @@ export const getPostThumbnailUrl = cache(async (slug: string): Promise<string | 
 
     // Process through CDN if in production
     const { processImageBlocks } = await import('@/lib/cdn');
-    await processImageBlocks([imageBlock]);
+    await processImageBlocks([imageBlock], slug);
 
     // Return CDN URL (block.image is mutated by processImageBlocks)
     return extractThumbnailUrl(imageBlock);

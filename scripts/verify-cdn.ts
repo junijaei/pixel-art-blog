@@ -2,15 +2,16 @@
 
 import { checkImageExists } from '../lib/cdn/api';
 import { getCacheStats, loadCache } from '../lib/cdn/cache';
-import { CDN_BASE_URL } from '../types/cdn';
+
+const IMG_URL = process.env.NEXT_PUBLIC_IMG_URL ?? '';
 
 async function main() {
   console.debug('=== CDN Images Verification ===\n');
-  console.debug(`CDN Base URL: ${CDN_BASE_URL}\n`);
+  console.debug(`CDN Base URL: ${IMG_URL}\n`);
 
   console.debug('[1] Checking CDN connectivity...');
   try {
-    const response = await fetch(CDN_BASE_URL, { method: 'HEAD' });
+    const response = await fetch(IMG_URL, { method: 'HEAD' });
     console.debug(`    CDN Status: ${response.status} ${response.statusText}\n`);
   } catch (error) {
     console.error('    CDN unreachable:', error);
@@ -34,7 +35,7 @@ async function main() {
 
       console.debug('[3] Verifying cached images exist on CDN...');
       for (const entry of entries.slice(0, 3)) {
-        const fileName = entry.cdnUrl.replace(`${CDN_BASE_URL}/`, '');
+        const fileName = entry.cdnUrl.replace(`${IMG_URL}/`, '');
         const exists = await checkImageExists(fileName);
         console.debug(`    ${fileName}: ${exists ? 'EXISTS' : 'NOT FOUND'}`);
       }

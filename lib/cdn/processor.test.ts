@@ -75,7 +75,7 @@ describe('processImageBlocks — caption preservation', () => {
       uploadedAt: '2024-01-01T00:00:00.000Z',
     });
 
-    await processImageBlocks([block]);
+    await processImageBlocks([block], 'test-post');
 
     expect(block.image.caption).toEqual(mockCaption);
     expect(block.image.type).toBe('external');
@@ -92,7 +92,7 @@ describe('processImageBlocks — caption preservation', () => {
       fromCache: false,
     });
 
-    await processImageBlocks([block]);
+    await processImageBlocks([block], 'test-post');
 
     expect(block.image.caption).toEqual(mockCaption);
     expect(block.image.type).toBe('external');
@@ -109,7 +109,7 @@ describe('processImageBlocks — caption preservation', () => {
       uploadedAt: '2024-01-01T00:00:00.000Z',
     });
 
-    await processImageBlocks([block]);
+    await processImageBlocks([block], 'test-post');
 
     expect(block.image.name).toBe('test-image');
     expect(block.image.caption).toEqual(mockCaption);
