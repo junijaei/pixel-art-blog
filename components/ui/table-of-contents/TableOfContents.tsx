@@ -68,12 +68,9 @@ export function TableOfContents({ items, activeId, className }: TableOfContentsP
     return index === activeScopeStart && items[index]?.level === 1;
   };
 
-  // Check if there are children in the active scope (for showing connector line)
-  const hasChildrenInScope = activeScopeEnd > activeScopeStart + 1;
-
   return (
     <nav
-      aria-label="Table of contents"
+      aria-label="목차 목록"
       className={cn(
         'hidden lg:block',
         'fixed top-1/4 right-8 z-10',

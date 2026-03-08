@@ -67,7 +67,7 @@ export function Code({ block }: CodeProps) {
                 onClick={() => setIsExpanded(!isExpanded)}
                 className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-2 py-1 text-xs transition-colors"
                 aria-expanded={isExpanded}
-                aria-label={isExpanded ? 'Collapse code' : 'Expand code'}
+                aria-label={isExpanded ? '코드 접기' : '코드 펼치기'}
               >
                 {isExpanded ? 'Collapse' : 'Expand'}
               </button>
@@ -75,7 +75,7 @@ export function Code({ block }: CodeProps) {
             <button
               onClick={copyToClipboard}
               className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-2 py-1 text-xs transition-colors"
-              aria-label={isCopied ? 'Copied!' : 'Copy code'}
+              aria-label={isCopied ? '코드 복사됨' : '코드 복사하기'}
             >
               {isCopied ? 'Copied!' : 'Copy'}
             </button>
@@ -112,7 +112,7 @@ export function Code({ block }: CodeProps) {
             <button
               onClick={() => setIsExpanded(true)}
               className="text-muted-foreground hover:text-foreground w-full text-center text-xs transition-colors"
-              aria-label="Expand code"
+              aria-label="코드 펼치기"
             >
               Show all {lineCount} lines
             </button>

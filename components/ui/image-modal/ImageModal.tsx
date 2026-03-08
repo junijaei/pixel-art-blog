@@ -63,7 +63,7 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={`Enlarged view of ${alt || 'image'}`}
+      aria-label={`확장된 크기의 ${alt || '이미지'} 모달`}
       className={cn(
         'fixed inset-0 z-50 flex items-center justify-center',
         // Backdrop
@@ -77,7 +77,7 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
       <button
         type="button"
         onClick={onClose}
-        aria-label="Close modal"
+        aria-label="모달 닫기"
         className={cn(
           'absolute top-4 right-4 z-10',
           'rounded-lg p-2',

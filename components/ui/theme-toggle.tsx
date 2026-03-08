@@ -27,7 +27,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     return (
       <button
         className={cn('hover:bg-secondary cursor-pointer rounded-lg p-2 transition-colors', className)}
-        aria-label="Toggle theme"
+        aria-label="다크모드 토글 버튼"
       >
         <div className="h-4 w-4" />
       </button>
@@ -44,7 +44,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
     <button
       onClick={toggleTheme}
       className={cn('hover:bg-secondary cursor-pointer rounded-lg p-2 transition-colors', className)}
-      aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
     >
       {isDark ? (
         <PixelSun className="text-muted-foreground h-4 w-4 transition-transform hover:rotate-12" />

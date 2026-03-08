@@ -6,7 +6,7 @@ import type { CategoryTreeNode } from '@/types/notion';
 import { cn } from '@/utils/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 
 interface SidebarProps {
   categories: CategoryTreeNode[];
@@ -64,7 +64,7 @@ function CategoryTreeItem({
           <button
             onClick={handleToggle}
             className="hover:bg-sidebar-accent cursor-pointer rounded p-1 transition-colors"
-            aria-label={isExpanded ? 'Collapse category' : 'Expand category'}
+            aria-label={isExpanded ? '카테고리 접기' : '카테고리 펼치기'}
           >
             <PixelChevron
               className={cn('text-sidebar-foreground/60 h-3 w-3 transition-transform', isExpanded && 'rotate-90')}
@@ -200,7 +200,7 @@ export function Sidebar({ categories, className }: SidebarProps) {
             <button
               onClick={handleToggleAll}
               className="hover:bg-sidebar-accent text-sidebar-foreground/60 cursor-pointer rounded p-1 transition-colors"
-              aria-label="Toggle all categories"
+              aria-label={isAllExpanded ? '카테고리 전체 접기' : '카테고리 전체 펼치기'}
             >
               {isAllExpanded ? <PixelCollapse className="h-4 w-4" /> : <PixelExpand className="h-4 w-4" />}
             </button>
@@ -209,7 +209,7 @@ export function Sidebar({ categories, className }: SidebarProps) {
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className={cn('hover:bg-sidebar-accent ml-auto cursor-pointer rounded p-2 transition-colors')}
-          aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          aria-label={isCollapsed ? '사이드바 펼치기' : '사이드바 접기'}
         >
           <PixelChevron
             className={cn(
