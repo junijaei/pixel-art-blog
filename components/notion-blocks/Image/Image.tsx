@@ -4,7 +4,7 @@ import type { ImageProps } from '@/components/notion-blocks/Image/index';
 import { RichText } from '@/components/notion-blocks/RichText/RichText';
 import { ImageModal } from '@/components/ui';
 import { cn } from '@/utils/utils';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 /**
  * Notion Image 블록을 렌더링하는 컴포넌트
@@ -15,7 +15,16 @@ import { useState } from 'react';
 export function Image({ block, priority = false }: ImageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   const { image } = block;
+
+  // 강력 새로고침 시 캐시된 이미지는 onLoad가 발화하지 않으므로
+  // 마운트 후 img.complete로 이미 로드된 상태인지 확인
+  useEffect(() => {
+    if (imgRef.current?.complete) {
+      setIsLoaded(true);
+    }
+  }, []);
 
   // Extract URL from either 'file' or 'external' type
   const imageUrl =
@@ -41,11 +50,12 @@ export function Image({ block, priority = false }: ImageProps) {
           type="button"
           onClick={() => setIsModalOpen(true)}
           className="focus:ring-ring w-full cursor-zoom-in rounded-lg focus:ring-2 focus:ring-offset-2 focus:outline-none"
-          aria-label={`View ${altText || 'image'} in full size`}
+          aria-label={`${altText || '이미지'} 확대 보기`}
         >
           <div className="relative">
             {!isLoaded && <div className="bg-muted aspect-video w-full animate-pulse rounded-lg" />}
             <img
+              ref={imgRef}
               src={imageUrl}
               alt={altText}
               loading={priority ? 'eager' : 'lazy'}
