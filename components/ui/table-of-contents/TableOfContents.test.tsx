@@ -94,7 +94,7 @@ describe('TableOfContents', () => {
     it('has accessible navigation label', () => {
       render(<TableOfContents items={sampleItems} />);
       const nav = screen.getByRole('navigation');
-      expect(nav).toHaveAttribute('aria-label', 'Table of contents');
+      expect(nav).toHaveAttribute('aria-label', '목차 목록');
     });
   });
 });

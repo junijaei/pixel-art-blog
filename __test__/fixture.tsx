@@ -261,6 +261,7 @@ export function createMockPostPage(
 
   return {
     ...baseDatabasePage,
+    id: (id.prefix || '') + id.number,
     created_time: createdAt,
     last_edited_time: updatedAt,
     parent: { type: 'database_id', database_id: 'post-db-1' },
@@ -400,6 +401,7 @@ export function createMockCategoryPage(
 
   return {
     ...baseDatabasePage,
+    id: (id.prefix || '') + id.number,
     created_time: createdAt,
     last_edited_time: updatedAt,
     parent: { type: 'database_id', database_id: 'cat-db-1' },

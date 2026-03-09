@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock Notion client - must be before imports that use it
-vi.mock('./client', () => ({
+vi.mock('@/lib/notion/core/client', () => ({
   notionClient: {
     dataSources: {
       query: vi.fn(),
@@ -55,6 +55,7 @@ describe('fetchAllCategories', () => {
       hasChildren: true,
       path: '/frontend',
       isActive: true,
+      postCount: 0,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-06-15T12:00:00.000Z',
     });
@@ -358,6 +359,7 @@ describe('fetchCategory', () => {
       hasChildren: true,
       path: '/frontend',
       isActive: true,
+      postCount: 0,
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-06-15T00:00:00.000Z',
     });

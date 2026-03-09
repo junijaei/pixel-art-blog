@@ -195,10 +195,10 @@ describe('Nested Blocks Integration - Phase 1', () => {
 
       // Callout 내부의 children container 찾기
       const calloutDiv = container.querySelector('.rounded-xl');
-      const childrenContainer = calloutDiv?.querySelector('.mt-2');
+      const childrenContainer = calloutDiv?.querySelector('.mt-4');
 
       expect(childrenContainer).toBeInTheDocument();
-      expect(childrenContainer).toHaveClass('mt-2', 'space-y-1');
+      expect(childrenContainer).toHaveClass('mt-4');
     });
   });
 

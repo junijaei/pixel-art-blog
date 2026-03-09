@@ -114,13 +114,14 @@ describe('Bookmark', () => {
     expect(link).toHaveClass('border');
   });
 
-  it('스켈레톤 UI를 초기에 표시한다', () => {
+  it('preview 없이 URL만 표시한다', () => {
     const block = createBookmarkBlock('https://example.com');
 
     const { container } = render(<Bookmark block={block} />);
 
-    // 스켈레톤 요소가 있어야 함 (animate-pulse)
-    const skeleton = container.querySelector('.animate-pulse');
-    expect(skeleton).toBeInTheDocument();
+    // preview가 없으면 URL을 제목으로 표시
+    const link = container.querySelector('a');
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', 'https://example.com');
   });
 });

@@ -2,7 +2,7 @@ import { fetchBlocksChildren } from '@/lib/notion/core/block.api';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock Notion client
-vi.mock('./client', () => ({
+vi.mock('@/lib/notion/core/client', () => ({
   notionClient: {
     blocks: {
       children: {

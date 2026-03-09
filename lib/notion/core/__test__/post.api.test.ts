@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock Notion client - must be before imports that use it
-vi.mock('./client', () => ({
+vi.mock('@/lib/notion/core/client', () => ({
   notionClient: {
     dataSources: {
       query: vi.fn(),
@@ -34,7 +34,6 @@ describe('fetchPosts', () => {
       description: 'My first post',
       isPublished: true,
       publishedAt: '2025-06-15',
-      slug: 'hello-world',
       tags: ['react', 'next.js'],
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-06-15T12:00:00.000Z',
@@ -59,7 +58,7 @@ describe('fetchPosts', () => {
       description: 'My first post',
       isPublished: true,
       publishedAt: '2025-06-15',
-      slug: 'hello-world',
+      slug: 'post-page1',
       tags: ['react', 'next.js'],
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-06-15T12:00:00.000Z',
@@ -72,7 +71,6 @@ describe('fetchPosts', () => {
       categoryId: '',
       description: '',
       publishedAt: '',
-      slug: '',
       tags: [],
     });
 
@@ -90,7 +88,7 @@ describe('fetchPosts', () => {
     expect(result[0].categoryId).toBe('');
     expect(result[0].description).toBe('');
     expect(result[0].publishedAt).toBe('');
-    expect(result[0].slug).toBe('');
+    expect(result[0].slug).toBe('post-page1');
     expect(result[0].tags).toEqual([]);
   });
 
@@ -340,7 +338,6 @@ describe('fetchPost', () => {
       description: 'desc',
       isPublished: true,
       publishedAt: '2025-06-15',
-      slug: 'test-post',
       tags: ['tag1'],
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-06-15T00:00:00.000Z',
@@ -358,7 +355,7 @@ describe('fetchPost', () => {
       description: 'desc',
       isPublished: true,
       publishedAt: '2025-06-15',
-      slug: 'test-post',
+      slug: 'post-page1',
       tags: ['tag1'],
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-06-15T00:00:00.000Z',

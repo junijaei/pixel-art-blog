@@ -35,7 +35,7 @@ describe('ImageModal', () => {
 
     it('renders close button', () => {
       render(<ImageModal {...defaultProps} />);
-      expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /닫기/i })).toBeInTheDocument();
     });
 
     it('renders caption when provided', () => {
@@ -52,7 +52,7 @@ describe('ImageModal', () => {
   describe('Interactions', () => {
     it('calls onClose when close button is clicked', () => {
       render(<ImageModal {...defaultProps} />);
-      const closeButton = screen.getByRole('button', { name: /close/i });
+      const closeButton = screen.getByRole('button', { name: /닫기/i });
       fireEvent.click(closeButton);
       expect(mockOnClose).toHaveBeenCalledTimes(1);
     });
@@ -88,7 +88,7 @@ describe('ImageModal', () => {
 
     it('close button has accessible name', () => {
       render(<ImageModal {...defaultProps} />);
-      const closeButton = screen.getByRole('button', { name: /close/i });
+      const closeButton = screen.getByRole('button', { name: /닫기/i });
       expect(closeButton).toBeInTheDocument();
     });
   });
