@@ -8,6 +8,7 @@ import {
   NumberedListItem,
   Paragraph,
   Quote,
+  Table,
   ToDo,
   Toggle,
 } from '@/components/notion-blocks';
@@ -110,6 +111,9 @@ function BlockComponent({ block, numberedListIndex, firstImage = false }: BlockC
 
     case 'bookmark':
       return <BookmarkServer block={block} />;
+
+    case 'table':
+      return <Table block={block} />;
 
     default:
       // Unknown block type - gracefully skip or show placeholder

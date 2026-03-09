@@ -41,3 +41,6 @@ export { BlockRenderer } from './BlockRenderer';
 export type { BlockRendererProps } from './BlockRenderer';
 
 export { RichText } from './RichText';
+
+export { Table } from './Table';
+export type { TableProps, TableBlock, TableRowBlock } from './Table';

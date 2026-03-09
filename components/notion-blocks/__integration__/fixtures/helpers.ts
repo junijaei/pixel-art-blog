@@ -12,6 +12,8 @@ import type {
   QuoteBlock,
   RichText,
   RichTextAnnotations,
+  TableBlock,
+  TableRowBlock,
   ToDoBlock,
   ToggleBlock,
 } from '@/types/notion';
@@ -305,6 +307,37 @@ export function createImageBlock(
       }),
       ...(name && { name }),
       ...(caption.length > 0 && { caption }),
+    },
+  };
+}
+
+export function createTableRowBlock(cellTexts: string[], options: BlockBaseOptions = {}): TableRowBlock {
+  return {
+    ...DEFAULT_BLOCK_META,
+    id: options.id ?? generateBlockId('table-row'),
+    has_children: false,
+    children: options.children,
+    type: 'table_row',
+    table_row: {
+      cells: cellTexts.map((text) => createRichText(text)),
+    },
+  };
+}
+
+export function createTableBlock(
+  rows: TableRowBlock[],
+  options: BlockBaseOptions & { has_column_header?: boolean; has_row_header?: boolean } = {}
+): TableBlock {
+  return {
+    ...DEFAULT_BLOCK_META,
+    id: options.id ?? generateBlockId('table'),
+    has_children: rows.length > 0,
+    children: rows,
+    type: 'table',
+    table: {
+      table_width: rows[0]?.table_row.cells.length ?? 0,
+      has_column_header: options.has_column_header ?? false,
+      has_row_header: options.has_row_header ?? false,
     },
   };
 }
