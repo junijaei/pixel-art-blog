@@ -3,7 +3,7 @@ import { createPostLink } from '@/lib/notion/shared';
 import type { PostCardProps } from '@/types/notion';
 import Link from 'next/link';
 
-export function PostCard({ title, description, date, slug, categoryPath, categoryLabel, readingTime }: PostCardProps) {
+export function PostCard({ slug, title, description, date, categoryPath, categoryLabel, readingTime }: PostCardProps) {
   const href = createPostLink(categoryPath, slug);
 
   return (

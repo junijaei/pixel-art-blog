@@ -64,10 +64,10 @@ export default async function PostsPage({ searchParams }: PostsPageProps) {
                 {posts.map((post) => (
                   <PostCard
                     key={post.id}
+                    slug={post.slug}
                     title={post.title}
                     description={post.description}
                     date={post.date}
-                    slug={post.slug}
                     categoryPath={post.categoryPath}
                     categoryLabel={post.categoryLabel}
                   />

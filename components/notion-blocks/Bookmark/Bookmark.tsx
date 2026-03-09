@@ -29,11 +29,7 @@ export function Bookmark({ block, preview }: BookmarkProps) {
         {/* 썸네일 이미지 */}
         {preview?.image && (
           <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-lg">
-            <img
-  src={preview.image}
-  alt={preview.title || 'Bookmark preview'}
-  className="h-full w-full object-cover"
-/>
+            <img src={preview.image} alt={preview.title || 'Bookmark preview'} className="h-full w-full object-cover" />
           </div>
         )}
 

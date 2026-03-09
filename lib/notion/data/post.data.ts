@@ -212,7 +212,7 @@ export const getPostThumbnailUrl = cache(async (slug: string): Promise<string | 
  * Get thumbnails for multiple posts (batch, for list pages)
  *
  * @param posts - Posts to get thumbnails for
- * @returns Map of slug -> thumbnailUrl
+ * @returns Map of postId -> thumbnailUrl
  */
 export async function getPostsThumbnails(posts: Post[]): Promise<Map<string, string | null>> {
   const results = await Promise.all(

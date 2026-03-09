@@ -53,10 +53,10 @@ export default async function HomePage() {
           <section className="mb-16 px-6">
             <div className="mx-auto max-w-2xl">
               <PostCard
+                slug={featuredPost.slug}
                 title={featuredPost.title}
                 description={featuredPost.description}
                 date={featuredPost.date}
-                slug={featuredPost.slug}
                 categoryPath={featuredPost.categoryPath}
                 categoryLabel={featuredPost.categoryLabel}
               />
@@ -87,10 +87,10 @@ export default async function HomePage() {
                 {recentPosts.map((post) => (
                   <PostCard
                     key={post.id}
+                    slug={post.slug}
                     title={post.title}
                     description={post.description}
                     date={post.date}
-                    slug={post.slug}
                     categoryPath={post.categoryPath}
                     categoryLabel={post.categoryLabel}
                   />
