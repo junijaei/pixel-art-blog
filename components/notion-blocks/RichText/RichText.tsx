@@ -45,7 +45,7 @@ export function RichText({ richTextArray }: { richTextArray: RichText[] }) {
       element = (
         <code
           key={index}
-          className="bg-muted rounded px-1.5 py-0.5 font-mono text-[0.85em] whitespace-nowrap text-red-600"
+          className="bg-muted font-code rounded px-1.5 py-0.5 text-[0.85em] whitespace-nowrap text-red-600"
         >
           {element}
         </code>

@@ -12,44 +12,16 @@
 @custom-variant dark (&:is(.dark *));
 
 /* =====================================================
- * Custom Fonts - Local Font Face Definitions
- * ===================================================== */
-
-@font-face {
-  font-family: 'Galmuri11';
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  src: url('/fonts/Galmuri11.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Galmuri9';
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  src: url('/fonts/Galmuri9.woff2') format('woff2');
-}
-
-@font-face {
-  font-family: 'Mulmaru';
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  src: url('/fonts/Mulmaru.woff2') format('woff2');
-}
-
-/* =====================================================
  * Tailwind Theme Integration
  * CSS 변수를 Tailwind 테마에 매핑
  * ===================================================== */
 @theme inline {
   /* Typography */
-  --font-sans:
+  --font-pretendard:
     'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue',
     'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', sans-serif;
-  --font-mono: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  --font-code: 'Geist Mono', 'Geist Mono Fallback', monospace;
   --font-pixel: 'Silkscreen', cursive;
   --font-galmuri11:
     'Galmuri11', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR',
@@ -60,6 +32,7 @@
   --font-mulmaru:
     'mulmaru', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', 'Silkscreen',
     cursive;
+  --font-code: 'd2coding', 'Geist Mono', 'Geist Mono Fallback', monospace;
 
   /* Core Colors */
   --color-background: var(--background);
@@ -187,5 +160,34 @@
   /* 인라인 코드 overflow 방지 */
   .notion-content code:not(pre code) {
     word-break: break-all;
+  }
+
+  /* Shiki 코드 블록 줄 번호 */
+  .shiki-code-block pre {
+    counter-reset: shiki-line;
+  }
+
+  .shiki-code-block .line {
+    counter-increment: shiki-line;
+    /* display: inline-block; */
+    padding-left: 2.5rem;
+    position: relative;
+  }
+
+  .shiki-code-block .line::before {
+    content: counter(shiki-line);
+    font-family: var(--font-pixel);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2rem;
+    padding-right: 0.5rem;
+    text-align: right;
+    color: var(--foreground);
+    opacity: 0.35;
+    font-size: 10px;
+    line-height: inherit;
+    user-select: none;
+    pointer-events: none;
   }
 }

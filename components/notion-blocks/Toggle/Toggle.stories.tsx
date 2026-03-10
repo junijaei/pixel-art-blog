@@ -100,7 +100,7 @@ export const CodeExample: Story = {
     block: createToggleBlock(createRichText('Show code example')),
     children: (
       <pre className="bg-muted/30 overflow-x-auto rounded-lg p-4">
-        <code className="font-mono text-sm">
+        <code className="font-code text-sm">
           {`function example() {
   console.log("Hello, World!");
   return true;
