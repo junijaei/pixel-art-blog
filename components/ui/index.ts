@@ -1,4 +1,5 @@
 export * from './breadcrumb';
+export * from './giscus-comments';
 export * from './image-modal';
 export * from './pixel/pixel-decoration';
 export * from './pixel/pixel-icons';

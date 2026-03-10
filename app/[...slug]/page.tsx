@@ -1,6 +1,6 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { BlockRenderer } from '@/components/notion-blocks';
-import { Breadcrumb, PixelArrow, PixelClock, PixelDecoration, RelatedPosts, TocWithScrollSpy } from '@/components/ui';
+import { Breadcrumb, GiscusComments, PixelArrow, PixelClock, PixelDecoration, RelatedPosts, TocWithScrollSpy } from '@/components/ui';
 import {
   getCategoryDataBundle,
   getCategoryMaps,
@@ -150,6 +150,17 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </article>
 
           <RelatedPosts posts={relatedPosts} />
+
+          <section className="mt-16">
+            <div className="mb-6 flex items-center gap-3">
+              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" />
+              <span className="font-galmuri9 text-muted-foreground text-[10px] tracking-widest uppercase">
+                Comments
+              </span>
+              <div className="bg-border h-px flex-1" />
+            </div>
+            <GiscusComments />
+          </section>
 
             <footer className="border-border mt-16 border-t pt-8">
               <div className="flex items-center justify-between">
