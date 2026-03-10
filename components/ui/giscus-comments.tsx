@@ -15,7 +15,7 @@ export function GiscusComments() {
 
   if (!mounted) return null;
 
-  const giscusTheme = resolvedTheme === 'dark' ? 'dark_dimmed' : 'noborder_light';
+  const giscusTheme = resolvedTheme === 'dark' ? 'transparent_dark' : 'noborder_light';
 
   return (
     <GiscusWidget
