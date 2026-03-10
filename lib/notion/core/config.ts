@@ -8,7 +8,7 @@ export const NOTION_DATASOURCE_POST_ID = process.env.NOTION_DATASOURCE_POST_ID |
 export const ISR_CONFIG = {
   // 재검증 시간 (초 단위)
   REVALIDATE_TIME: {
-    HOME: 3600, // 1시간 - 홈페이지
+    HOME: 1800, // 30분 - 홈페이지
     CATEGORY_LIST: 3600, // 1시간 - 카테고리 목록 (자주 변경되지 않음)
     POSTS_LIST: 1800, // 30분 - 포스트 목록
     POST_DETAIL: 3600, // 1시간 - 개별 포스트

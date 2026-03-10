@@ -14,7 +14,7 @@ import { formatDateKorean } from '@/utils/utils';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
-export const revalidate = 3600;
+export const revalidate = 3600; // 1시간
 export const dynamicParams = true;
 
 // eslint-disable-next-line react-refresh/only-export-components
