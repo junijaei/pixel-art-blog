@@ -82,7 +82,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="kr" suppressHydrationWarning>
       <body
         className={cn(
           geistMono.variable,
@@ -92,7 +92,7 @@ export default function RootLayout({
           galmuri9.variable,
           galmuri11.variable,
           mulmaru.variable,
-          'max-w-dvw font-pretendard antialiased'
+          'font-pretendard max-w-dvw antialiased'
         )}
       >
         <NextTopLoader

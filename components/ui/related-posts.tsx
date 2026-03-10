@@ -3,7 +3,7 @@ import { createPostLink } from '@/lib/notion/shared';
 import type { PostCardData } from '@/types/notion';
 import Link from 'next/link';
 
-interface RelatedPostCardProps extends Omit<PostCardData, 'id' | 'description'> {}
+type RelatedPostCardProps = Omit<PostCardData, 'id' | 'description'>;
 
 function RelatedPostCard({ slug, title, date, categoryPath, categoryLabel }: RelatedPostCardProps) {
   const href = createPostLink(categoryPath, slug);
@@ -41,9 +41,7 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
     <section className="mt-16">
       <div className="mb-4 flex items-center gap-3">
         <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" />
-        <span className="font-galmuri9 text-muted-foreground text-[10px] tracking-widest uppercase">
-          Related Posts
-        </span>
+        <span className="font-galmuri9 text-muted-foreground text-[10px] tracking-widest uppercase">Related Posts</span>
         <div className="bg-border h-px flex-1" />
       </div>
 
