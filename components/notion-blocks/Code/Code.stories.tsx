@@ -207,6 +207,68 @@ export function useStorage<T>(
   },
 };
 
+export const MermaidFlowchart: Story = {
+  args: {
+    block: createCodeBlock(
+      `flowchart TD
+    A[시작] --> B{조건 확인}
+    B -->|참| C[작업 실행]
+    B -->|거짓| D[오류 처리]
+    C --> E[완료]
+    D --> E`,
+      'mermaid'
+    ),
+  },
+};
+
+export const MermaidSequence: Story = {
+  args: {
+    block: createCodeBlock(
+      `sequenceDiagram
+    participant 클라이언트
+    participant 서버
+    participant DB
+
+    클라이언트->>서버: GET /api/posts
+    서버->>DB: SELECT * FROM posts
+    DB-->>서버: 결과 반환
+    서버-->>클라이언트: JSON 응답`,
+      'mermaid'
+    ),
+  },
+};
+
+export const MermaidERD: Story = {
+  args: {
+    block: createCodeBlock(
+      `erDiagram
+    USER {
+      int id PK
+      string name
+      string email
+    }
+    POST {
+      int id PK
+      string title
+      int user_id FK
+    }
+    USER ||--o{ POST : "작성"`,
+      'mermaid'
+    ),
+  },
+};
+
+export const MermaidWithCaption: Story = {
+  args: {
+    block: createCodeBlock(
+      `flowchart LR
+    A[입력] --> B[처리] --> C[출력]`,
+      'mermaid',
+      createRichText('데이터 처리 흐름도', { italic: true })
+    ),
+  },
+};
+
 export const MultipleCodeBlocks: Story = {
   args: {
     block: createCodeBlock('<div className="container"><h1>Hello</h1></div>', 'jsx'),

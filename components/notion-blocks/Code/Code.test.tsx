@@ -1,7 +1,14 @@
 import { Code } from '@/components/notion-blocks/Code/Code';
 import type { CodeBlock, RichText } from '@/types/notion';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+
+// MermaidDiagram 모킹 - mermaid는 브라우저 환경이 필요하므로 테스트에서 모킹
+vi.mock('@/components/notion-blocks/Code/MermaidDiagram', () => ({
+  MermaidDiagram: ({ code }: { code: string }) => (
+    <div data-testid="mermaid-diagram" data-code={code} />
+  ),
+}));
 
 // Helper function to create complete CodeBlock with all required fields
 const createCodeBlock = (code: string, language: string, caption: RichText[] = []): CodeBlock => ({
@@ -178,6 +185,69 @@ describe('Code', () => {
 
       // 확장됨
       expect(screen.getByText('Collapse')).toBeInTheDocument();
+    });
+  });
+
+  describe('Mermaid 다이어그램', () => {
+    it('language가 mermaid일 때 MermaidDiagram을 렌더링한다', () => {
+      const code = 'flowchart TD\n  A --> B';
+      const block = createCodeBlock(code, 'mermaid');
+
+      render(<Code block={block} />);
+
+      expect(screen.getByTestId('mermaid-diagram')).toBeInTheDocument();
+    });
+
+    it('mermaid 블록은 코드 블록 헤더를 렌더링하지 않는다', () => {
+      const block = createCodeBlock('flowchart TD\n  A --> B', 'mermaid');
+
+      render(<Code block={block} />);
+
+      expect(screen.queryByText('mermaid')).not.toBeInTheDocument();
+      expect(screen.queryByText('Copy')).not.toBeInTheDocument();
+    });
+
+    it('mermaid 블록에 caption을 렌더링한다', () => {
+      const caption: RichText[] = [
+        {
+          type: 'text',
+          text: { content: '흐름도 설명', link: null },
+          annotations: {
+            bold: false,
+            italic: false,
+            strikethrough: false,
+            underline: false,
+            code: false,
+            color: 'default',
+          },
+          plain_text: '흐름도 설명',
+          href: null,
+        },
+      ];
+      const block = createCodeBlock('flowchart TD\n  A --> B', 'mermaid', caption);
+
+      render(<Code block={block} />);
+
+      expect(screen.getByTestId('mermaid-diagram')).toBeInTheDocument();
+      expect(screen.getByText('흐름도 설명')).toBeInTheDocument();
+    });
+
+    it('mermaid 코드가 MermaidDiagram에 올바르게 전달된다', () => {
+      const code = 'sequenceDiagram\n  A->>B: Hello';
+      const block = createCodeBlock(code, 'mermaid');
+
+      render(<Code block={block} />);
+
+      expect(screen.getByTestId('mermaid-diagram')).toHaveAttribute('data-code', code);
+    });
+
+    it('일반 코드 블록은 MermaidDiagram을 렌더링하지 않는다', () => {
+      const block = createCodeBlock('console.log("hello")', 'javascript');
+
+      render(<Code block={block} />);
+
+      expect(screen.queryByTestId('mermaid-diagram')).not.toBeInTheDocument();
+      expect(screen.getByText('javascript')).toBeInTheDocument();
     });
   });
 });
