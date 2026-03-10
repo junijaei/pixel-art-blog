@@ -163,6 +163,60 @@ export async function getPostsWithReadingTime(posts: Post[]): Promise<Array<Post
 }
 
 /**
+ * Compute category similarity score between two fullPath strings.
+ * Score = number of matching path segments from the start (common prefix length).
+ */
+function computeCategoryScore(currentFullPath: string, otherFullPath: string): number {
+  if (!currentFullPath || !otherFullPath) return 0;
+
+  const currentSegments = currentFullPath.split('/');
+  const otherSegments = otherFullPath.split('/');
+  const minLen = Math.min(currentSegments.length, otherSegments.length);
+
+  let score = 0;
+  for (let i = 0; i < minLen; i++) {
+    if (currentSegments[i] === otherSegments[i]) score++;
+    else break;
+  }
+  return score;
+}
+
+/**
+ * Get related posts for a given post, sorted by category similarity.
+ *
+ * Reuses cached getPosts() and getCategoryMaps() — no extra API calls.
+ */
+export async function getRelatedPosts(currentPost: Post, maxCount: number = 3): Promise<PostCardData[]> {
+  const [allPosts, categoryMaps] = await Promise.all([getPosts(), getCategoryMaps()]);
+
+  const currentCategory = categoryMaps.byId.get(currentPost.categoryId);
+  const currentFullPath = currentCategory?.fullPath ?? '';
+
+  return allPosts
+    .filter((post) => post.id !== currentPost.id && post.isPublished)
+    .map((post) => {
+      const category = categoryMaps.byId.get(post.categoryId);
+      const fullPath = category?.fullPath ?? '';
+      return { post, category, score: computeCategoryScore(currentFullPath, fullPath) };
+    })
+    .filter(({ score }) => score > 0)
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return new Date(b.post.publishedAt).getTime() - new Date(a.post.publishedAt).getTime();
+    })
+    .slice(0, maxCount)
+    .map(({ post, category }) => ({
+      id: post.id,
+      title: post.title,
+      description: post.description || '내용이 없습니다.',
+      date: formatRelativeTime(post.publishedAt),
+      slug: post.slug,
+      categoryPath: category?.fullPath || '',
+      categoryLabel: category?.label || '',
+    }));
+}
+
+/**
  * Find first image block from blocks (shallow search for performance)
  */
 function findFirstImageBlock(blocks: Block[]): ImageBlock | null {

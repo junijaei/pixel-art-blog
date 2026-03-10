@@ -1,6 +1,6 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { BlockRenderer } from '@/components/notion-blocks';
-import { Breadcrumb, PixelArrow, PixelClock, PixelDecoration, TocWithScrollSpy } from '@/components/ui';
+import { Breadcrumb, PixelArrow, PixelClock, PixelDecoration, RelatedPosts, TocWithScrollSpy } from '@/components/ui';
 import {
   getCategoryDataBundle,
   getCategoryMaps,
@@ -8,6 +8,7 @@ import {
   getPostThumbnailUrl,
   getPostWithContent,
   getPosts,
+  getRelatedPosts,
   parsePostLink,
 } from '@/lib/notion';
 import { formatDateKorean } from '@/utils/utils';
@@ -84,6 +85,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   const { post, blocks, metadata, category } = postData;
 
+  // 연관된 글 조회 (getPosts/getCategoryMaps 캐시 재사용 — 추가 API 호출 없음)
+  const relatedPosts = await getRelatedPosts(post);
+
   return (
     <div className="flex min-h-screen flex-col">
       <BlogHeader />
@@ -144,6 +148,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <article className="prose prose-neutral dark:prose-invert max-w-none">
             <BlockRenderer blocks={blocks} />
           </article>
+
+          <RelatedPosts posts={relatedPosts} />
 
             <footer className="border-border mt-16 border-t pt-8">
               <div className="flex items-center justify-between">

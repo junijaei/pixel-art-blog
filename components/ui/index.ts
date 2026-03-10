@@ -5,6 +5,7 @@ export * from './pixel/pixel-icons';
 export * from './post-card';
 export * from './post-card-skeleton';
 export * from './post-detail-skeleton';
+export * from './related-posts';
 export * from './table-of-contents';
 export * from './theme-toggle';
 export * from './skeleton';

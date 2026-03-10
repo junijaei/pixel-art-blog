@@ -37,6 +37,7 @@ export {
   getPostsThumbnails,
   getPostThumbnailUrl,
   getPostWithContent,
+  getRelatedPosts,
 } from './data/post.data';
 export type { PostWithContent } from './data/post.data';
 
