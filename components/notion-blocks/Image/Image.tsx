@@ -12,9 +12,12 @@ import { useEffect, useRef, useState } from 'react';
  *
  * @param block - Notion API에서 반환된 Image 블록 데이터
  */
+const PLACEHOLDER_SRC = '/placeholder-image.png';
+
 export function Image({ block, priority = false }: ImageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isError, setIsError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
   const { image } = block;
 
@@ -56,11 +59,15 @@ export function Image({ block, priority = false }: ImageProps) {
             {!isLoaded && <div className="bg-muted aspect-video w-full animate-pulse rounded-lg" />}
             <img
               ref={imgRef}
-              src={imageUrl}
+              src={isError ? PLACEHOLDER_SRC : imageUrl}
               alt={altText}
               loading={priority ? 'eager' : 'lazy'}
               fetchPriority={priority ? 'high' : 'auto'}
               onLoad={() => setIsLoaded(true)}
+              onError={() => {
+                setIsError(true);
+                setIsLoaded(true);
+              }}
               className={cn(
                 'border-border w-full rounded-lg border transition-opacity hover:opacity-90',
                 !isLoaded && 'absolute inset-0 h-full opacity-0'

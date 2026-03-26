@@ -1,6 +1,6 @@
 import { Image } from '@/components/notion-blocks/Image/Image';
 import type { ImageBlock } from '@/types/notion';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 describe('Image', () => {
@@ -221,6 +221,31 @@ describe('Image', () => {
     expect(img).toHaveAttribute('fetchpriority', 'high');
   });
 
+
+  it('shows placeholder image on error', () => {
+    const block: ImageBlock = {
+      object: 'block',
+      id: 'test-image-error',
+      type: 'image',
+      image: {
+        type: 'external',
+        external: { url: 'https://example.com/broken.png' },
+        name: 'Broken image',
+      },
+      parent: { type: 'page_id', page_id: 'test-page' },
+      created_time: '2024-01-01T00:00:00.000Z',
+      last_edited_time: '2024-01-01T00:00:00.000Z',
+      has_children: false,
+      archived: false,
+    };
+
+    render(<Image block={block} />);
+
+    const img = screen.getByRole('img');
+    fireEvent.error(img);
+
+    expect(img).toHaveAttribute('src', '/placeholder-image.png');
+  });
 
   it('renders figure element with proper structure', () => {
     const block: ImageBlock = {
