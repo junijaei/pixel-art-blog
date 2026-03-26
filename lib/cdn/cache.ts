@@ -2,7 +2,7 @@ import type { ImageCacheEntry, ImageCacheStore } from '@/types/cdn';
 import fs from 'fs/promises';
 import path from 'path';
 
-const CACHE_DIR = path.join(process.cwd(), '.cache');
+const CACHE_DIR = path.join(process.cwd(), '.next', 'cache');
 const CACHE_FILE = path.join(CACHE_DIR, 'cdn-images.json');
 const CACHE_VERSION = '2.0.0';
 
@@ -114,6 +114,27 @@ export async function setCachedImage(
 
   await saveCache(store);
   console.debug(`[Cache] Set: ${blockId} -> ${cdnUrl}`);
+}
+
+export async function batchSetCachedImages(
+  entries: Array<{
+    blockId: string;
+    lastEditedTime: string;
+    cdnUrl: string;
+    originalFilename?: string;
+  }>
+): Promise<void> {
+  if (entries.length === 0) return;
+
+  const store = await loadCache();
+  const now = new Date().toISOString();
+
+  for (const { blockId, lastEditedTime, cdnUrl, originalFilename } of entries) {
+    store.entries[blockId] = { blockId, lastEditedTime, cdnUrl, uploadedAt: now, originalFilename };
+  }
+
+  await saveCache(store);
+  console.debug(`[Cache] Batch set ${entries.length} entries`);
 }
 
 export async function deleteCachedImage(blockId: string): Promise<void> {

@@ -8,7 +8,7 @@ vi.mock('@/lib/cdn/dev-mock', () => ({
 
 vi.mock('@/lib/cdn/cache', () => ({
   getCachedImage: vi.fn(),
-  setCachedImage: vi.fn(),
+  batchSetCachedImages: vi.fn(),
 }));
 
 vi.mock('@/lib/cdn/api', () => ({
@@ -19,7 +19,7 @@ vi.mock('../notion', () => ({
   extractImageUrl: vi.fn((image) => image?.external?.url ?? image?.file?.url ?? null),
 }));
 
-import { getCachedImage, setCachedImage } from '@/lib/cdn/cache';
+import { batchSetCachedImages, getCachedImage } from '@/lib/cdn/cache';
 import { uploadImage } from '@/lib/cdn/api';
 import { processImageBlocks } from '@/lib/cdn/processor';
 
@@ -62,7 +62,7 @@ function createImageBlock(id: string, url: string): ImageBlock {
 describe('processImageBlocks — caption preservation', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.mocked(setCachedImage).mockResolvedValue(undefined);
+    vi.mocked(batchSetCachedImages).mockResolvedValue(undefined);
   });
 
   it('preserves caption when image is served from cache', async () => {
