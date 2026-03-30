@@ -2,7 +2,7 @@
  * Category Domain - Pure business logic
  */
 
-export { createPostLink, parsePostLink } from './link';
+export { createCategoryLink, createPostLink, parsePostLink } from './link';
 export {
   buildBreadcrumbItems,
   buildCategoryMaps,

@@ -4,6 +4,11 @@
  * Pure functions for URL generation/parsing
  */
 
+export function createCategoryLink(categoryFullPath: string): string {
+  if (!categoryFullPath) return '/posts';
+  return `/posts/${categoryFullPath}`;
+}
+
 export function createPostLink(categoryPath: string, postId: string): string {
   if (!categoryPath) {
     return `/${postId}`;

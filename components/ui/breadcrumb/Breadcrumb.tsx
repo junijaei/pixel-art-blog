@@ -28,7 +28,7 @@ export function Breadcrumb({ items, currentPath, className }: BreadcrumbProps) {
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
         const isCurrent = currentPath === item.path;
-        const href = item.path ? `/posts?category=${item.path}` : '/posts';
+        const href = item.path ? `/posts/${item.path}` : '/posts';
 
         return (
           <span key={item.path || 'all'} className="flex items-center gap-1">

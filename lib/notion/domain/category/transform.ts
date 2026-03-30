@@ -80,7 +80,7 @@ export function buildBreadcrumbItems(
     const partialPath = segments.slice(0, i + 1).join('/');
     const category = categoryByFullPathMap.get(partialPath);
     if (category) {
-      items.push({ label: category.label, path: category.path });
+      items.push({ label: category.label, path: partialPath });
     }
   }
 

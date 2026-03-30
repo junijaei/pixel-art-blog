@@ -9,4 +9,4 @@ export * from './utils';
 export { highlightCode } from '@/lib/notion/core/shiki';
 
 // Re-export pure domain functions for client components
-export { createPostLink, parsePostLink } from '@/lib/notion/domain/category';
+export { createCategoryLink, createPostLink, parsePostLink } from '@/lib/notion/domain/category';

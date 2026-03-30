@@ -2,6 +2,7 @@
 
 import { PixelChevron, PixelCollapse, PixelExpand, PixelFolder, PixelFolderOpen } from '@/components/ui';
 import { useStorage } from '@/hooks/use-storage';
+import { createCategoryLink } from '@/lib/notion/shared';
 import type { CategoryTreeNode } from '@/types/notion';
 import { cn } from '@/utils/utils';
 import Link from 'next/link';
@@ -19,6 +20,7 @@ interface CategoryTreeItemProps {
   expandedCategories: string[];
   onToggleExpanded: (categoryId: string) => void;
   currentPath: string;
+  parentFullPath?: string;
 }
 
 function CategoryTreeItem({
@@ -27,6 +29,7 @@ function CategoryTreeItem({
   expandedCategories,
   onToggleExpanded,
   currentPath,
+  parentFullPath,
 }: CategoryTreeItemProps) {
   const isExpanded = expandedCategories.includes(node.id);
   const hasChildren = node.children && node.children.length > 0;
@@ -34,11 +37,13 @@ function CategoryTreeItem({
   // Use server-precomputed cumulative count — no posts[] needed on the client
   const postCount = node.cumulativePostCount;
 
+  const fullPath = parentFullPath ? `${parentFullPath}/${node.path}` : node.path;
+  const href = createCategoryLink(fullPath);
+
   // 현재 경로가 이 카테고리의 경로와 일치하는지 확인
   const isActive = useMemo(() => {
-    const categoryPath = `/posts/${node.path}`;
-    return currentPath === categoryPath || currentPath.startsWith(`${categoryPath}/`);
-  }, [currentPath, node.path]);
+    return currentPath === href || currentPath.startsWith(`${href}/`);
+  }, [currentPath, href]);
 
   const handleToggle = useCallback(
     (e: React.MouseEvent) => {
@@ -76,7 +81,7 @@ function CategoryTreeItem({
 
         {/* Category Link */}
         <Link
-          href={`/posts/${node.path}`}
+          href={href}
           className={cn(
             'flex flex-1 items-center gap-2 rounded-md px-2 py-1 transition-colors',
             'hover:bg-sidebar-accent text-sidebar-foreground'
@@ -108,6 +113,7 @@ function CategoryTreeItem({
               expandedCategories={expandedCategories}
               onToggleExpanded={onToggleExpanded}
               currentPath={currentPath}
+              parentFullPath={fullPath}
             />
           ))}
         </div>
