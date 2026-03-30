@@ -1,30 +1,34 @@
-import { BlogFooter, BlogHeader } from '@/components/layouts';
-import { PixelDecoration, PostCard } from '@/components/ui';
-import { findCategoryByPath, getAllDescendantIds, getCategoryTree, getPostCardsData, getPosts } from '@/lib/notion';
+import { findCategoryByPath, getAllDescendantIds, getCategoryMaps, getCategoryTree, getPostCardsData, getPosts } from '@/lib/notion';
 import type { PostCardData } from '@/types/notion';
-import { capitalizeFirst } from '@/utils/utils';
 import { notFound } from 'next/navigation';
+import { PostsList } from '../_components/posts-list';
 
 export const revalidate = 1800; // 30분
+export const dynamicParams = true;
 
-interface PostsCategoryPageProps {
-  params: Promise<{ slug: string[] }>;
+// eslint-disable-next-line react-refresh/only-export-components
+export async function generateStaticParams() {
+  try {
+    const categoryMaps = await getCategoryMaps();
+    return Array.from(categoryMaps.byId.values()).map((cat) => ({
+      slug: cat.fullPath ? cat.fullPath.split('/') : [cat.path],
+    }));
+  } catch {
+    return [];
+  }
 }
 
-export default async function PostsCategoryPage({ params }: PostsCategoryPageProps) {
+export default async function PostsCategoryPage({ params }: { params: Promise<{ slug: string[] }> }) {
   const { slug } = await params;
-  const categoryPath = slug.join('/');
+  const categoryPath = slug.at(-1)!; // 마지막 segment로 카테고리 탐색
 
   let posts: PostCardData[] = [];
   let categoryLabel = '';
 
   try {
     const [allPosts, categoryTree] = await Promise.all([getPosts(), getCategoryTree()]);
-
     const categoryNode = findCategoryByPath(categoryTree, categoryPath);
-    if (!categoryNode) {
-      notFound();
-    }
+    if (!categoryNode) notFound();
 
     categoryLabel = categoryNode.label;
     const categoryIds = new Set(getAllDescendantIds(categoryNode));
@@ -34,52 +38,5 @@ export default async function PostsCategoryPage({ params }: PostsCategoryPagePro
     console.error('Failed to fetch posts from Notion:', error);
   }
 
-  return (
-    <div className="flex min-h-screen flex-col">
-      <BlogHeader />
-
-      <main className="flex-1">
-        <section className="px-6 py-16">
-          <div className="mx-auto max-w-2xl">
-            <div className="mb-6 flex items-center gap-4">
-              <PixelDecoration layout="horizontal" gradientStart="center" />
-              <span className="text-muted-foreground font-galmuri9 text-[10px] tracking-widest uppercase">
-                {capitalizeFirst(categoryLabel)} Posts
-              </span>
-            </div>
-
-            <h1 className="font-mulmaru mb-4 text-4xl leading-tight font-bold sm:text-5xl">
-              {capitalizeFirst(categoryLabel)}
-            </h1>
-
-            <p className="text-muted-foreground max-w-2xl text-lg leading-relaxed">
-              {posts.length > 0 ? `총 ${posts.length}개의 포스트` : '포스트가 없습니다.'}
-            </p>
-          </div>
-        </section>
-
-        {posts.length > 0 && (
-          <section className="px-6 pb-20">
-            <div className="mx-auto max-w-2xl">
-              <div className="flex flex-col gap-6">
-                {posts.map((post) => (
-                  <PostCard
-                    key={post.id}
-                    slug={post.slug}
-                    title={post.title}
-                    description={post.description}
-                    date={post.date}
-                    categoryPath={post.categoryPath}
-                    categoryLabel={post.categoryLabel}
-                  />
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-      </main>
-
-      <BlogFooter />
-    </div>
-  );
+  return <PostsList posts={posts} categoryLabel={categoryLabel} />;
 }
