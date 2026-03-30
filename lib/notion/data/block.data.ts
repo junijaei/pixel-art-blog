@@ -18,7 +18,9 @@ export const getBlocks = cache(async (blockId: string): Promise<Block[]> => {
  * Fetches blocks and enriches with children in one call
  */
 export const getBlocksWithChildren = cache(async (blockId: string, maxDepth: number = 10): Promise<Block[]> => {
-  const blocks = await fetchBlocks(blockId);
+  // getBlocks의 캐시 결과를 재사용해 Notion API 중복 호출을 방지한다.
+  // fetchBlocksChildren은 spread로 새 객체를 생성하므로 캐시된 블록을 변형하지 않는다.
+  const blocks = await getBlocks(blockId);
   return await fetchBlocksChildren(blocks, maxDepth);
 });
 

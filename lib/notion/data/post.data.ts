@@ -7,6 +7,7 @@
 import { fetchBlocks, fetchBlocksChildren } from '@/lib/notion/core/block.api';
 import { ISR_CONFIG } from '@/lib/notion/core/config';
 import { fetchPost, fetchPosts } from '@/lib/notion/core/post.api';
+import { unstable_cache } from 'next/cache';
 import { processBlockTree } from '@/lib/notion/domain/block';
 import { buildBreadcrumbItems } from '@/lib/notion/domain/category';
 import type { BreadcrumbItem, TocItem } from '@/lib/notion/shared/types';
@@ -42,11 +43,22 @@ export interface PostWithContent {
   category: CategoryWithFullPath | null;
 }
 
+// 발행된 포스트 전체 목록에 요청 간 캐싱 적용 (30분)
+// 필터/정렬 옵션이 있는 경우는 동적이므로 per-request cache()만 사용
+const fetchPublishedPostsFromNotion = unstable_cache(
+  async () => fetchPosts(ISR_CONFIG.POST_DATABASE_ID),
+  ['notion-published-posts'],
+  { revalidate: 1800 }
+);
+
 /**
- * Get all posts (memoized)
+ * Get all posts (cross-request cached for default, per-request memoized for filtered)
  */
 export const getPosts = cache(async (options?: PostFilterOptions, sortOptions?: PostSortOptions): Promise<Post[]> => {
-  return await fetchPosts(ISR_CONFIG.POST_DATABASE_ID, options, sortOptions);
+  if (!options && !sortOptions) {
+    return fetchPublishedPostsFromNotion();
+  }
+  return fetchPosts(ISR_CONFIG.POST_DATABASE_ID, options, sortOptions);
 });
 
 /**

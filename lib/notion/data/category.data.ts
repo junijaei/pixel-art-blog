@@ -8,14 +8,22 @@ import { fetchAllCategories } from '@/lib/notion/core/category.api';
 import { ISR_CONFIG } from '@/lib/notion/core/config';
 import { buildCategoryMaps, buildCategoryTree } from '@/lib/notion/domain/category';
 import type { Category, CategoryTreeNode, CategoryWithFullPath } from '@/types/notion';
+import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
 
+// 카테고리 데이터는 자주 변경되지 않으므로 요청 간 캐싱 적용 (1시간)
+// unstable_cache: ISR 재검증 사이클 전반에 걸쳐 Notion API 호출 최소화
+// cache(): 단일 렌더 패스 내 중복 호출 방지
+const fetchCategoriesFromNotion = unstable_cache(
+  async () => fetchAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true }),
+  ['notion-categories'],
+  { revalidate: 3600 }
+);
+
 /**
- * Get all categories (cached)
+ * Get all categories (cross-request cached)
  */
-export const getCategories = cache(async (): Promise<Category[]> => {
-  return await fetchAllCategories(ISR_CONFIG.CATEGORY_DATABASE_ID, { activeOnly: true });
-});
+export const getCategories = cache(fetchCategoriesFromNotion);
 
 /**
  * Get category maps (cached)
