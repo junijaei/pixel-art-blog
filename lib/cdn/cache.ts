@@ -2,6 +2,10 @@ import type { ImageCacheEntry, ImageCacheStore } from '@/types/cdn';
 import fs from 'fs/promises';
 import path from 'path';
 
+// Vercel 서버리스(ISR) 환경에서는 .next 디렉토리가 읽기 전용이므로
+// 빌드 타임에만 파일 쓰기를 수행한다.
+const IS_BUILD_PHASE = process.env.NEXT_PHASE === 'phase-production-build';
+
 const CACHE_DIR = path.join(process.cwd(), '.next', 'cache');
 const CACHE_FILE = path.join(CACHE_DIR, 'cdn-images.json');
 const CACHE_VERSION = '2.0.0';
@@ -63,14 +67,17 @@ export async function loadCache(): Promise<ImageCacheStore> {
 }
 
 export async function saveCache(store: ImageCacheStore): Promise<void> {
+  // 메모리 캐시는 항상 갱신 (현재 invocation 내 중복 업로드 방지)
+  store.lastUpdated = new Date().toISOString();
+  memoryCache = store;
+  memoryCacheLoaded = true;
+
+  // 파일 쓰기는 빌드 타임에만 수행
+  // ISR 서버리스 환경에서는 .next 디렉토리가 읽기 전용이므로 건너뜀
+  if (!IS_BUILD_PHASE) return;
+
   try {
     await ensureCacheDir();
-    store.lastUpdated = new Date().toISOString();
-
-    // 메모리 캐시 업데이트
-    memoryCache = store;
-    memoryCacheLoaded = true;
-
     await fs.writeFile(CACHE_FILE, JSON.stringify(store, null, 2), 'utf-8');
     console.debug(`[Cache] Saved ${Object.keys(store.entries).length} entries to disk`);
   } catch (error) {
