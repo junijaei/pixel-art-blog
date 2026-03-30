@@ -36,7 +36,7 @@ function CategoryTreeItem({
 
   // 현재 경로가 이 카테고리의 경로와 일치하는지 확인
   const isActive = useMemo(() => {
-    const categoryPath = `/${node.path}`;
+    const categoryPath = `/posts/${node.path}`;
     return currentPath === categoryPath || currentPath.startsWith(`${categoryPath}/`);
   }, [currentPath, node.path]);
 
@@ -76,7 +76,7 @@ function CategoryTreeItem({
 
         {/* Category Link */}
         <Link
-          href={`/posts?category=${encodeURIComponent(node.path)}`}
+          href={`/posts/${node.path}`}
           className={cn(
             'flex flex-1 items-center gap-2 rounded-md px-2 py-1 transition-colors',
             'hover:bg-sidebar-accent text-sidebar-foreground'

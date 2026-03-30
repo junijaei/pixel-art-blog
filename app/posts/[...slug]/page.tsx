@@ -1,17 +1,35 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { PixelDecoration, PostCard } from '@/components/ui';
-import { getPostCardsData } from '@/lib/notion';
+import { findCategoryByPath, getAllDescendantIds, getCategoryTree, getPostCardsData, getPosts } from '@/lib/notion';
 import type { PostCardData } from '@/types/notion';
 import { capitalizeFirst } from '@/utils/utils';
+import { notFound } from 'next/navigation';
 
 export const revalidate = 1800; // 30분
 
-export default async function PostsPage() {
+interface PostsCategoryPageProps {
+  params: Promise<{ slug: string[] }>;
+}
+
+export default async function PostsCategoryPage({ params }: PostsCategoryPageProps) {
+  const { slug } = await params;
+  const categoryPath = slug.join('/');
+
   let posts: PostCardData[] = [];
-  const categoryLabel = 'All';
+  let categoryLabel = '';
 
   try {
-    posts = await getPostCardsData();
+    const [allPosts, categoryTree] = await Promise.all([getPosts(), getCategoryTree()]);
+
+    const categoryNode = findCategoryByPath(categoryTree, categoryPath);
+    if (!categoryNode) {
+      notFound();
+    }
+
+    categoryLabel = categoryNode.label;
+    const categoryIds = new Set(getAllDescendantIds(categoryNode));
+    const filteredPosts = allPosts.filter((post) => categoryIds.has(post.categoryId));
+    posts = await getPostCardsData(filteredPosts);
   } catch (error) {
     console.error('Failed to fetch posts from Notion:', error);
   }
