@@ -1,5 +1,5 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
-import { PixelArrow, PixelDecoration, PostCard } from '@/components/ui';
+import { HeroTitle, PixelArrow, PixelDecoration, PostCard } from '@/components/ui';
 import { getPostCardsData } from '@/lib/notion';
 import Link from 'next/link';
 
@@ -32,11 +32,7 @@ export default async function HomePage() {
               </span>
             </div>
 
-            <h1 className="font-mulmaru mb-6 text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl">
-              Bit By Bit,
-              <br />
-              <span className="text-muted-foreground">One bit at a time</span>
-            </h1>
+            <HeroTitle />
 
             <p className="text-muted-foreground mb-8 text-lg leading-relaxed">
               Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만든다는 의미를 담고 있습니다.

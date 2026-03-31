@@ -10,3 +10,4 @@ export * from './related-posts';
 export * from './table-of-contents';
 export * from './theme-toggle';
 export * from './skeleton';
+export * from './hero-title';
