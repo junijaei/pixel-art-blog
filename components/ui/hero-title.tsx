@@ -4,7 +4,7 @@ import DecryptedText from '@/components/DecryptedText';
 
 export function HeroTitle() {
   return (
-    <h1 className="font-mulmaru mb-6 text-4xl leading-tight font-bold text-balance sm:text-5xl lg:text-6xl">
+    <h1 className="font-mulmaru mb-6 text-4xl leading-tight font-bold text-balance md:text-6xl">
       <DecryptedText
         text="Bit By Bit,"
         animateOn="view"
@@ -15,7 +15,7 @@ export function HeroTitle() {
         encryptedClassName="text-muted-foreground/50"
       />
       <br />
-      <span className="text-muted-foreground">
+      <span className="text-muted-foreground text-3xl md:text-6xl">
         <DecryptedText
           text="One bit at a time."
           animateOn="view"
