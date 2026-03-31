@@ -120,6 +120,30 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  a,
+  button,
+  input,
+  textarea,
+  select,
+  label,
+  [role='button'],
+  [role='link'],
+  [role='checkbox'],
+  [role='radio'],
+  [role='tab'],
+  [role='menuitem'],
+  [role='combobox'],
+  [role='listbox'],
+  [role='option'],
+  [tabindex]:not([tabindex='-1']) {
+    pointer-events: auto;
+    user-select: auto;
+    -webkit-user-select: auto;
   }
 
   body {
