@@ -5,6 +5,7 @@ import { useStorage } from '@/hooks/use-storage';
 import { createCategoryLink } from '@/lib/notion/shared';
 import type { CategoryTreeNode } from '@/types/notion';
 import { cn } from '@/utils/utils';
+import { AnimatePresence, motion } from 'motion/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
@@ -12,6 +13,7 @@ import { useCallback, useMemo, useState } from 'react';
 interface SidebarProps {
   categories: CategoryTreeNode[];
   className?: string;
+  defaultCollapsed?: boolean;
 }
 
 interface CategoryTreeItemProps {
@@ -42,6 +44,7 @@ function CategoryTreeItem({
 
   // 현재 경로가 이 카테고리의 경로와 일치하는지 확인
   const isActive = useMemo(() => {
+    if (!currentPath) return false;
     return currentPath === href || currentPath.startsWith(`${href}/`);
   }, [currentPath, href]);
 
@@ -71,9 +74,12 @@ function CategoryTreeItem({
             className="hover:bg-sidebar-accent cursor-pointer rounded p-1 transition-colors"
             aria-label={isExpanded ? '카테고리 접기' : '카테고리 펼치기'}
           >
-            <PixelChevron
-              className={cn('text-sidebar-foreground/60 h-3 w-3 transition-transform', isExpanded && 'rotate-90')}
-            />
+            <motion.div
+              animate={{ rotate: isExpanded ? 90 : 0 }}
+              transition={{ duration: 0.2, ease: 'easeInOut' }}
+            >
+              <PixelChevron className="text-sidebar-foreground/60 h-3 w-3" />
+            </motion.div>
           </button>
         ) : (
           <div className="w-5" />
@@ -103,41 +109,77 @@ function CategoryTreeItem({
       </div>
 
       {/* Children */}
-      {hasChildren && isExpanded && (
-        <div>
-          {node.children.map((child) => (
-            <CategoryTreeItem
-              key={child.id}
-              node={child}
-              level={level + 1}
-              expandedCategories={expandedCategories}
-              onToggleExpanded={onToggleExpanded}
-              currentPath={currentPath}
-              parentFullPath={fullPath}
-            />
-          ))}
-        </div>
-      )}
+      <AnimatePresence initial={false}>
+        {hasChildren && isExpanded && (
+          <motion.div
+            initial="collapsed"
+            animate="expanded"
+            exit="collapsed"
+            variants={{
+              expanded: {
+                height: 'auto',
+                opacity: 1,
+                transition: {
+                  height: { duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] },
+                  opacity: { duration: 0.2, delay: 0.1 },
+                  staggerChildren: 0.05,
+                },
+              },
+              collapsed: {
+                height: 0,
+                opacity: 0,
+                transition: {
+                  height: { duration: 0.3, ease: [0.04, 0.62, 0.23, 0.98] },
+                  opacity: { duration: 0.2 },
+                },
+              },
+            }}
+            className="overflow-hidden"
+          >
+            {node.children.map((child) => (
+              <motion.div
+                key={child.id}
+                variants={{
+                  collapsed: { opacity: 0, x: -10, transition: { duration: 0.15 } },
+                  expanded: { opacity: 1, x: 0, transition: { duration: 0.2, ease: 'easeOut' } },
+                }}
+              >
+                <CategoryTreeItem
+                  node={child}
+                  level={level + 1}
+                  expandedCategories={expandedCategories}
+                  onToggleExpanded={onToggleExpanded}
+                  currentPath={currentPath}
+                  parentFullPath={fullPath}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
-export function Sidebar({ categories, className }: SidebarProps) {
+export function Sidebar({ categories, className, defaultCollapsed = true }: SidebarProps) {
   const pathname = usePathname();
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  const [isCollapsed, setIsCollapsed] = useState(defaultCollapsed);
   const [expandedCategories, setExpandedCategories] = useStorage<string[]>('expanded-categories', ['all']);
 
   // 카테고리 확장/축소 토글
-  const handleToggleExpanded = useCallback((categoryId: string) => {
-    setExpandedCategories((prev) => {
-      const next = [...prev];
-      if (next.includes(categoryId)) {
-        return next.filter((item) => item !== categoryId);
-      } else {
-        return [...next, categoryId];
-      }
-    });
-  }, []);
+  const handleToggleExpanded = useCallback(
+    (categoryId: string) => {
+      setExpandedCategories((prev) => {
+        const next = [...prev];
+        if (next.includes(categoryId)) {
+          return next.filter((item) => item !== categoryId);
+        } else {
+          return [...next, categoryId];
+        }
+      });
+    },
+    [setExpandedCategories]
+  );
 
   const collectExpandableIds = useCallback((categories: CategoryTreeNode[]): string[] => {
     const result: string[] = [];
@@ -225,9 +267,16 @@ export function Sidebar({ categories, className }: SidebarProps) {
           />
         </button>
       </div>
-      {/* Category Tree */}
-      {!isCollapsed && (
-        <div className="flex-1 overflow-y-auto px-2 py-2">
+      {/* Content Area */}
+      <div className="relative flex-1 overflow-hidden">
+        {/* Expanded: Category Tree */}
+        <div
+          className={cn(
+            'absolute inset-0 overflow-y-auto px-2 py-2',
+            'transition-all duration-300',
+            isCollapsed ? 'pointer-events-none opacity-0' : 'opacity-100'
+          )}
+        >
           {categories.length === 0 ? (
             <div className="text-sidebar-foreground/50 px-3 py-4 text-center text-sm">No categories found</div>
           ) : (
@@ -242,14 +291,18 @@ export function Sidebar({ categories, className }: SidebarProps) {
             ))
           )}
         </div>
-      )}
 
-      {/* Collapsed State Icon */}
-      {isCollapsed && (
-        <div className="flex flex-1 flex-col items-center gap-2 py-4">
+        {/* Collapsed: Icon */}
+        <div
+          className={cn(
+            'absolute inset-0 flex flex-col items-center gap-2 py-4',
+            'transition-all duration-300',
+            isCollapsed ? 'opacity-100' : 'pointer-events-none opacity-0'
+          )}
+        >
           <PixelFolder className="text-sidebar-foreground/60 h-5 w-5" />
         </div>
-      )}
+      </div>
     </aside>
   );
 }
