@@ -25,8 +25,8 @@ describe('Breadcrumb', () => {
     const reactLink = screen.getByText('React').closest('a');
 
     expect(allLink).toHaveAttribute('href', '/posts');
-    expect(techLink).toHaveAttribute('href', '/posts?category=tech');
-    expect(reactLink).toHaveAttribute('href', '/posts?category=tech/react');
+    expect(techLink).toHaveAttribute('href', '/posts/tech');
+    expect(reactLink).toHaveAttribute('href', '/posts/tech/react');
   });
 
   it('현재 카테고리가 강조 표시된다', () => {
