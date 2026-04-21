@@ -1,4 +1,5 @@
 import { TableOfContents, TocItem } from '@/components/ui/table-of-contents/TableOfContents';
+import { TocWithScrollSpy } from '@/components/ui/table-of-contents/TocWithScrollSpy';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 import { useState } from 'react';
 
@@ -27,6 +28,8 @@ const sampleItems: TocItem[] = [
   { id: 'installation', text: 'Installation', level: 3 },
   { id: 'configuration', text: 'Configuration', level: 3 },
   { id: 'basic-usage', text: 'Basic Usage', level: 2 },
+  { id: 'example1', text: 'Example 1', level: 3 },
+  { id: 'example2', text: 'Example 2', level: 3 },
   { id: 'advanced-topics', text: 'Advanced Topics', level: 1 },
   { id: 'custom-hooks', text: 'Custom Hooks', level: 2 },
   { id: 'performance', text: 'Performance Optimization', level: 2 },
@@ -138,7 +141,8 @@ export const InteractiveDemo: Story = {
 };
 
 /**
- * Simple demo with scroll content
+ * 실제 스크롤에 반응하는 TOC 데모
+ * 스크롤하면 IntersectionObserver가 활성 섹션을 추적합니다
  */
 export const ScrollDemo: Story = {
   render: () => {
@@ -154,21 +158,17 @@ export const ScrollDemo: Story = {
     return (
       <div className="relative">
         {/* Content sections */}
-        <div className="max-w-2xl space-y-96 p-8">
+        <div className="max-w-2xl space-y-64 p-8">
           {items.map((item) => (
             <section key={item.id} id={item.id} className="border-border rounded-lg border p-8">
               <h2 className="mb-4 text-2xl font-bold">{item.text}</h2>
-              <p className="text-muted-foreground">
-                Scroll through this content to see the TOC update. Each section has its own ID that the TOC links to.
-              </p>
+              <p className="text-muted-foreground">스크롤하면 오른쪽 TOC가 활성 섹션을 자동으로 추적합니다.</p>
             </section>
           ))}
         </div>
 
-        {/* TOC (normally positioned fixed, but inline for story) */}
-        <div className="fixed top-1/4 right-8">
-          <TableOfContents items={items} activeId="section-1" />
-        </div>
+        {/* TocWithScrollSpy: IntersectionObserver로 활성 항목 자동 추적 */}
+        <TocWithScrollSpy items={items} className="block" />
       </div>
     );
   },
