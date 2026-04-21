@@ -19,6 +19,23 @@ function getContent(richText: RichText): string | null {
   }
 }
 
+/** \n을 <br />로 변환합니다. */
+function renderWithNewlines(content: string): ReactNode {
+  const parts = content.split('\n');
+  if (parts.length === 1) return content;
+
+  return (
+    <>
+      {parts.map((part, i) => (
+        <Fragment key={i}>
+          {part}
+          {i < parts.length - 1 && <br />}
+        </Fragment>
+      ))}
+    </>
+  );
+}
+
 /**
  * Notion RichText 배열을 React 요소로 렌더링하는 헬퍼 함수
  *
@@ -38,7 +55,11 @@ export function RichText({ richTextArray }: { richTextArray: RichText[] }) {
       return <Mention key={index} richText={richText as RichTextMention} />;
     }
 
-    let element: ReactNode = getContent(richText);
+    const rawContent = getContent(richText);
+    let element: ReactNode =
+      rawContent !== null && rawContent.includes('\n')
+        ? renderWithNewlines(rawContent)
+        : rawContent;
 
     // annotations 적용 (중첩 순서: bold → italic → strikethrough → underline → code)
     if (annotations.code) {

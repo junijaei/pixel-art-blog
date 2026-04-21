@@ -97,7 +97,9 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
           alt={alt}
           className={cn('max-h-[85vh] max-w-full rounded-lg', 'border-border border shadow-2xl', 'object-contain')}
         />
-        {caption && <p className="text-muted-foreground mt-4 text-center text-sm">{caption}</p>}
+        {caption && (
+          <p className="text-muted-foreground mt-4 text-center text-sm whitespace-pre-wrap">{caption}</p>
+        )}
       </div>
     </div>
   );
