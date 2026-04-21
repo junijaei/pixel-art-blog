@@ -20,8 +20,8 @@ import {
   parsePostLink,
 } from '@/lib/notion';
 import { formatDateKorean } from '@/utils/utils';
-import Link from 'next/link';
 import type { Metadata } from 'next';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 3600; // 1시간

@@ -3,7 +3,7 @@ import { HeroTitle, PixelArrow, PixelDecoration, PostCard } from '@/components/u
 import { getPostCardsData } from '@/lib/notion';
 import Link from 'next/link';
 
-export const revalidate = 1800; // 30분
+export const revalidate = 3600; // 1시간
 
 export default async function HomePage() {
   let postCards: Awaited<ReturnType<typeof getPostCardsData>> = [];

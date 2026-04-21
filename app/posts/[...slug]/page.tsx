@@ -1,9 +1,16 @@
-import { findCategoryByPath, getAllDescendantIds, getCategoryMaps, getCategoryTree, getPostCardsData, getPosts } from '@/lib/notion';
+import {
+  findCategoryByPath,
+  getAllDescendantIds,
+  getCategoryMaps,
+  getCategoryTree,
+  getPostCardsData,
+  getPosts,
+} from '@/lib/notion';
 import type { PostCardData } from '@/types/notion';
 import { notFound } from 'next/navigation';
 import { PostsList } from '../_components/posts-list';
 
-export const revalidate = 1800; // 30분
+export const revalidate = 3600; // 1시간
 export const dynamicParams = true;
 
 // eslint-disable-next-line react-refresh/only-export-components

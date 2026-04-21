@@ -7,7 +7,7 @@
 import { fetchAllCategories } from '@/lib/notion/core/category.api';
 import { ISR_CONFIG } from '@/lib/notion/core/config';
 import { buildCategoryMaps, buildCategoryTree } from '@/lib/notion/domain/category';
-import type { Category, CategoryTreeNode, CategoryWithFullPath } from '@/types/notion';
+import type { CategoryTreeNode, CategoryWithFullPath } from '@/types/notion';
 import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
 

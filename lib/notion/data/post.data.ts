@@ -19,8 +19,6 @@ import type {
   ImageBlock,
   Post,
   PostCardData,
-  PostFilterOptions,
-  PostSortOptions,
 } from '@/types/notion';
 import { calculateReadingTime, formatRelativeTime } from '@/utils/utils';
 import { cache } from 'react';
@@ -43,22 +41,23 @@ export interface PostWithContent {
   category: CategoryWithFullPath | null;
 }
 
-// 발행된 포스트 전체 목록에 요청 간 캐싱 적용 (30분)
-// 필터/정렬 옵션이 있는 경우는 동적이므로 per-request cache()만 사용
-const fetchPublishedPostsFromNotion = unstable_cache(
+// unstable_cache: ISR 재검증 사이클 간 Notion API 호출 공유 (TTL 30분)
+// - 여러 페이지(홈, 포스트 목록, 카테고리 페이지 등)가 같은 포스트 목록을 필요로 하므로
+//   Data Cache를 통해 결과를 공유하여 중복 API 호출을 방지한다
+// - Notion SDK는 Next.js fetch 확장 캐싱 대상이 아니므로 unstable_cache로 직접 래핑
+const fetchAllPostsCached = unstable_cache(
   async () => fetchPosts(ISR_CONFIG.POST_DATABASE_ID),
   ['notion-published-posts'],
   { revalidate: 1800 }
 );
 
 /**
- * Get all posts (cross-request cached for default, per-request memoized for filtered)
+ * Get all published posts.
+ * - unstable_cache: cross-request (ISR 재검증 간 Data Cache 공유)
+ * - cache(): per-request (단일 렌더 패스 내 중복 호출 방지)
  */
-export const getPosts = cache(async (options?: PostFilterOptions, sortOptions?: PostSortOptions): Promise<Post[]> => {
-  if (!options && !sortOptions) {
-    return fetchPublishedPostsFromNotion();
-  }
-  return fetchPosts(ISR_CONFIG.POST_DATABASE_ID, options, sortOptions);
+export const getPosts = cache(async (): Promise<Post[]> => {
+  return fetchAllPostsCached();
 });
 
 /**

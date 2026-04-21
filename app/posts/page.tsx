@@ -2,7 +2,7 @@ import { getPostCardsData } from '@/lib/notion';
 import { PostCardData } from '@/types/notion';
 import { PostsList } from './_components/posts-list';
 
-export const revalidate = 1800; // 30분
+export const revalidate = 3600; // 1시간
 
 export default async function PostsPage() {
   let posts: PostCardData[] = [];
