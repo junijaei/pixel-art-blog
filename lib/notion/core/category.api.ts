@@ -3,9 +3,14 @@
  * 카테고리 데이터베이스 서버 전용 API 함수
  */
 
+import type { QueryDataSourceParameters } from '@notionhq/client/build/src/api-endpoints';
+
 import { notionClient } from '@/lib/notion/core/client';
 import type { Category, CategoryFilterOptions, CategoryPage } from '@/types/notion';
 import { CATEGORY_PROPERTIES, CATEGORY_STATUS, NOTION_LIMITS } from './config';
+
+type DataSourceFilter = QueryDataSourceParameters['filter'];
+type DataSourceFilterGroup = Extract<NonNullable<DataSourceFilter>, { and: unknown }>['and'];
 
 /**
  * 카테고리 페이지를 파싱된 Category 객체로 변환
@@ -70,7 +75,7 @@ export async function fetchAllCategories(databaseId: string, options?: CategoryF
   let hasMore = true;
 
   // 필터 구성
-  const filters: any[] = [];
+  const filters: DataSourceFilterGroup = [];
 
   // activeOnly 옵션
   if (options?.activeOnly !== false) {
@@ -102,7 +107,8 @@ export async function fetchAllCategories(databaseId: string, options?: CategoryF
     });
   }
 
-  const filter = filters.length > 0 ? (filters.length === 1 ? filters[0] : { and: filters }) : undefined;
+  const filter: DataSourceFilter =
+    filters.length > 0 ? (filters.length === 1 ? filters[0] : { and: filters }) : undefined;
 
   while (hasMore) {
     const response = await notionClient.dataSources.query({

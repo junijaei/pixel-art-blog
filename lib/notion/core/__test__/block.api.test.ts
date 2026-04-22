@@ -15,6 +15,24 @@ vi.mock('@/lib/notion/core/client', () => ({
 
 import { createMockBlock } from '@/__test__/fixture';
 import { notionClient } from '@/lib/notion/core/client';
+import type { Block } from '@/types/notion';
+
+type BlockChildrenListResponse = Awaited<ReturnType<typeof notionClient.blocks.children.list>>;
+
+function createBlockChildrenResponse(
+  results: Block[],
+  hasMore = false,
+  nextCursor: string | null = null
+): BlockChildrenListResponse {
+  return {
+    results,
+    has_more: hasMore,
+    next_cursor: nextCursor,
+    object: 'list',
+    type: 'block',
+    block: {},
+  } as BlockChildrenListResponse;
+}
 
 describe('fetchBlocksChildren', () => {
   beforeEach(() => {
@@ -34,14 +52,7 @@ describe('fetchBlocksChildren', () => {
     const parentBlock = createMockBlock('parent-1', true);
     const childBlocks = [createMockBlock('child-1', false), createMockBlock('child-2', false)];
 
-    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce({
-      results: childBlocks,
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'block',
-      block: {},
-    } as any);
+    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce(createBlockChildrenResponse(childBlocks));
 
     const result = await fetchBlocksChildren([parentBlock]);
 
@@ -59,24 +70,12 @@ describe('fetchBlocksChildren', () => {
     const grandchildBlock = createMockBlock('grandchild-1', false);
 
     // 첫 번째 호출: parent의 children
-    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce({
-      results: [childWithChildren],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'block',
-      block: {},
-    } as any);
+    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce(
+      createBlockChildrenResponse([childWithChildren])
+    );
 
     // 두 번째 호출: child의 children
-    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce({
-      results: [grandchildBlock],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'block',
-      block: {},
-    } as any);
+    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce(createBlockChildrenResponse([grandchildBlock]));
 
     const result = await fetchBlocksChildren([parentBlock]);
 
@@ -88,17 +87,12 @@ describe('fetchBlocksChildren', () => {
   it('maxDepth에 도달하면 더 이상 children을 가져오지 않는다', async () => {
     const block = createMockBlock('deep-block', true);
 
-    vi.mocked(notionClient.blocks.children.list).mockResolvedValue({
-      results: [createMockBlock('child', true)],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'block',
-      block: {},
-    } as any);
+    vi.mocked(notionClient.blocks.children.list).mockResolvedValue(
+      createBlockChildrenResponse([createMockBlock('child', true)])
+    );
 
     // maxDepth를 2로 설정
-    const result = await fetchBlocksChildren([block], 2);
+    await fetchBlocksChildren([block], 2);
 
     // depth 0 -> depth 1 -> depth 2 (stop)
     // 즉, 2번만 호출되어야 함
@@ -127,24 +121,12 @@ describe('fetchBlocksChildren', () => {
     const childBlocks2 = [createMockBlock('child-2', false)];
 
     // 첫 번째 페이지
-    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce({
-      results: childBlocks1,
-      has_more: true,
-      next_cursor: 'cursor-1',
-      object: 'list',
-      type: 'block',
-      block: {},
-    } as any);
+    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce(
+      createBlockChildrenResponse(childBlocks1, true, 'cursor-1')
+    );
 
     // 두 번째 페이지
-    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce({
-      results: childBlocks2,
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'block',
-      block: {},
-    } as any);
+    vi.mocked(notionClient.blocks.children.list).mockResolvedValueOnce(createBlockChildrenResponse(childBlocks2));
 
     const result = await fetchBlocksChildren([parentBlock]);
 
@@ -169,22 +151,8 @@ describe('fetchBlocksChildren', () => {
     ];
 
     vi.mocked(notionClient.blocks.children.list)
-      .mockResolvedValueOnce({
-        results: [createMockBlock('child-1-1', false)],
-        has_more: false,
-        next_cursor: null,
-        object: 'list',
-        type: 'block',
-        block: {},
-      } as any)
-      .mockResolvedValueOnce({
-        results: [createMockBlock('child-2-1', false)],
-        has_more: false,
-        next_cursor: null,
-        object: 'list',
-        type: 'block',
-        block: {},
-      } as any);
+      .mockResolvedValueOnce(createBlockChildrenResponse([createMockBlock('child-1-1', false)]))
+      .mockResolvedValueOnce(createBlockChildrenResponse([createMockBlock('child-2-1', false)]));
 
     const result = await fetchBlocksChildren(blocks);
 

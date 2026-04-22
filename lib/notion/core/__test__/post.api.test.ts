@@ -16,7 +16,24 @@ import { createMockPostPage } from '@/__test__/fixture';
 import { notionClient } from '@/lib/notion/core/client';
 import { NOTION_LIMITS } from '@/lib/notion/core/config';
 import { fetchPost, fetchPosts } from '@/lib/notion/core/post.api';
-import type { Post } from '@/types/notion';
+import type { Post, PostPage } from '@/types/notion';
+
+type PostQueryResponse = Awaited<ReturnType<typeof notionClient.dataSources.query>>;
+type PostRetrieveResponse = Awaited<ReturnType<typeof notionClient.pages.retrieve>>;
+
+function createPostQueryResponse(
+  results: PostPage[],
+  hasMore = false,
+  nextCursor: string | null = null
+): PostQueryResponse {
+  return {
+    results,
+    has_more: hasMore,
+    next_cursor: nextCursor,
+    object: 'list',
+    type: 'page_or_database',
+  } as PostQueryResponse;
+}
 
 // ─── fetchPosts ─────────────────────────────────────────────────────────────
 
@@ -39,13 +56,7 @@ describe('fetchPosts', () => {
       updatedAt: '2025-06-15T12:00:00.000Z',
     });
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [mockPage],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([mockPage]));
 
     const result = await fetchPosts('db-1');
 
@@ -74,13 +85,7 @@ describe('fetchPosts', () => {
       tags: [],
     });
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [mockPage],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([mockPage]));
 
     const result = await fetchPosts('db-1');
 
@@ -94,15 +99,9 @@ describe('fetchPosts', () => {
 
   it('status가 null인 경우 draft를 기본값으로 사용한다', async () => {
     const mockPage = createMockPostPage();
-    (mockPage.properties.status as any).status = null;
+    mockPage.properties.status.status = null;
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [mockPage],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([mockPage]));
 
     const result = await fetchPosts('db-1');
     expect(result[0].status).toBe('draft');
@@ -114,13 +113,7 @@ describe('fetchPosts', () => {
       createMockPostPage({ id: { prefix: 'post-page', number: 2 }, title: 'Post 2' }),
     ];
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: mockPages,
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse(mockPages));
 
     const result = await fetchPosts('db-1');
 
@@ -136,20 +129,8 @@ describe('fetchPosts', () => {
     const page2 = [createMockPostPage({ id: { prefix: 'post-page', number: 2 }, title: 'Second' })];
 
     vi.mocked(notionClient.dataSources.query)
-      .mockResolvedValueOnce({
-        results: page1,
-        has_more: true,
-        next_cursor: 'cursor-1',
-        object: 'list',
-        type: 'page_or_database',
-      } as any)
-      .mockResolvedValueOnce({
-        results: page2,
-        has_more: false,
-        next_cursor: null,
-        object: 'list',
-        type: 'page_or_database',
-      } as any);
+      .mockResolvedValueOnce(createPostQueryResponse(page1, true, 'cursor-1'))
+      .mockResolvedValueOnce(createPostQueryResponse(page2));
 
     const result = await fetchPosts('db-1');
 
@@ -164,13 +145,7 @@ describe('fetchPosts', () => {
   });
 
   it('기본적으로 publishedOnly 필터를 적용한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([]));
 
     await fetchPosts('db-1');
 
@@ -184,13 +159,7 @@ describe('fetchPosts', () => {
   });
 
   it('publishedOnly: false 옵션이면 published 필터를 적용하지 않는다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([]));
 
     await fetchPosts('db-1', { publishedOnly: false });
 
@@ -202,13 +171,7 @@ describe('fetchPosts', () => {
   });
 
   it('categoryId 필터를 적용한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([]));
 
     await fetchPosts('db-1', { categoryId: 'cat-1' });
 
@@ -225,13 +188,7 @@ describe('fetchPosts', () => {
   });
 
   it('tag 필터를 적용한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([]));
 
     await fetchPosts('db-1', { tag: 'react' });
 
@@ -248,13 +205,7 @@ describe('fetchPosts', () => {
   });
 
   it('모든 필터를 동시에 적용한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([]));
 
     await fetchPosts('db-1', { categoryId: 'cat-1', tag: 'react' });
 
@@ -272,13 +223,7 @@ describe('fetchPosts', () => {
   });
 
   it('기본 정렬은 publishedAt 내림차순이다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([]));
 
     await fetchPosts('db-1');
 
@@ -290,13 +235,7 @@ describe('fetchPosts', () => {
   });
 
   it('커스텀 정렬 옵션을 적용한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([]));
 
     await fetchPosts('db-1', undefined, { field: 'createdAt', direction: 'ascending' });
 
@@ -308,13 +247,7 @@ describe('fetchPosts', () => {
   });
 
   it('빈 결과를 처리한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createPostQueryResponse([]));
 
     const result = await fetchPosts('db-1');
 
@@ -343,7 +276,7 @@ describe('fetchPost', () => {
       updatedAt: '2025-06-15T00:00:00.000Z',
     });
 
-    vi.mocked(notionClient.pages.retrieve).mockResolvedValueOnce(mockPage as any);
+    vi.mocked(notionClient.pages.retrieve).mockResolvedValueOnce(mockPage as PostRetrieveResponse);
 
     const result = await fetchPost('post-page1');
 

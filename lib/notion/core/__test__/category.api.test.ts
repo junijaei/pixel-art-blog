@@ -16,7 +16,24 @@ import { createMockCategoryPage } from '@/__test__/fixture';
 import { fetchAllCategories, fetchCategory } from '@/lib/notion/core/category.api';
 import { notionClient } from '@/lib/notion/core/client';
 import { NOTION_LIMITS } from '@/lib/notion/core/config';
-import type { Category } from '@/types/notion';
+import type { Category, CategoryPage } from '@/types/notion';
+
+type CategoryQueryResponse = Awaited<ReturnType<typeof notionClient.dataSources.query>>;
+type CategoryRetrieveResponse = Awaited<ReturnType<typeof notionClient.pages.retrieve>>;
+
+function createCategoryQueryResponse(
+  results: CategoryPage[],
+  hasMore = false,
+  nextCursor: string | null = null
+): CategoryQueryResponse {
+  return {
+    results,
+    has_more: hasMore,
+    next_cursor: nextCursor,
+    object: 'list',
+    type: 'page_or_database',
+  } as CategoryQueryResponse;
+}
 
 // ─── fetchAllCategories ────────────────────────────────────────────────────────
 
@@ -37,13 +54,7 @@ describe('fetchAllCategories', () => {
       updatedAt: '2025-06-15T12:00:00.000Z',
     });
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [mockPage],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([mockPage]));
 
     const result = await fetchAllCategories('db-1');
 
@@ -69,13 +80,7 @@ describe('fetchAllCategories', () => {
       path: '',
     });
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [mockPage],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([mockPage]));
 
     const result = await fetchAllCategories('db-1');
 
@@ -88,13 +93,7 @@ describe('fetchAllCategories', () => {
   it('isActive가 deactive이면 false를 반환한다', async () => {
     const mockPage = createMockCategoryPage({ isActive: false });
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [mockPage],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([mockPage]));
 
     const result = await fetchAllCategories('db-1');
     expect(result[0].isActive).toBe(false);
@@ -102,15 +101,9 @@ describe('fetchAllCategories', () => {
 
   it('isActive select가 null이면 false를 반환한다', async () => {
     const mockPage = createMockCategoryPage();
-    (mockPage.properties.isActive as any).select = null;
+    mockPage.properties.isActive.select = null;
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [mockPage],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([mockPage]));
 
     const result = await fetchAllCategories('db-1');
     expect(result[0].isActive).toBe(false);
@@ -121,13 +114,7 @@ describe('fetchAllCategories', () => {
       id: { prefix: null, number: 42 },
     });
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [mockPage],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([mockPage]));
 
     const result = await fetchAllCategories('db-1');
     expect(result[0].id).toBe('42');
@@ -139,13 +126,7 @@ describe('fetchAllCategories', () => {
       createMockCategoryPage({ id: { prefix: 'c', number: 2 }, label: 'Cat 2' }),
     ];
 
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: mockPages,
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse(mockPages));
 
     const result = await fetchAllCategories('db-1');
 
@@ -161,20 +142,8 @@ describe('fetchAllCategories', () => {
     const page2 = [createMockCategoryPage({ id: { prefix: 'c', number: 2 }, label: 'Second' })];
 
     vi.mocked(notionClient.dataSources.query)
-      .mockResolvedValueOnce({
-        results: page1,
-        has_more: true,
-        next_cursor: 'cursor-1',
-        object: 'list',
-        type: 'page_or_database',
-      } as any)
-      .mockResolvedValueOnce({
-        results: page2,
-        has_more: false,
-        next_cursor: null,
-        object: 'list',
-        type: 'page_or_database',
-      } as any);
+      .mockResolvedValueOnce(createCategoryQueryResponse(page1, true, 'cursor-1'))
+      .mockResolvedValueOnce(createCategoryQueryResponse(page2));
 
     const result = await fetchAllCategories('db-1');
 
@@ -189,13 +158,7 @@ describe('fetchAllCategories', () => {
   });
 
   it('기본적으로 activeOnly 필터를 적용한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([]));
 
     await fetchAllCategories('db-1');
 
@@ -209,13 +172,7 @@ describe('fetchAllCategories', () => {
   });
 
   it('activeOnly: false 옵션이면 active 필터를 적용하지 않는다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([]));
 
     await fetchAllCategories('db-1', { activeOnly: false });
 
@@ -227,13 +184,7 @@ describe('fetchAllCategories', () => {
   });
 
   it('parentId 필터를 적용한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([]));
 
     await fetchAllCategories('db-1', { parentId: 'parent-1' });
 
@@ -250,13 +201,7 @@ describe('fetchAllCategories', () => {
   });
 
   it('rootOnly 필터를 적용한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([]));
 
     await fetchAllCategories('db-1', { rootOnly: true });
 
@@ -273,13 +218,7 @@ describe('fetchAllCategories', () => {
   });
 
   it('모든 필터를 동시에 적용한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([]));
 
     await fetchAllCategories('db-1', { parentId: 'p-1', rootOnly: true });
 
@@ -297,13 +236,7 @@ describe('fetchAllCategories', () => {
   });
 
   it('createdAt 오름차순으로 정렬한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([]));
 
     await fetchAllCategories('db-1');
 
@@ -315,13 +248,7 @@ describe('fetchAllCategories', () => {
   });
 
   it('빈 결과를 처리한다', async () => {
-    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce({
-      results: [],
-      has_more: false,
-      next_cursor: null,
-      object: 'list',
-      type: 'page_or_database',
-    } as any);
+    vi.mocked(notionClient.dataSources.query).mockResolvedValueOnce(createCategoryQueryResponse([]));
 
     const result = await fetchAllCategories('db-1');
 
@@ -348,7 +275,7 @@ describe('fetchCategory', () => {
       updatedAt: '2025-06-15T00:00:00.000Z',
     });
 
-    vi.mocked(notionClient.pages.retrieve).mockResolvedValueOnce(mockPage as any);
+    vi.mocked(notionClient.pages.retrieve).mockResolvedValueOnce(mockPage as CategoryRetrieveResponse);
 
     const result = await fetchCategory('cat-123');
 

@@ -3,9 +3,15 @@
  * 글 데이터베이스 서버 전용 API 함수
  */
 
+import type { QueryDataSourceParameters } from '@notionhq/client/build/src/api-endpoints';
+
 import { notionClient } from '@/lib/notion/core/client';
-import type { Post, PostFilterOptions, PostPage, PostSortOptions, PropertyFilter } from '@/types/notion';
+import type { Post, PostFilterOptions, PostPage, PostSortOptions } from '@/types/notion';
 import { NOTION_LIMITS, POST_PROPERTIES, POST_STATUS } from './config';
+
+type DataSourceFilter = QueryDataSourceParameters['filter'];
+type DataSourceFilterGroup = Extract<NonNullable<DataSourceFilter>, { and: unknown }>['and'];
+type DataSourcePropertyFilters = Extract<DataSourceFilterGroup[number], { or: unknown }>['or'];
 
 /**
  * 포스트 페이지를 파싱된 Post 객체로 변환
@@ -74,9 +80,9 @@ function parsePostPage(page: PostPage): Post {
   };
 }
 
-function generateFilterOptions(options?: PostFilterOptions): any {
+function generateFilterOptions(options?: PostFilterOptions): DataSourceFilter {
   // 필터 구성
-  const filters: any[] = [];
+  const filters: DataSourceFilterGroup = [];
 
   // publishedOnly 옵션 (기본값: true)
   if (options?.publishedOnly !== false) {
@@ -91,7 +97,7 @@ function generateFilterOptions(options?: PostFilterOptions): any {
   // categoryId 옵션
   if (options?.categoryId) {
     if (Array.isArray(options.categoryId)) {
-      const categoryFilter: PropertyFilter[] = [];
+      const categoryFilter: DataSourcePropertyFilters = [];
       options.categoryId.forEach((id) => {
         categoryFilter.push({
           property: POST_PROPERTIES.CATEGORY,
@@ -116,7 +122,7 @@ function generateFilterOptions(options?: PostFilterOptions): any {
   // tag 옵션
   if (options?.tag) {
     if (Array.isArray(options.tag)) {
-      const tagFilter: PropertyFilter[] = [];
+      const tagFilter: DataSourcePropertyFilters = [];
       options.tag.forEach((tag) => {
         tagFilter.push({
           property: POST_PROPERTIES.TAG,
