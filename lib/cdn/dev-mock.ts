@@ -8,11 +8,11 @@ export function isDevelopment(): boolean {
 }
 
 export async function mockUploadImage(
-  _imageUrl: string,
-  _blockId: string,
-  _lastEditedTime: string
+  imageUrl: string,
+  blockId: string,
+  lastEditedTime: string
 ): Promise<ImageUploadResult> {
-  console.debug('[Dev Mock] Using placeholder image');
+  console.debug('[Dev Mock] Using placeholder image', { imageUrl, blockId, lastEditedTime });
   return {
     success: true,
     cdnUrl: PLACEHOLDER_IMAGE,

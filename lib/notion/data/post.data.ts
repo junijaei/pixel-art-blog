@@ -7,20 +7,13 @@
 import { fetchBlocks, fetchBlocksChildren } from '@/lib/notion/core/block.api';
 import { ISR_CONFIG } from '@/lib/notion/core/config';
 import { fetchPost, fetchPosts } from '@/lib/notion/core/post.api';
-import { unstable_cache } from 'next/cache';
 import { processBlockTree } from '@/lib/notion/domain/block';
 import { buildBreadcrumbItems } from '@/lib/notion/domain/category';
 import type { BreadcrumbItem, TocItem } from '@/lib/notion/shared/types';
 import { extractThumbnailUrl } from '@/lib/notion/shared/utils';
-import type {
-  Block,
-  Category,
-  CategoryWithFullPath,
-  ImageBlock,
-  Post,
-  PostCardData,
-} from '@/types/notion';
+import type { Block, Category, CategoryWithFullPath, ImageBlock, Post, PostCardData } from '@/types/notion';
 import { calculateReadingTime, formatRelativeTime } from '@/utils/utils';
+import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
 import { getBlocks, getBlocksWithChildren } from './block.data';
 import { getCategoryMaps } from './category.data';
