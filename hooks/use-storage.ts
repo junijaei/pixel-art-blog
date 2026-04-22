@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 type StorageType = 'local' | 'session';
 
@@ -21,6 +21,13 @@ export function useStorage<T>(
   const { storage = 'local', serializer = JSON.stringify, deserializer = JSON.parse } = options;
 
   const [state, setState] = useState<T>(initialValue);
+  const initialValueRef = useRef(initialValue);
+  const deserializerRef = useRef(deserializer);
+
+  useEffect(() => {
+    initialValueRef.current = initialValue;
+    deserializerRef.current = deserializer;
+  });
 
   useEffect(() => {
     const store = getStorage(storage);
@@ -30,25 +37,25 @@ export function useStorage<T>(
     if (raw === null) return;
 
     try {
-      setState(deserializer(raw));
+      setState(deserializerRef.current(raw));
     } catch {
-      setState(initialValue);
+      setState(initialValueRef.current);
     }
   }, [key, storage]);
 
-  // 다른 탭 sync
+  // Keep multiple tabs/windows in sync.
   useEffect(() => {
     const handler = (e: StorageEvent) => {
       if (e.key !== key) return;
 
       try {
         if (e.newValue === null) {
-          setState(initialValue);
+          setState(initialValueRef.current);
         } else {
-          setState(deserializer(e.newValue));
+          setState(deserializerRef.current(e.newValue));
         }
       } catch {
-        setState(initialValue);
+        setState(initialValueRef.current);
       }
     };
 
