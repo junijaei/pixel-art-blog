@@ -1,4 +1,4 @@
-import {
+﻿import {
   BookmarkServer,
   BulletedListItem,
   Callout,
@@ -15,8 +15,6 @@ import {
 import type { Block } from '@/types/notion';
 import dynamic from 'next/dynamic';
 
-// Image 블록은 모달(useState)을 포함한 클라이언트 컴포넌트이므로
-// next/dynamic으로 코드 분할하여 초기 번들에서 제외합니다.
 const Image = dynamic(() => import('../Image/Image').then((m) => ({ default: m.Image })));
 
 export interface BlockRendererProps {
@@ -24,19 +22,15 @@ export interface BlockRendererProps {
 }
 
 /**
- * Notion Block 배열을 받아서 적절한 컴포넌트로 렌더링하는 컴포넌트
- * 재귀적으로 children을 처리하여 중첩 구조를 지원합니다.
+ * Maps Notion blocks to their matching React components and recursively renders nested children.
  */
 export function BlockRenderer({ blocks }: BlockRendererProps) {
-  // numbered_list_item의 순번을 계산하기 위해 연속된 항목들을 추적
   let numberedListIndex = 0;
-  // LCP 최적화: 첫 번째 이미지 블록에 priority 힌트 부여
   let firstImageSeen = false;
 
   return (
     <div className="notion-content">
       {blocks.map((block, index) => {
-        // numbered_list_item인 경우 순번 증가, 아니면 리셋
         if (block.type === 'numbered_list_item') {
           numberedListIndex++;
         } else {
@@ -65,18 +59,30 @@ interface BlockComponentProps {
   firstImage?: boolean;
 }
 
+function getRenderableChildren(block: Block): Block[] {
+  if (!block.has_children || !block.children) {
+    return [];
+  }
+
+  if (block.type === 'table') {
+    return block.children.filter((child) => child.type !== 'table_row');
+  }
+
+  return block.children;
+}
+
 function BlockComponent({ block, numberedListIndex, firstImage = false }: BlockComponentProps) {
-  // children이 있는 경우 재귀적으로 렌더링
-  const children = block.has_children && block.children ? <BlockRenderer blocks={block.children} /> : undefined;
+  const childBlocks = getRenderableChildren(block);
+  const children = childBlocks.length > 0 ? <BlockRenderer blocks={childBlocks} /> : undefined;
 
   switch (block.type) {
     case 'paragraph':
-      return <Paragraph block={block} />;
+      return <Paragraph block={block}>{children}</Paragraph>;
 
     case 'heading_1':
     case 'heading_2':
     case 'heading_3':
-      return <Heading block={block} />;
+      return <Heading block={block}>{children}</Heading>;
 
     case 'bulleted_list_item':
       return <BulletedListItem block={block}>{children}</BulletedListItem>;
@@ -95,10 +101,14 @@ function BlockComponent({ block, numberedListIndex, firstImage = false }: BlockC
       return <Callout block={block}>{children}</Callout>;
 
     case 'code':
-      return <Code block={block} />;
+      return <Code block={block}>{children}</Code>;
 
     case 'image':
-      return <Image block={block} priority={firstImage} />;
+      return (
+        <Image block={block} priority={firstImage}>
+          {children}
+        </Image>
+      );
 
     case 'to_do':
       return <ToDo block={block}>{children}</ToDo>;
@@ -107,16 +117,15 @@ function BlockComponent({ block, numberedListIndex, firstImage = false }: BlockC
       return <Toggle block={block}>{children}</Toggle>;
 
     case 'divider':
-      return <Divider />;
+      return <Divider>{children}</Divider>;
 
     case 'bookmark':
-      return <BookmarkServer block={block} />;
+      return <BookmarkServer block={block}>{children}</BookmarkServer>;
 
     case 'table':
-      return <Table block={block} />;
+      return <Table block={block}>{children}</Table>;
 
     default:
-      // Unknown block type - gracefully skip or show placeholder
       console.warn(`Unknown block type: ${(block as Block).type}`);
       return null;
   }

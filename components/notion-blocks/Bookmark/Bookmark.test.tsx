@@ -1,5 +1,5 @@
 import { Bookmark } from '@/components/notion-blocks/Bookmark/Bookmark';
-import type { BookmarkBlock } from '@/types/notion';
+import type { BookmarkBlock, RichText } from '@/types/notion';
 import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -10,13 +10,13 @@ describe('Bookmark', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Mock fetch to return empty preview data
-    (global.fetch as any).mockResolvedValue({
+    vi.mocked(global.fetch).mockResolvedValue({
       ok: true,
       json: async () => ({ url: 'https://example.com' }),
-    });
+    } as Response);
   });
 
-  const createBookmarkBlock = (url: string, caption: any[] = []): BookmarkBlock => ({
+  const createBookmarkBlock = (url: string, caption: RichText[] = []): BookmarkBlock => ({
     object: 'block',
     id: 'bookmark-test-1',
     type: 'bookmark',

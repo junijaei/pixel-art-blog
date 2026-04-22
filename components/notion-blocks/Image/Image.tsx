@@ -5,6 +5,7 @@ import { RichText } from '@/components/notion-blocks/RichText/RichText';
 import { ImageModal } from '@/components/ui';
 import { cn } from '@/utils/utils';
 import { useEffect, useRef, useState } from 'react';
+import { ChildBlockContainer } from '../ChildBlockContainer';
 
 /**
  * Notion Image 블록을 렌더링하는 컴포넌트
@@ -14,7 +15,7 @@ import { useEffect, useRef, useState } from 'react';
  */
 const PLACEHOLDER_SRC = '/placeholder-image.png';
 
-export function Image({ block, priority = false }: ImageProps) {
+export function Image({ block, priority = false, children }: ImageProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -81,6 +82,7 @@ export function Image({ block, priority = false }: ImageProps) {
           </figcaption>
         )}
       </figure>
+      {children && <ChildBlockContainer>{children}</ChildBlockContainer>}
 
       <ImageModal
         src={imageUrl}
