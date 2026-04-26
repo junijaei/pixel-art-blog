@@ -1,6 +1,7 @@
 import { AsyncSidebar } from '@/app/_components/async-sidebar';
 import '@/app/globals.css';
 import { SidebarSkeleton } from '@/components/layouts';
+import { PageViewTracker } from '@/components/PageViewTracker';
 import { ScrollDepthTracker } from '@/components/ScrollDepthTracker';
 import { ThemeProvider } from '@/components/theme-provider';
 import { cn } from '@/utils';
@@ -112,6 +113,7 @@ export default function RootLayout({
             <div className="flex-1">{children}</div>
           </div>
         </ThemeProvider>
+        <PageViewTracker />
         <ScrollDepthTracker />
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
       </body>

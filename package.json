@@ -22,6 +22,7 @@
     "@giscus/react": "^3.1.0",
     "@next/third-parties": "^16.1.6",
     "@notionhq/client": "^5.8.0",
+    "@upstash/redis": "^1.37.0",
     "autoprefixer": "^10.4.23",
     "cheerio": "^1.2.0",
     "class-variance-authority": "^0.7.1",
