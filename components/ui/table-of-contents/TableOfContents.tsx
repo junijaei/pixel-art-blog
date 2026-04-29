@@ -16,11 +16,13 @@ export interface TableOfContentsProps {
   items: TocItem[];
   /** Currently active/visible heading ID */
   activeId?: string;
+  /** Whether the TOC is visible (fade-in/out) */
+  isVisible?: boolean;
   /** Additional CSS classes */
   className?: string;
 }
 
-export function TableOfContents({ items, activeId, className }: TableOfContentsProps) {
+export function TableOfContents({ items, activeId, isVisible = true, className }: TableOfContentsProps) {
   if (items.length === 0) {
     return null;
   }
@@ -100,6 +102,8 @@ export function TableOfContents({ items, activeId, className }: TableOfContentsP
         'fixed top-1/4 right-8 z-10',
         'max-h-[60vh] w-56 overflow-y-auto',
         'scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent',
+        'transition-opacity duration-500',
+        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none',
         className
       )}
     >
@@ -147,7 +151,7 @@ export function TableOfContents({ items, activeId, className }: TableOfContentsP
                 >
                   <span
                     className={cn(
-                      'font-galmuri9 flex items-center gap-1 truncate transition-all duration-300',
+                      'flex items-center gap-1 truncate transition-all duration-300',
                       'text-xs',
                       isActive && 'font-medium',
                       isScopeParent && !isActive && 'font-medium'
