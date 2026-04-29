@@ -14,7 +14,7 @@ export default async function HomePage() {
     console.error('Failed to fetch posts from Notion:', error);
   }
 
-  const featuredPost = postCards[0];
+  const latestPost = postCards[0];
   const recentPosts = postCards.slice(1, 5);
 
   return (
@@ -40,25 +40,33 @@ export default async function HomePage() {
               기록합니다.
             </p>
 
-            <PixelDecoration className="h-2 gap-2" size="md" layout="horizontal" dotCount={8} />
+            <PixelDecoration
+              className="h-2 justify-end gap-2"
+              size="md"
+              layout="horizontal"
+              dotCount={8}
+              gradientStart="end"
+            />
           </div>
         </section>
 
-        {/* Featured Post */}
-        {featuredPost && (
-          <section className="mb-16 px-6">
-            <div className="mx-auto max-w-2xl">
-              <PostCard
-                slug={featuredPost.slug}
-                title={featuredPost.title}
-                description={featuredPost.description}
-                date={featuredPost.date}
-                categoryPath={featuredPost.categoryPath}
-                categoryLabel={featuredPost.categoryLabel}
-              />
+        {/* Latest Post */}
+        <section className="mb-16 px-6">
+          <div className="mx-auto max-w-2xl">
+            <div className="mb-8 flex items-center gap-4">
+              <h2 className="font-pixel text-xs tracking-wider">LATEST POST</h2>
+              <PixelDecoration layout="horizontal" gradientStart="center" className="opacity-50" />
             </div>
-          </section>
-        )}
+            <PostCard
+              slug={latestPost.slug}
+              title={latestPost.title}
+              description={latestPost.description}
+              date={latestPost.date}
+              categoryPath={latestPost.categoryPath}
+              categoryLabel={latestPost.categoryLabel}
+            />
+          </div>
+        </section>
 
         {/* Recent Posts */}
         {recentPosts.length > 0 && (

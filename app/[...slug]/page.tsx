@@ -97,14 +97,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     <div className="flex min-h-screen flex-col">
       <BlogHeader />
 
-      <main className="max-w-dvw flex-1 px-6 py-20">
+      <main className="max-w-dvw flex-1 px-6 py-12 sm:py-20">
         {metadata.tocItems.length > 0 && <TocWithScrollSpy items={metadata.tocItems} />}
 
         <div className="mx-auto max-w-2xl">
           {/* 뒤로 가기 */}
           <Link
             href="/posts"
-            className="group text-muted-foreground hover:text-foreground mb-14 inline-flex items-center gap-2 text-sm transition-colors"
+            className="group text-muted-foreground hover:text-foreground mb-10 inline-flex items-center gap-2 text-sm transition-colors sm:mb-14"
           >
             <PixelArrow className="h-3 w-3 rotate-180 transition-transform group-hover:-translate-x-0.5" />
             <span>Back to posts</span>
@@ -119,11 +119,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             <h1 className="mb-5 text-3xl leading-tight font-bold break-keep sm:text-4xl">{post.title}</h1>
 
-            {post.description && (
-              <p className="text-muted-foreground mb-8 text-lg leading-relaxed">{post.description}</p>
-            )}
+            {post.description && <p className="text-muted-foreground text-lg leading-relaxed">{post.description}</p>}
 
-            <div className="border-border flex flex-wrap items-center justify-between gap-4 border-t pt-5">
+            <div className="border-border flex flex-wrap items-center justify-between gap-4 pt-3">
               <div className="text-muted-foreground flex items-center gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <PixelClock className="mt-0.5 h-3 w-3" />
@@ -132,19 +130,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
                 <span aria-hidden>·</span>
                 <span>{metadata.readingTime}</span>
               </div>
-
-              {post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="bg-muted text-muted-foreground font-galmuri9 rounded-full px-3 py-1 text-[10px] tracking-wider"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
             </div>
           </header>
 
@@ -160,8 +145,21 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <BlockRenderer blocks={blocks} />
           </article>
 
+          {post.tags.length > 0 && (
+            <div className="mt-32 mb-8 flex flex-wrap gap-2">
+              {post.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="bg-muted text-muted-foreground font-galmuri9 rounded-full px-3 py-1 text-[10px] tracking-wider"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+
           {/* 댓글 */}
-          <section className="mt-32">
+          <section className="">
             <div className="mb-8 flex items-center gap-3">
               <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" />
               <span className="font-galmuri9 text-muted-foreground text-[10px] tracking-widest uppercase">
