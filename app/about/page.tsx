@@ -1,7 +1,21 @@
 import { BlogFooter } from '@/components/layouts/footer';
 import { BlogHeader } from '@/components/layouts/header';
 import { PixelDecoration, PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = {
+  title: 'About',
+  description: '프론트엔드 개발자 전희재(junijaei)를 소개합니다.',
+  alternates: { canonical: '/about' },
+  openGraph: {
+    title: 'About',
+    description: '프론트엔드 개발자 전희재(junijaei)를 소개합니다.',
+    url: '/about',
+    type: 'profile',
+  },
+};
 
 export default function AboutPage() {
   return (

@@ -56,18 +56,33 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const [post, thumbnailUrl] = await Promise.all([getPostBySlug(parsed.postId), getPostThumbnailUrl(parsed.postId)]);
   if (!post) return { title: 'Post Not Found' };
 
+  const canonicalPath = slugSegments.join('/');
+
   return {
-    title: post.title + ' | Bit by Bit',
+    title: post.title,
     description: post.description,
+    alternates: {
+      canonical: `/${canonicalPath}`,
+    },
     openGraph: {
-      title: post.title + ' | Bit by Bit',
+      title: post.title,
       description: post.description,
       type: 'article',
       publishedTime: post.publishedAt,
+      modifiedTime: post.updatedAt,
       tags: post.tags,
+      locale: 'ko_KR',
+      siteName: 'Bit by Bit',
+      url: `/${canonicalPath}`,
       ...(thumbnailUrl && {
-        images: [{ url: thumbnailUrl, alt: post.title }],
+        images: [{ url: thumbnailUrl, width: 1200, height: 630, alt: post.title }],
       }),
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.description,
+      ...(thumbnailUrl && { images: [thumbnailUrl] }),
     },
   };
 }
@@ -93,8 +108,31 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   // 연관된 글 조회 (getPosts/getCategoryMaps 캐시 재사용 — 추가 API 호출 없음)
   const relatedPosts = await getRelatedPosts(post);
 
+  const siteUrl =
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+  const postUrl = `${siteUrl}/${slugSegments.join('/')}`;
+
   return (
     <div className="flex min-h-screen flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BlogPosting',
+            headline: post.title,
+            ...(post.description && { description: post.description }),
+            datePublished: post.publishedAt,
+            dateModified: post.updatedAt,
+            author: { '@type': 'Person', name: 'junijaei' },
+            publisher: { '@type': 'Person', name: 'junijaei' },
+            url: postUrl,
+            mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
+            ...(metadata.thumbnailUrl && { image: metadata.thumbnailUrl }),
+          }),
+        }}
+      />
       <BlogHeader />
 
       <main className="max-w-dvw flex-1 px-6 py-12 sm:py-20">

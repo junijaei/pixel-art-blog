@@ -65,16 +65,53 @@ const mulmaru = localFont({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: 'Bit by Bit - junijaei blog',
-  description: '프론트엔드 개발자 junijaei의 블로그 입니다.',
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
+  ),
+  title: {
+    default: 'Bit by Bit — junijaei blog',
+    template: '%s | Bit by Bit',
+  },
+  description: '프론트엔드 개발자 junijaei의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
   icons: {
     icon: '/favicon.ico',
+  },
+  openGraph: {
+    title: 'Bit by Bit — junijaei blog',
+    description: '프론트엔드 개발자 junijaei의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
+    url: '/',
+    siteName: 'Bit by Bit',
+    locale: 'ko_KR',
+    type: 'website',
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Bit by Bit — junijaei blog' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Bit by Bit — junijaei blog',
+    description: '프론트엔드 개발자 junijaei의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
+    creator: '@junijaei',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const viewport: Viewport = {
-  themeColor: '#fafafa',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fafafa' },
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+  ],
 };
 
 export default function RootLayout({
@@ -83,7 +120,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang="kr" suppressHydrationWarning>
+    <html lang="ko" suppressHydrationWarning>
       <body
         className={cn(
           geistMono.variable,
