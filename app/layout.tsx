@@ -35,7 +35,7 @@ const d2coding = localFont({
   src: '../public/fonts/D2Coding.ttf',
   variable: '--font-d2coding',
   display: 'swap',
-  preload: true,
+  preload: false,
   weight: '45 920',
 });
 
@@ -43,7 +43,7 @@ const galmuri9 = localFont({
   src: '../public/fonts/Galmuri9.woff2',
   variable: '--font-galmuri9',
   display: 'swap',
-  preload: true,
+  preload: false,
   weight: '400',
 });
 
@@ -51,7 +51,7 @@ const galmuri11 = localFont({
   src: '../public/fonts/Galmuri11.woff2',
   variable: '--font-galmuri11',
   display: 'swap',
-  preload: true,
+  preload: false,
   weight: '400',
 });
 
@@ -59,7 +59,7 @@ const mulmaru = localFont({
   src: '../public/fonts/Mulmaru.woff2',
   variable: '--font-mulmaru',
   display: 'swap',
-  preload: true,
+  preload: false,
   weight: '400',
 });
 
@@ -130,7 +130,7 @@ export default function RootLayout({
           galmuri9.variable,
           galmuri11.variable,
           mulmaru.variable,
-          'font-pretendard max-w-dvw antialiased'
+          'font-pretendard w-full antialiased'
         )}
       >
         <NextTopLoader

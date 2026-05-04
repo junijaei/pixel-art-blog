@@ -7,17 +7,27 @@ const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ||
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const now = new Date();
+// About 페이지 콘텐츠가 실제로 변경될 때 업데이트
+const ABOUT_LAST_MODIFIED = new Date('2026-01-01');
 
-  const staticRoutes: MetadataRoute.Sitemap = [
-    { url: SITE_URL, lastModified: now, changeFrequency: 'daily', priority: 1 },
-    { url: `${SITE_URL}/posts`, lastModified: now, changeFrequency: 'daily', priority: 0.9 },
-    { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.5 },
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const fallbackRoutes: MetadataRoute.Sitemap = [
+    { url: SITE_URL, changeFrequency: 'daily', priority: 1 },
+    { url: `${SITE_URL}/posts`, changeFrequency: 'daily', priority: 0.9 },
+    { url: `${SITE_URL}/about`, lastModified: ABOUT_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },
   ];
 
   try {
     const [posts, categoryMaps] = await Promise.all([getPosts(), getCategoryMaps()]);
+
+    const latestPostDate =
+      posts.length > 0 ? new Date(posts[0].updatedAt || posts[0].publishedAt) : ABOUT_LAST_MODIFIED;
+
+    const staticRoutes: MetadataRoute.Sitemap = [
+      { url: SITE_URL, lastModified: latestPostDate, changeFrequency: 'daily', priority: 1 },
+      { url: `${SITE_URL}/posts`, lastModified: latestPostDate, changeFrequency: 'daily', priority: 0.9 },
+      { url: `${SITE_URL}/about`, lastModified: ABOUT_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },
+    ];
 
     const categoryRoutes: MetadataRoute.Sitemap = Array.from(categoryMaps.byId.values()).map((cat) => ({
       url: `${SITE_URL}/posts/${cat.fullPath || cat.path}`,
@@ -40,6 +50,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     return [...staticRoutes, ...categoryRoutes, ...postRoutes];
   } catch {
-    return staticRoutes;
+    return fallbackRoutes;
   }
 }

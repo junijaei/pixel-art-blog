@@ -6,7 +6,7 @@ export function BlogHeader() {
   return (
     <header className="border-border bg-card/50 sticky top-0 z-50 border-b backdrop-blur-sm">
       <div className="mx-auto max-w-6xl px-6 py-4">
-        <nav className="flex items-center justify-between">
+        <nav aria-label="주요 내비게이션" className="flex items-center justify-between">
           <Link href="/" className="group flex items-center gap-3">
             <div className="hidden items-center gap-1 sm:flex">
               <PixelDot className="text-foreground h-2 w-2" />

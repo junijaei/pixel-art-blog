@@ -48,13 +48,13 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {
   const { slug: slugSegments } = await params;
 
-  if (slugSegments.length === 0) return { title: 'Post Not Found' };
+  if (slugSegments.length === 0) return { title: 'Post Not Found', robots: { index: false, follow: false } };
 
   const parsed = parsePostLink(slugSegments);
-  if (!parsed) return { title: 'Post Not Found' };
+  if (!parsed) return { title: 'Post Not Found', robots: { index: false, follow: false } };
 
   const [post, thumbnailUrl] = await Promise.all([getPostBySlug(parsed.postId), getPostThumbnailUrl(parsed.postId)]);
-  if (!post) return { title: 'Post Not Found' };
+  if (!post) return { title: 'Post Not Found', robots: { index: false, follow: false } };
 
   const canonicalPath = slugSegments.join('/');
 
@@ -125,17 +125,46 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             ...(post.description && { description: post.description }),
             datePublished: post.publishedAt,
             dateModified: post.updatedAt,
-            author: { '@type': 'Person', name: 'junijaei' },
-            publisher: { '@type': 'Person', name: 'junijaei' },
+            author: { '@type': 'Person', name: '전희재', url: 'https://github.com/junijaei' },
+            publisher: {
+              '@type': 'Organization',
+              name: 'Bit by Bit',
+              url: siteUrl,
+              logo: { '@type': 'ImageObject', url: `${siteUrl}/og-image.png` },
+            },
             url: postUrl,
             mainEntityOfPage: { '@type': 'WebPage', '@id': postUrl },
             ...(metadata.thumbnailUrl && { image: metadata.thumbnailUrl }),
           }),
         }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: siteUrl },
+              ...metadata.breadcrumbs.map((crumb, i) => ({
+                '@type': 'ListItem',
+                position: i + 2,
+                name: crumb.label,
+                item: `${siteUrl}/posts/${crumb.path}`,
+              })),
+              {
+                '@type': 'ListItem',
+                position: metadata.breadcrumbs.length + 2,
+                name: post.title,
+                item: postUrl,
+              },
+            ],
+          }),
+        }}
+      />
       <BlogHeader />
 
-      <main className="max-w-dvw flex-1 px-6 py-12 sm:py-20">
+      <main className="w-full flex-1 px-6 py-12 sm:py-20">
         {metadata.tocItems.length > 0 && <TocWithScrollSpy items={metadata.tocItems} />}
 
         <div className="mx-auto max-w-2xl">

@@ -13,7 +13,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
   }, [error]);
 
   return (
-    <html lang="en">
+    <html lang="ko">
       <body style={{ margin: 0, fontFamily: 'system-ui, -apple-system, sans-serif' }}>
         <div
           style={{

@@ -1,4 +1,10 @@
 import ErrorLayout from '@/components/layouts/error-layout';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '404 - 페이지를 찾을 수 없습니다',
+  robots: { index: false, follow: false },
+};
 
 export default function NotFound() {
   return (

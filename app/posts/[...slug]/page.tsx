@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   try {
     const categoryTree = await getCategoryTree();
     const categoryNode = findCategoryByPath(categoryTree, categoryPath);
-    if (!categoryNode) return { title: '카테고리' };
+    if (!categoryNode) return { title: '카테고리', robots: { index: false, follow: false } };
 
     return {
       title: categoryNode.label,
@@ -32,9 +32,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         url: `/posts/${slugPath}`,
         type: 'website',
       },
+      twitter: {
+        card: 'summary_large_image',
+        title: categoryNode.label,
+        description: `${categoryNode.label} 카테고리의 블로그 포스트 목록입니다.`,
+        creator: '@junijaei',
+      },
     };
   } catch {
-    return { title: '포스트' };
+    return { title: '포스트', robots: { index: false, follow: false } };
   }
 }
 

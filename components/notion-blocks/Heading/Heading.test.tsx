@@ -4,7 +4,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 describe('Heading', () => {
-  it('renders h1 for heading_1', () => {
+  it('renders h2 for heading_1', () => {
     const block: HeadingBlock = {
       type: 'heading_1',
       heading_1: {
@@ -29,12 +29,12 @@ describe('Heading', () => {
     };
 
     const { container } = render(<Heading block={block} />);
-    const h1 = container.querySelector('h1');
-    expect(h1).toBeInTheDocument();
-    expect(h1?.textContent).toBe('Heading 1');
+    const h2 = container.querySelector('h2');
+    expect(h2).toBeInTheDocument();
+    expect(h2?.textContent).toBe('Heading 1');
   });
 
-  it('renders h2 for heading_2', () => {
+  it('renders h3 for heading_2', () => {
     const block: HeadingBlock = {
       type: 'heading_2',
       heading_2: {
@@ -59,12 +59,12 @@ describe('Heading', () => {
     };
 
     const { container } = render(<Heading block={block} />);
-    const h2 = container.querySelector('h2');
-    expect(h2).toBeInTheDocument();
-    expect(h2?.textContent).toBe('Heading 2');
+    const h3 = container.querySelector('h3');
+    expect(h3).toBeInTheDocument();
+    expect(h3?.textContent).toBe('Heading 2');
   });
 
-  it('renders h3 for heading_3', () => {
+  it('renders h4 for heading_3', () => {
     const block: HeadingBlock = {
       type: 'heading_3',
       heading_3: {
@@ -89,9 +89,9 @@ describe('Heading', () => {
     };
 
     const { container } = render(<Heading block={block} />);
-    const h3 = container.querySelector('h3');
-    expect(h3).toBeInTheDocument();
-    expect(h3?.textContent).toBe('Heading 3');
+    const h4 = container.querySelector('h4');
+    expect(h4).toBeInTheDocument();
+    expect(h4?.textContent).toBe('Heading 3');
   });
 
   it('applies correct font sizes', () => {
@@ -119,8 +119,8 @@ describe('Heading', () => {
     };
 
     const { container: container1 } = render(<Heading block={block1} />);
-    const h1 = container1.querySelector('h1');
-    expect(h1).toHaveClass('text-4xl');
+    const h2 = container1.querySelector('h2');
+    expect(h2).toHaveClass('text-4xl');
 
     const block2: HeadingBlock = {
       type: 'heading_2',
@@ -146,8 +146,8 @@ describe('Heading', () => {
     };
 
     const { container: container2 } = render(<Heading block={block2} />);
-    const h2 = container2.querySelector('h2');
-    expect(h2).toHaveClass('text-3xl');
+    const h3 = container2.querySelector('h3');
+    expect(h3).toHaveClass('text-3xl');
 
     const block3: HeadingBlock = {
       type: 'heading_3',
@@ -173,8 +173,8 @@ describe('Heading', () => {
     };
 
     const { container: container3 } = render(<Heading block={block3} />);
-    const h3 = container3.querySelector('h3');
-    expect(h3).toHaveClass('text-2xl');
+    const h4 = container3.querySelector('h4');
+    expect(h4).toHaveClass('text-2xl');
   });
 
   it('renders rich text with styles', () => {
@@ -217,8 +217,8 @@ describe('Heading', () => {
     };
 
     const { container } = render(<Heading block={block} />);
-    const h2 = container.querySelector('h2');
-    expect(h2).toBeInTheDocument();
-    expect(h2?.textContent).toBe('');
+    const h3 = container.querySelector('h3');
+    expect(h3).toBeInTheDocument();
+    expect(h3?.textContent).toBe('');
   });
 });

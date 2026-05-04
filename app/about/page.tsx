@@ -14,12 +14,37 @@ export const metadata: Metadata = {
     description: '프론트엔드 개발자 전희재(junijaei)를 소개합니다.',
     url: '/about',
     type: 'profile',
+    firstName: '희재',
+    lastName: '전',
+    username: 'junijaei',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'About | 전희재',
+    description: '프론트엔드 개발자 전희재(junijaei)를 소개합니다.',
+    creator: '@junijaei',
+    images: ['/og-image.png'],
   },
 };
 
 export default function AboutPage() {
   return (
     <div className="flex min-h-screen flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Person',
+            name: '전희재',
+            alternateName: 'junijaei',
+            jobTitle: '프론트엔드 개발자',
+            url: 'https://github.com/junijaei',
+            email: 'hjhj7895598@gmail.com',
+            sameAs: ['https://github.com/junijaei', 'https://linkedin.com/in/junijaei'],
+          }),
+        }}
+      />
       <BlogHeader />
 
       <main className="flex-1 px-6 py-16">

@@ -14,6 +14,13 @@ export const metadata: Metadata = {
     url: '/posts',
     type: 'website',
   },
+  twitter: {
+    card: 'summary_large_image',
+    title: '포스트',
+    description: '프론트엔드 개발자 전희재의 블로그 포스트 목록입니다.',
+    creator: '@junijaei',
+    images: ['/og-image.png'],
+  },
 };
 
 export const revalidate = 3600; // 1시간

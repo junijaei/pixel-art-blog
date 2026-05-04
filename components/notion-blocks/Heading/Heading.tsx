@@ -28,18 +28,6 @@ export function Heading({ block, children }: HeadingProps) {
     case 'heading_1':
       return (
         <>
-          <h1
-            id={headingId}
-            className={cn('mt-8 mb-4 scroll-mt-24 rounded font-bold', headingClasses[type], colorClass)}
-          >
-            {renderedText}
-          </h1>
-          {childContent}
-        </>
-      );
-    case 'heading_2':
-      return (
-        <>
           <h2
             id={headingId}
             className={cn('mt-8 mb-4 scroll-mt-24 rounded font-bold', headingClasses[type], colorClass)}
@@ -49,7 +37,7 @@ export function Heading({ block, children }: HeadingProps) {
           {childContent}
         </>
       );
-    case 'heading_3':
+    case 'heading_2':
       return (
         <>
           <h3
@@ -58,6 +46,18 @@ export function Heading({ block, children }: HeadingProps) {
           >
             {renderedText}
           </h3>
+          {childContent}
+        </>
+      );
+    case 'heading_3':
+      return (
+        <>
+          <h4
+            id={headingId}
+            className={cn('mt-8 mb-4 scroll-mt-24 rounded font-bold', headingClasses[type], colorClass)}
+          >
+            {renderedText}
+          </h4>
           {childContent}
         </>
       );
