@@ -6,11 +6,11 @@ import { PostsList } from './_components/posts-list';
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: '포스트',
-  description: '프론트엔드 개발자 junijaei의 블로그 포스트 목록입니다.',
+  description: '프론트엔드 개발자 전희재의 블로그 포스트 목록입니다.',
   alternates: { canonical: '/posts' },
   openGraph: {
     title: '포스트',
-    description: '프론트엔드 개발자 junijaei의 블로그 포스트 목록입니다.',
+    description: '프론트엔드 개발자 전희재의 블로그 포스트 목록입니다.',
     url: '/posts',
     type: 'website',
   },

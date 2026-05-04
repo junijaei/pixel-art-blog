@@ -73,13 +73,13 @@ export const metadata: Metadata = {
     default: 'Bit by Bit — junijaei blog',
     template: '%s | Bit by Bit',
   },
-  description: '프론트엔드 개발자 junijaei의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
+  description: '프론트엔드 개발자 전희재의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
   icons: {
     icon: '/favicon.ico',
   },
   openGraph: {
     title: 'Bit by Bit — junijaei blog',
-    description: '프론트엔드 개발자 junijaei의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
+    description: '프론트엔드 개발자 전희재의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
     url: '/',
     siteName: 'Bit by Bit',
     locale: 'ko_KR',
@@ -89,7 +89,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'Bit by Bit — junijaei blog',
-    description: '프론트엔드 개발자 junijaei의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
+    description: '프론트엔드 개발자 전희재의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
     creator: '@junijaei',
     images: ['/og-image.png'],
   },
