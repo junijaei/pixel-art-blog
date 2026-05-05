@@ -1,6 +1,6 @@
 import { BlogFooter } from '@/components/layouts/footer';
 import { BlogHeader } from '@/components/layouts/header';
-import { PixelDecoration, PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui';
+import { PixelArrow, PixelDecoration, PixelFile, PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -49,7 +49,6 @@ export default function AboutPage() {
 
       <main className="flex-1 px-6 py-16">
         <div className="mx-auto max-w-2xl">
-          {/* Page Header */}
           <div className="mb-12">
             <div className="mb-6 flex items-center gap-4">
               <PixelUser className="text-muted-foreground h-5 w-5" />
@@ -64,7 +63,6 @@ export default function AboutPage() {
             </h1>
           </div>
 
-          {/* Avatar/Visual */}
           <div className="relative mb-12 flex flex-col gap-8 sm:flex-row sm:items-start">
             <div className="bg-secondary border-border flex h-48 w-48 shrink-0 items-center justify-center rounded-xl border">
               <img
@@ -74,7 +72,6 @@ export default function AboutPage() {
               />
             </div>
 
-            {/* Contact Links */}
             <div className="mr-6 flex flex-col gap-3">
               <span className="text-muted-foreground font-pixel mb-1 text-[10px] tracking-wider">CONTACT</span>
               <div className="flex flex-col gap-2">
@@ -109,7 +106,6 @@ export default function AboutPage() {
             <PixelDecoration layout="corner" className="absolute -right-2 -bottom-2 hidden sm:grid" />
           </div>
 
-          {/* Bio Content */}
           <div className="space-y-6">
             <p className="text-foreground/90 text-md leading-relaxed sm:text-lg">
               Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만든다는 의미를 담고 있습니다.
@@ -123,41 +119,33 @@ export default function AboutPage() {
               <br />
               <br />이 블로그는 제 태도와 생각을 bit 단위로 쌓아가는 기록장입니다.
             </p>
-
-            {/* <div className="py-8">
-              <div className="mb-4 flex items-center gap-3">
-                <div className="flex gap-1.5">
-                  {[...Array(3)].map((_, i) => (
-                    <PixelDot key={i} className="text-foreground h-2 w-2" />
-                  ))}
-                </div>
-                <span className="text-muted-foreground font-pixel text-[10px] tracking-wider">FOCUS</span>
-              </div>
-
-              <ul className="space-y-3">
-                {[
-                  '프론트엔드 구조와 설계',
-                  '코드 품질을 유지하는 방법',
-                  'UI 구현과 인터랙션 디테일',
-                  '학습 과정과 성장 기록',
-                ].map((item) => (
-                  <li key={item} className="text-foreground/90 flex items-center gap-3">
-                    <PixelDot className="text-muted-foreground/60 h-1.5 w-1.5" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </div> */}
-
-            {/* <p className="text-muted-foreground leading-relaxed">
-              Feel free to explore the posts and reach out if you'd like to discuss design, collaborate on a project, or
-              just chat about pixels.
-            </p> */}
           </div>
 
-          {/* Decorative Footer */}
-          <div className="mt-16 flex justify-center">
+          <div className="my-16 flex justify-center">
             <PixelDecoration layout="horizontal" gradientStart="center" />
+          </div>
+
+          <div>
+            <p className="text-muted-foreground mb-4 leading-relaxed">
+              더 자세한 경험이 궁금하다면, 아래 이력서를 확인해 주세요.
+            </p>
+            <Link
+              href="https://assets.junijaei.co.kr/resume/FE_%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%92%E1%85%B4%E1%84%8C%E1%85%A2_%E1%84%8B%E1%85%B5%E1%84%85%E1%85%A7%E1%86%A8%E1%84%89%E1%85%A5.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-border bg-secondary/40 hover:border-muted-foreground/30 hover:bg-secondary group flex items-center justify-between rounded-xl border px-5 py-4 transition-all duration-300"
+            >
+              <div className="flex items-center gap-4">
+                <div className="bg-foreground/5 border-border flex h-10 w-10 items-center justify-center rounded-lg border">
+                  <PixelFile className="text-muted-foreground h-5 w-5" />
+                </div>
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-foreground text-sm font-medium">전희재 이력서</span>
+                  <span className="text-muted-foreground font-pixel text-[9px] tracking-wider">PDF · FE DEVELOPER</span>
+                </div>
+              </div>
+              <PixelArrow className="text-muted-foreground group-hover:text-foreground h-4 w-4 -rotate-45 transition-colors duration-300" />
+            </Link>
           </div>
         </div>
       </main>
