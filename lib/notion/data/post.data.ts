@@ -5,13 +5,14 @@
  */
 
 import { fetchBlocks, fetchBlocksChildren } from '@/lib/notion/core/block.api';
+import { fetchCommentsForBlocks } from '@/lib/notion/core/comment.api';
 import { ISR_CONFIG } from '@/lib/notion/core/config';
 import { fetchPost, fetchPosts } from '@/lib/notion/core/post.api';
 import { processBlockTree } from '@/lib/notion/domain/block';
 import { buildBreadcrumbItems } from '@/lib/notion/domain/category';
 import type { BreadcrumbItem, TocItem } from '@/lib/notion/shared/types';
 import { extractThumbnailUrl } from '@/lib/notion/shared/utils';
-import type { Block, Category, CategoryWithFullPath, ImageBlock, Post, PostCardData } from '@/types/notion';
+import type { Block, BlockCommentRecord, Category, CategoryWithFullPath, ImageBlock, Post, PostCardData } from '@/types/notion';
 import { calculateReadingTime, formatRelativeTime } from '@/utils/utils';
 import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
@@ -24,6 +25,7 @@ import { getCategoryMaps } from './category.data';
 export interface PostWithContent {
   post: Post;
   blocks: Block[];
+  commentMap: BlockCommentRecord;
   metadata: {
     tocItems: TocItem[];
     readingTime: string;
@@ -45,11 +47,14 @@ const fetchAllPostsCached = unstable_cache(
 );
 
 /**
- * Get all published posts.
- * - unstable_cache: cross-request (ISR 재검증 간 Data Cache 공유)
- * - cache(): per-request (단일 렌더 패스 내 중복 호출 방지)
+ * Get all posts.
+ * - dev: draft 포함 전체 반환 (ISR 캐시 우회)
+ * - prod: unstable_cache + cache() 이중 캐싱
  */
 export const getPosts = cache(async (): Promise<Post[]> => {
+  if (process.env.NODE_ENV === 'development') {
+    return fetchPosts(ISR_CONFIG.POST_DATABASE_ID, { publishedOnly: false });
+  }
   return fetchAllPostsCached();
 });
 
@@ -109,7 +114,11 @@ export async function getPostWithContent(
   // 2. Process blocks (single pass)
   const { blocks, metadata: blockMetadata } = processBlockTree(rawBlocks);
 
-  // 3. CDN image processing (side effect)
+  // 3. Fetch block-level comments (all top-level blocks)
+  const blockIds = blocks.map((b) => b.id);
+  const commentMap = await fetchCommentsForBlocks(blockIds);
+
+  // 4. CDN image processing (side effect)
   if (blockMetadata.imageBlocks.length > 0) {
     const { processImageBlocks } = await import('@/lib/cdn');
     const stats = await processImageBlocks(blockMetadata.imageBlocks, post.slug);
@@ -134,6 +143,7 @@ export async function getPostWithContent(
   return {
     post,
     blocks,
+    commentMap,
     metadata: {
       tocItems: blockMetadata.tocItems,
       readingTime,

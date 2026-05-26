@@ -103,7 +103,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const postData = await getPostWithContent(parsed.postId, categoryData);
   if (!postData) return notFound();
 
-  const { post, blocks, metadata, category } = postData;
+  const { post, blocks, commentMap, metadata, category } = postData;
 
   // 연관된 글 조회 (getPosts/getCategoryMaps 캐시 재사용 — 추가 API 호출 없음)
   const relatedPosts = await getRelatedPosts(post);
@@ -209,7 +209,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
           {/* 본문 */}
           <article className="prose prose-neutral dark:prose-invert max-w-none">
-            <BlockRenderer blocks={blocks} />
+            <BlockRenderer blocks={blocks} commentMap={commentMap} />
           </article>
 
           {post.tags.length > 0 && (

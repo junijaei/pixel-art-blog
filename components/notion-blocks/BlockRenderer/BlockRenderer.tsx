@@ -12,19 +12,21 @@
   ToDo,
   Toggle,
 } from '@/components/notion-blocks';
-import type { Block } from '@/types/notion';
+import { CommentWrapper } from '@/components/notion-blocks/InlineComment';
+import type { Block, BlockCommentRecord } from '@/types/notion';
 import dynamic from 'next/dynamic';
 
 const Image = dynamic(() => import('../Image/Image').then((m) => ({ default: m.Image })));
 
 export interface BlockRendererProps {
   blocks: Block[];
+  commentMap?: BlockCommentRecord;
 }
 
 /**
  * Maps Notion blocks to their matching React components and recursively renders nested children.
  */
-export function BlockRenderer({ blocks }: BlockRendererProps) {
+export function BlockRenderer({ blocks, commentMap }: BlockRendererProps) {
   let numberedListIndex = 0;
   let firstImageSeen = false;
 
@@ -40,14 +42,26 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
         const isFirstImage = block.type === 'image' && !firstImageSeen;
         if (isFirstImage) firstImageSeen = true;
 
-        return (
+        const blockComments = commentMap?.[block.id];
+        const rendered = (
           <BlockComponent
             key={block.id || index}
             block={block}
             numberedListIndex={numberedListIndex}
             firstImage={isFirstImage}
+            commentMap={commentMap}
           />
         );
+
+        if (blockComments && blockComments.length > 0) {
+          return (
+            <CommentWrapper key={block.id || index} comments={blockComments}>
+              {rendered}
+            </CommentWrapper>
+          );
+        }
+
+        return rendered;
       })}
     </div>
   );
@@ -57,6 +71,7 @@ interface BlockComponentProps {
   block: Block;
   numberedListIndex: number;
   firstImage?: boolean;
+  commentMap?: BlockCommentRecord;
 }
 
 function getRenderableChildren(block: Block): Block[] {
@@ -71,9 +86,10 @@ function getRenderableChildren(block: Block): Block[] {
   return block.children;
 }
 
-function BlockComponent({ block, numberedListIndex, firstImage = false }: BlockComponentProps) {
+function BlockComponent({ block, numberedListIndex, firstImage = false, commentMap }: BlockComponentProps) {
   const childBlocks = getRenderableChildren(block);
-  const children = childBlocks.length > 0 ? <BlockRenderer blocks={childBlocks} /> : undefined;
+  const children =
+    childBlocks.length > 0 ? <BlockRenderer blocks={childBlocks} commentMap={commentMap} /> : undefined;
 
   switch (block.type) {
     case 'paragraph':

@@ -324,3 +324,14 @@ export function PixelQuotation({ className }: { className?: string }) {
     </svg>
   );
 }
+
+export function PixelPencil({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 13 13" fill="none" aria-hidden className={className}>
+      <path
+        d="M2 9.5V11h1.5l4.4-4.4-1.5-1.5L2 9.5zM10.7 4.3a.4.4 0 0 0 0-.57l-.93-.93a.4.4 0 0 0-.57 0l-.73.73 1.5 1.5.73-.73z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}

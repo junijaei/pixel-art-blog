@@ -70,7 +70,7 @@ export const metadata: Metadata = {
       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
   ),
   title: {
-    default: 'Bit by Bit — junijaei blog',
+    default: 'Bit by Bit',
     template: '%s | Bit by Bit',
   },
   description: '프론트엔드 개발자 전희재의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
@@ -78,17 +78,17 @@ export const metadata: Metadata = {
     icon: '/favicon.ico',
   },
   openGraph: {
-    title: 'Bit by Bit — junijaei blog',
+    title: 'Bit by Bit',
     description: '프론트엔드 개발자 전희재의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
     url: '/',
     siteName: 'Bit by Bit',
     locale: 'ko_KR',
     type: 'website',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Bit by Bit — junijaei blog' }],
+    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Bit by Bit' }],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Bit by Bit — junijaei blog',
+    title: 'Bit by Bit',
     description: '프론트엔드 개발자 전희재의 블로그입니다. 설계와 구현 과정의 생각과 경험을 기록합니다.',
     creator: '@junijaei',
     images: ['/og-image.png'],
