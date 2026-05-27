@@ -16,4 +16,33 @@
   body {
     font-family: var(--font-pretendard);
   }
+
+  /* Docs 페이지 다크모드 — Storybook 자체 컨테이너에 테마 적용 */
+  html.dark #storybook-docs,
+  html.dark .sbdocs-wrapper {
+    background-color: var(--background);
+    color: var(--foreground);
+  }
+
+  html.dark .sbdocs-content h1,
+  html.dark .sbdocs-content h2,
+  html.dark .sbdocs-content h3,
+  html.dark .sbdocs-content p,
+  html.dark .sbdocs-content td,
+  html.dark .sbdocs-content th,
+  html.dark .sbdocs-content li {
+    color: var(--foreground);
+  }
+
+  html.dark .sbdocs-content table thead tr {
+    background-color: var(--muted);
+  }
+
+  html.dark .sbdocs-content table tbody tr:nth-child(odd) {
+    background-color: color-mix(in oklch, var(--muted) 40%, transparent);
+  }
+
+  html.dark .docs-story {
+    background-color: var(--background);
+  }
 </style>

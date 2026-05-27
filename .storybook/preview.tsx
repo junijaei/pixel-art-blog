@@ -8,6 +8,9 @@ function ThemeSync({ theme }: { theme: string }) {
 
   useEffect(() => {
     setTheme(theme);
+    // Docs 모드에서도 html 루트에 직접 클래스 적용
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(theme);
   }, [setTheme, theme]);
 
   return null;
