@@ -1,10 +1,11 @@
 import type { BlockCommentRecord, NotionComment } from '@/types/notion';
 import { notionClient } from './client';
+import { withRetry } from './retry';
 
 /** 단일 블록의 댓글을 가져옵니다. */
 async function fetchBlockComments(blockId: string): Promise<NotionComment[]> {
   try {
-    const response = await notionClient.comments.list({ block_id: blockId });
+    const response = await withRetry(() => notionClient.comments.list({ block_id: blockId }));
     return response.results as unknown as NotionComment[];
   } catch {
     return [];

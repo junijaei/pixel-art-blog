@@ -8,6 +8,7 @@ import type { QueryDataSourceParameters } from '@notionhq/client/build/src/api-e
 import { notionClient } from '@/lib/notion/core/client';
 import type { Post, PostFilterOptions, PostPage, PostSortOptions } from '@/types/notion';
 import { NOTION_LIMITS, POST_PROPERTIES, POST_STATUS } from './config';
+import { withRetry } from './retry';
 
 type DataSourceFilter = QueryDataSourceParameters['filter'];
 type DataSourceFilterGroup = Extract<NonNullable<DataSourceFilter>, { and: unknown }>['and'];
@@ -165,18 +166,20 @@ export async function fetchPosts(
     : ({ field: POST_PROPERTIES.PUBLISHED_AT, direction: 'descending' } as PostSortOptions);
 
   while (hasMore) {
-    const response = await notionClient.dataSources.query({
-      data_source_id: databaseId,
-      page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
-      start_cursor: cursor,
-      filter,
-      sorts: [
-        {
-          property: sort.field,
-          direction: sort.direction,
-        },
-      ],
-    });
+    const response = await withRetry(() =>
+      notionClient.dataSources.query({
+        data_source_id: databaseId,
+        page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
+        start_cursor: cursor,
+        filter,
+        sorts: [
+          {
+            property: sort.field,
+            direction: sort.direction,
+          },
+        ],
+      })
+    );
 
     posts.push(...(response.results as PostPage[]));
     hasMore = response.has_more;
@@ -190,9 +193,7 @@ export async function fetchPosts(
  * 특정 포스트 가져오기
  */
 export async function fetchPost(pageId: string): Promise<Post> {
-  const page = await notionClient.pages.retrieve({
-    page_id: pageId,
-  });
+  const page = await withRetry(() => notionClient.pages.retrieve({ page_id: pageId }));
 
   return parsePostPage(page as PostPage);
 }

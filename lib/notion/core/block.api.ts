@@ -6,6 +6,7 @@
 import { notionClient } from '@/lib/notion/core/client';
 import type { Block } from '@/types/notion';
 import { NOTION_LIMITS } from './config';
+import { withRetry } from './retry';
 
 export async function fetchBlocks(blockId: string): Promise<Block[]> {
   const blocks: Block[] = [];
@@ -13,11 +14,13 @@ export async function fetchBlocks(blockId: string): Promise<Block[]> {
   let hasMore = true;
 
   while (hasMore) {
-    const response = await notionClient.blocks.children.list({
-      block_id: blockId,
-      page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
-      start_cursor: cursor,
-    });
+    const response = await withRetry(() =>
+      notionClient.blocks.children.list({
+        block_id: blockId,
+        page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
+        start_cursor: cursor,
+      })
+    );
 
     blocks.push(...(response.results as Block[]));
     hasMore = response.has_more;

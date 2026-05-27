@@ -8,6 +8,7 @@ import type { QueryDataSourceParameters } from '@notionhq/client/build/src/api-e
 import { notionClient } from '@/lib/notion/core/client';
 import type { Category, CategoryFilterOptions, CategoryPage } from '@/types/notion';
 import { CATEGORY_PROPERTIES, CATEGORY_STATUS, NOTION_LIMITS } from './config';
+import { withRetry } from './retry';
 
 type DataSourceFilter = QueryDataSourceParameters['filter'];
 type DataSourceFilterGroup = Extract<NonNullable<DataSourceFilter>, { and: unknown }>['and'];
@@ -111,18 +112,20 @@ export async function fetchAllCategories(databaseId: string, options?: CategoryF
     filters.length > 0 ? (filters.length === 1 ? filters[0] : { and: filters }) : undefined;
 
   while (hasMore) {
-    const response = await notionClient.dataSources.query({
-      data_source_id: databaseId,
-      page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
-      start_cursor: cursor,
-      filter,
-      sorts: [
-        {
-          property: CATEGORY_PROPERTIES.CREATED_AT,
-          direction: 'ascending',
-        },
-      ],
-    });
+    const response = await withRetry(() =>
+      notionClient.dataSources.query({
+        data_source_id: databaseId,
+        page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
+        start_cursor: cursor,
+        filter,
+        sorts: [
+          {
+            property: CATEGORY_PROPERTIES.CREATED_AT,
+            direction: 'ascending',
+          },
+        ],
+      })
+    );
 
     categories.push(...(response.results as CategoryPage[]));
     hasMore = response.has_more;
@@ -136,9 +139,7 @@ export async function fetchAllCategories(databaseId: string, options?: CategoryF
  * 특정 카테고리 가져오기
  */
 export async function fetchCategory(pageId: string): Promise<Category> {
-  const page = await notionClient.pages.retrieve({
-    page_id: pageId,
-  });
+  const page = await withRetry(() => notionClient.pages.retrieve({ page_id: pageId }));
 
   return parseCategoryPage(page as CategoryPage);
 }
