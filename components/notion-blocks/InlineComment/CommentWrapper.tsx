@@ -132,7 +132,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
               top: popoverStyle.top,
               left: popoverStyle.left,
               width: 'min(360px, calc(100vw - 16px))',
-              zIndex: 9999,
+              zIndex: 40,
             }}
             className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-xl pointer-events-auto [&_*]:pointer-events-auto"
             onMouseDown={(e) => e.stopPropagation()}
