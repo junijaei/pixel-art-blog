@@ -24,7 +24,7 @@ function parsePostPage(page: PostPage): Post {
 
   // title (title 타입)
   const titleProp = props[POST_PROPERTIES.TITLE];
-  const title = titleProp?.type === 'title' && titleProp.title.length > 0 ? titleProp.title[0].plain_text : '';
+  const title = titleProp?.type === 'title' && titleProp.title.length > 0 ? titleProp.title.map((rt) => rt.plain_text).join('') : '';
 
   // category (관계형)
   const categoryProp = props[POST_PROPERTIES.CATEGORY];
