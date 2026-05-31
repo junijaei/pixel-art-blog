@@ -31,12 +31,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         description: `${categoryNode.label} 카테고리의 블로그 포스트 목록입니다.`,
         url: `/posts/${slugPath}`,
         type: 'website',
+        images: [{ url: '/og-image.png', width: 1200, height: 630, alt: categoryNode.label }],
       },
       twitter: {
         card: 'summary_large_image',
         title: categoryNode.label,
         description: `${categoryNode.label} 카테고리의 블로그 포스트 목록입니다.`,
         creator: '@junijaei',
+        images: ['/og-image.png'],
       },
     };
   } catch {

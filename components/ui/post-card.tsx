@@ -16,10 +16,10 @@ export function PostCard({ slug, title, description, date, categoryPath, categor
           <PixelTag className="h-3 w-3" />
           <span className="text-xs">{categoryLabel}</span>
         </div>
-        <PixelDecoration layout='horizontal' dotCount={3} gradientStart='end' />
+        <PixelDecoration layout="horizontal" dotCount={3} gradientStart="end" />
       </div>
 
-      <h3 className="group-hover:text-muted-foreground mb-2 text-lg leading-relaxed font-medium transition-colors">
+      <h3 className="group-hover:text-muted-foreground mb-2 text-lg leading-snug font-medium transition-colors">
         {title}
       </h3>
 
