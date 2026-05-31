@@ -26,3 +26,20 @@ export function extractThumbnailUrl(imageBlock: ImageBlock | null | undefined): 
   if (!imageBlock?.image) return null;
   return extractImageUrl(imageBlock.image);
 }
+
+/**
+ * Extract URL from Notion page cover object
+ * Supports both external and file-hosted covers
+ */
+export function extractCoverUrl(cover: { type: string; [key: string]: unknown } | null): string | null {
+  if (!cover) return null;
+  if (cover.type === 'external') {
+    const external = cover.external as { url?: string } | undefined;
+    return external?.url ?? null;
+  }
+  if (cover.type === 'file') {
+    const file = cover.file as { url?: string } | undefined;
+    return file?.url ?? null;
+  }
+  return null;
+}

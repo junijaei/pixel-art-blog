@@ -21,6 +21,7 @@ import {
 } from '@/lib/notion';
 import { formatDateKorean } from '@/utils/utils';
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -53,8 +54,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const parsed = parsePostLink(slugSegments);
   if (!parsed) return { title: 'Post Not Found', robots: { index: false, follow: false } };
 
-  const [post, thumbnailUrl] = await Promise.all([getPostBySlug(parsed.postId), getPostThumbnailUrl(parsed.postId)]);
+  const post = await getPostBySlug(parsed.postId);
   if (!post) return { title: 'Post Not Found', robots: { index: false, follow: false } };
+
+  let thumbnailUrl: string | null = null;
+  if (post.coverUrl) {
+    const { processCoverImage } = await import('@/lib/cdn');
+    thumbnailUrl = await processCoverImage(post.coverUrl, post.slug, post.updatedAt) ?? post.coverUrl;
+  }
+  // @deprecated: getPostThumbnailUrl will be removed once all posts have a Notion cover
+  if (!thumbnailUrl) thumbnailUrl = await getPostThumbnailUrl(parsed.postId);
 
   const canonicalPath = slugSegments.join('/');
 
@@ -104,6 +113,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   if (!postData) return notFound();
 
   const { post, blocks, commentMap, metadata, category } = postData;
+
+  // 커버 있으면 첫 번째 블록이 이미지인 경우 중복 방지로 제거
+  const displayBlocks = post.coverUrl && blocks[0]?.type === 'image' ? blocks.slice(1) : blocks;
 
   // 연관된 글 조회 (getPosts/getCategoryMaps 캐시 재사용 — 추가 API 호출 없음)
   const relatedPosts = await getRelatedPosts(post);
@@ -207,9 +219,26 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <div className="bg-border h-px flex-1" />
           </div>
 
+          {/* 커버 이미지 */}
+          {post.coverUrl && (
+            <div
+              className="relative mb-14 w-full overflow-hidden rounded-xl ring-1 ring-border"
+              style={{ aspectRatio: '1.91/1' }}
+            >
+              <Image
+                src={post.coverUrl}
+                alt={post.title}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 672px"
+                priority
+              />
+            </div>
+          )}
+
           {/* 본문 */}
           <article className="prose prose-neutral dark:prose-invert max-w-none">
-            <BlockRenderer blocks={blocks} commentMap={commentMap} />
+            <BlockRenderer blocks={displayBlocks} commentMap={commentMap} />
           </article>
 
           {post.tags.length > 0 && (

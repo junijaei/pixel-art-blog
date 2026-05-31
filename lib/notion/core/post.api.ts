@@ -5,6 +5,7 @@
 
 import type { QueryDataSourceParameters } from '@notionhq/client/build/src/api-endpoints';
 
+import { extractCoverUrl } from '@/lib/notion/shared';
 import { notionClient } from '@/lib/notion/core/client';
 import type { Post, PostFilterOptions, PostPage, PostSortOptions } from '@/types/notion';
 import { NOTION_LIMITS, POST_PROPERTIES, POST_STATUS } from './config';
@@ -78,6 +79,7 @@ function parsePostPage(page: PostPage): Post {
     tags,
     createdAt,
     updatedAt,
+    coverUrl: extractCoverUrl(page.cover),
   };
 }
 

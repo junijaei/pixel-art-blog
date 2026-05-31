@@ -1,6 +1,6 @@
-export { checkImageExists, generateFileName, getCdnUrl, uploadImage } from './api';
+export { checkImageExists, generateCoverFileName, generateFileName, getCdnUrl, uploadCoverImage, uploadImage } from './api';
 
-export { processImageBlocks } from './processor';
+export { processCoverImage, processImageBlocks } from './processor';
 
 export {
   clearCache,

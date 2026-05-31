@@ -3,4 +3,4 @@
  */
 
 export { extractBaseColor, getBlockBackgroundClass, getNotionColorClass, isBackgroundColor } from './color';
-export { extractImageUrl, extractThumbnailUrl } from './image';
+export { extractCoverUrl, extractImageUrl, extractThumbnailUrl } from './image';

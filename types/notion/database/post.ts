@@ -48,6 +48,7 @@ export interface Post {
   tags: string[];
   createdAt: string;
   updatedAt: string;
+  coverUrl: string | null;
 }
 
 export interface PostFilterOptions {

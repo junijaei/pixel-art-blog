@@ -1,5 +1,5 @@
-import { uploadImage } from '@/lib/cdn/api';
-import { batchSetCachedImages, getCachedImage } from '@/lib/cdn/cache';
+import { uploadCoverImage, uploadImage } from '@/lib/cdn/api';
+import { batchSetCachedImages, getCachedImage, setCachedImage } from '@/lib/cdn/cache';
 import { isDevelopment, mockProcessBlocks } from '@/lib/cdn/dev-mock';
 import type { ImageProcessingStats, ImageUploadResult } from '@/types/cdn';
 import type { ImageBlock } from '@/types/notion/content/block';
@@ -80,6 +80,37 @@ async function processImageBlock(imageInfo: ImageBlockInfo, postSlugId: string):
       originalFilename: block.image.name,
     },
   };
+}
+
+export async function processCoverImage(
+  coverUrl: string | null,
+  postSlugId: string,
+  lastEditedTime: string
+): Promise<string | null> {
+  if (!coverUrl) return null;
+  if (isDevelopment()) return coverUrl;
+
+  const cacheKey = `${postSlugId}_cover`;
+
+  const cached = await getCachedImage(cacheKey, lastEditedTime);
+  if (cached) {
+    console.debug(`[Processor] Cover cache hit: ${postSlugId}`);
+    return cached.cdnUrl;
+  }
+
+  const uploadResult = await uploadCoverImage(coverUrl, postSlugId, lastEditedTime);
+
+  if (!uploadResult.success || !uploadResult.cdnUrl) {
+    console.error(
+      `[Processor] Cover upload failed for ${postSlugId} — falling back to Notion URL (expires ~1h)`,
+      uploadResult.error
+    );
+    return coverUrl;
+  }
+
+  await setCachedImage(cacheKey, lastEditedTime, uploadResult.cdnUrl);
+  console.debug(`[Processor] Cover processed: ${postSlugId} -> ${uploadResult.cdnUrl}`);
+  return uploadResult.cdnUrl;
 }
 
 // NOTE: ISR 재검증(서버리스 함수) 환경에서는 메모리 캐시와 파일 캐시 모두 무효하다.

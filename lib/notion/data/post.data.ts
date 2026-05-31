@@ -137,11 +137,18 @@ export async function getPostWithContent(
   // 6. Calculate reading time
   const readingTime = calculateReadingTime(blockMetadata.plainText);
 
-  // Extract thumbnail URL from first image block (after CDN processing)
-  const thumbnailUrl = extractThumbnailUrl(blockMetadata.imageBlocks?.[0]);
+  // Cover image CDN processing
+  let processedCoverUrl = post.coverUrl;
+  if (post.coverUrl) {
+    const { processCoverImage } = await import('@/lib/cdn');
+    processedCoverUrl = await processCoverImage(post.coverUrl, post.slug, post.updatedAt) ?? post.coverUrl;
+  }
+
+  // @deprecated: fallback to first image block — will be removed once all posts have a Notion cover
+  const thumbnailUrl = processedCoverUrl ?? extractThumbnailUrl(blockMetadata.imageBlocks?.[0]);
 
   return {
-    post,
+    post: processedCoverUrl !== post.coverUrl ? { ...post, coverUrl: processedCoverUrl } : post,
     blocks,
     commentMap,
     metadata: {

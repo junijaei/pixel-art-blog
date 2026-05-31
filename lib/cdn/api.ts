@@ -126,6 +126,27 @@ export async function uploadImage(
   }
 }
 
+export function generateCoverFileName(postSlugId: string, lastEditedTime: string): string {
+  const hash = crypto.createHash('sha256').update(`${postSlugId}:${lastEditedTime}`).digest('hex').slice(0, 8);
+  return `blog/${postSlugId}/thumbnail/${hash}.webp`;
+}
+
+export async function uploadCoverImage(
+  coverUrl: string,
+  postSlugId: string,
+  lastEditedTime: string
+): Promise<ImageUploadResult> {
+  try {
+    const fileName = generateCoverFileName(postSlugId, lastEditedTime);
+    console.debug(`[CDN] Uploading cover: ${fileName}`);
+    const result = await uploadWithRetry(coverUrl, fileName);
+    return { success: true, cdnUrl: result.url, fromCache: false };
+  } catch (error) {
+    console.error(`[CDN] Cover upload failed:`, error);
+    return { success: false, error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
 export async function checkImageExists(fileName: string): Promise<boolean> {
   try {
     const response = await fetchWithTimeout(getCdnUrl(fileName), { method: 'HEAD' }, 5000);

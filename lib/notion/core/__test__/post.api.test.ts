@@ -73,6 +73,7 @@ describe('fetchPosts', () => {
       tags: ['react', 'next.js'],
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-06-15T12:00:00.000Z',
+      coverUrl: null,
     });
   });
 
@@ -292,6 +293,7 @@ describe('fetchPost', () => {
       tags: ['tag1'],
       createdAt: '2025-01-01T00:00:00.000Z',
       updatedAt: '2025-06-15T00:00:00.000Z',
+      coverUrl: null,
     });
     expect(notionClient.pages.retrieve).toHaveBeenCalledWith({ page_id: 'post-page1' });
   });
