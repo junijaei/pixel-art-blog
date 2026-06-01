@@ -1,6 +1,14 @@
 import { BlogFooter } from '@/components/layouts/footer';
 import { BlogHeader } from '@/components/layouts/header';
-import { PixelArrow, PixelDecoration, PixelFile, PixelGithub, PixelLinkedin, PixelMail, PixelUser } from '@/components/ui';
+import {
+  PixelArrow,
+  PixelDecoration,
+  PixelFile,
+  PixelGithub,
+  PixelLinkedin,
+  PixelMail,
+  PixelUser,
+} from '@/components/ui';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -47,26 +55,27 @@ export default function AboutPage() {
       />
       <BlogHeader />
 
-      <main className="flex-1 px-6 py-16">
+      <main className="flex-1 px-6 py-16 sm:py-20">
         <div className="mx-auto max-w-2xl">
-          <div className="mb-12">
+          <div className="mb-8 sm:mb-12">
             <div className="mb-6 flex items-center gap-4">
               <PixelUser className="text-muted-foreground h-5 w-5" />
               <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">About</span>
-              <PixelDecoration layout="horizontal" gradientStart="center" className="opacity-30" />
             </div>
 
-            <h1 className="font-mulmaru mb-6 text-3xl font-bold sm:text-4xl">
+            <h1 className="font-mulmaru mb-6 text-4xl leading-tight font-semibold tracking-tight sm:text-5xl">
               프론트엔드 개발자,
               <br className="inline sm:hidden" />
               전희재입니다.
             </h1>
           </div>
 
-          <div className="relative mb-12 flex flex-col gap-8 sm:flex-row sm:items-start">
-            <div className="bg-secondary border-border flex h-48 w-48 shrink-0 items-center justify-center rounded-xl border">
+          <div className="border-border/80 bg-card/70 relative mx-auto mb-8 flex max-w-xl flex-col items-center gap-8 rounded-2xl border p-5 sm:mb-12 sm:flex-row sm:items-start sm:p-6">
+            <div className="bg-secondary border-border/80 flex h-44 w-44 shrink-0 items-center justify-center rounded-xl border">
               <img
                 src="/profile.png"
+                width={176}
+                height={176}
                 alt="프로필 이미지. 엘모가 컴퓨터 앞에 앉아 코딩을 하고 있다."
                 className="rounded-xl"
               />
@@ -102,8 +111,6 @@ export default function AboutPage() {
                 </Link>
               </div>
             </div>
-
-            <PixelDecoration layout="corner" className="absolute -right-2 -bottom-2 hidden sm:grid" />
           </div>
 
           <div className="space-y-6">
@@ -121,7 +128,7 @@ export default function AboutPage() {
             </p>
           </div>
 
-          <div className="my-16 flex justify-center">
+          <div className="my-8 flex justify-center sm:my-16">
             <PixelDecoration layout="horizontal" gradientStart="center" />
           </div>
 
@@ -133,7 +140,7 @@ export default function AboutPage() {
               href="https://assets.junijaei.co.kr/resume/FE_%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%92%E1%85%B4%E1%84%8C%E1%85%A2_%E1%84%8B%E1%85%B5%E1%84%85%E1%85%A7%E1%86%A8%E1%84%89%E1%85%A5.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="border-border bg-secondary/40 hover:border-muted-foreground/30 hover:bg-secondary group flex items-center justify-between rounded-xl border px-5 py-4 transition-all duration-300"
+              className="border-border bg-secondary/40 hover:border-muted-foreground/30 hover:bg-secondary focus-visible:ring-ring group mx-auto flex max-w-xl items-center justify-between rounded-xl border px-5 py-4 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2"
             >
               <div className="flex items-center gap-4">
                 <div className="bg-foreground/5 border-border flex h-10 w-10 items-center justify-center rounded-lg border">

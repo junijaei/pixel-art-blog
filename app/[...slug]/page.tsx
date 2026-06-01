@@ -60,7 +60,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   let thumbnailUrl: string | null = null;
   if (post.coverUrl) {
     const { processCoverImage } = await import('@/lib/cdn');
-    thumbnailUrl = await processCoverImage(post.coverUrl, post.slug, post.updatedAt) ?? post.coverUrl;
+    thumbnailUrl = (await processCoverImage(post.coverUrl, post.slug, post.updatedAt)) ?? post.coverUrl;
   }
   // @deprecated: getPostThumbnailUrl will be removed once all posts have a Notion cover
   if (!thumbnailUrl) thumbnailUrl = await getPostThumbnailUrl(parsed.postId);
@@ -190,17 +190,19 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </Link>
 
           {/* 포스트 헤더 */}
-          <header className="mb-14">
-            <div className="mb-5 flex items-center gap-4">
+          <header className="mb-12">
+            <div className="mb-6 flex items-center gap-3">
               <Breadcrumb items={metadata.breadcrumbs} currentPath={category?.path || ''} />
-              <PixelDecoration layout="horizontal" gradientStart="center" className="opacity-30" />
+              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-30" />
             </div>
 
-            <h1 className="mb-5 text-3xl leading-tight font-bold break-keep sm:text-4xl">{post.title}</h1>
+            <h1 className="mb-5 text-3xl leading-tight font-bold tracking-tight break-keep sm:text-5xl">
+              {post.title}
+            </h1>
 
-            {post.description && <p className="text-muted-foreground text-lg leading-relaxed">{post.description}</p>}
+            {post.description && <p className="text-muted-foreground text-lg leading-8">{post.description}</p>}
 
-            <div className="border-border flex flex-wrap items-center justify-between gap-4 pt-3">
+            <div className="border-border/70 mt-8 flex flex-wrap items-center justify-between gap-4 pt-5">
               <div className="text-muted-foreground flex items-center gap-4 text-sm">
                 <div className="flex items-center gap-2">
                   <PixelClock className="mt-0.5 h-3 w-3" />
@@ -215,14 +217,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {/* 헤더 구분선 */}
           <div className="mb-14 flex items-center gap-3">
             <div className="bg-border h-px flex-1" />
-            <PixelDecoration layout="horizontal" gradientStart="center" className="opacity-50" />
+            <PixelDecoration layout="horizontal" dotCount={3} gradientStart="center" className="opacity-30" />
             <div className="bg-border h-px flex-1" />
           </div>
 
           {/* 커버 이미지 */}
           {post.coverUrl && (
             <div
-              className="relative mb-14 w-full overflow-hidden rounded-xl ring-1 ring-border"
+              className="ring-border/80 relative mb-14 w-full overflow-hidden rounded-xl ring-1"
               style={{ aspectRatio: '1.91/1' }}
             >
               <Image
@@ -237,7 +239,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           )}
 
           {/* 본문 */}
-          <article className="prose prose-neutral dark:prose-invert max-w-none">
+          <article className="prose prose-neutral dark:prose-invert prose-p:leading-8 prose-headings:tracking-tight max-w-none">
             <BlockRenderer blocks={displayBlocks} commentMap={commentMap} />
           </article>
 
@@ -255,9 +257,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           )}
 
           {/* 댓글 */}
-          <section className="">
-            <div className="mb-8 flex items-center gap-3">
-              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" />
+          <section>
+            <div className="mb-8 flex items-center gap-3 pt-6">
+              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-45" />
               <span className="font-galmuri9 text-muted-foreground text-[10px] tracking-widest uppercase">
                 Comments
               </span>
@@ -272,7 +274,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {/* 하단 내비게이션 */}
           <footer className="mt-8">
             <div className="flex items-center justify-between">
-              <PixelDecoration layout="corner" className="opacity-60" />
+              <PixelDecoration layout="corner" className="opacity-30" />
               <Link
                 href="/posts"
                 className="group text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"

@@ -14,20 +14,20 @@ export function PostsList({ posts, categoryLabel }: PostsListProps) {
       <BlogHeader />
 
       <main className="flex-1">
-        <section className="px-6 py-16">
-          <div className="mx-auto max-w-2xl">
-            <div className="mb-6 flex items-center gap-4">
-              <PixelDecoration layout="horizontal" gradientStart="center" />
+        <section className="px-6 pt-16 pb-12 sm:pt-20">
+          <div className="mx-auto max-w-xl">
+            <div className="mb-7 flex items-center gap-3">
               <span className="text-muted-foreground font-galmuri9 text-[10px] tracking-widest uppercase">
                 {capitalizeFirst(categoryLabel)} Posts
               </span>
+              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
             </div>
 
-            <h1 className="font-mulmaru mb-4 text-4xl leading-tight font-bold sm:text-5xl">
+            <h1 className="font-mulmaru mb-4 text-4xl leading-tight font-semibold tracking-tight sm:text-5xl">
               {capitalizeFirst(categoryLabel)}
             </h1>
 
-            <p className="text-muted-foreground max-w-2xl text-lg leading-relaxed">
+            <p className="text-muted-foreground max-w-xl text-lg leading-8">
               {posts.length > 0 ? `총 ${posts.length}개의 포스트` : '포스트가 없습니다.'}
             </p>
           </div>
@@ -35,8 +35,8 @@ export function PostsList({ posts, categoryLabel }: PostsListProps) {
 
         {posts.length > 0 && (
           <section className="px-6 pb-20">
-            <div className="mx-auto max-w-2xl">
-              <div className="flex flex-col gap-6">
+            <div className="mx-auto max-w-xl">
+              <div className="flex flex-col gap-5">
                 {posts.map((post) => (
                   <PostCard
                     key={post.id}
