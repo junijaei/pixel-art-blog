@@ -5,8 +5,15 @@ type BaseProps = {
   size?: 'sm' | 'md' | 'lg';
 };
 
-type GridOrCornerProps = BaseProps & {
-  layout: 'grid' | 'corner';
+type GridProps = BaseProps & {
+  layout: 'grid';
+};
+
+type CornerGradientStart = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+
+type CornerProps = BaseProps & {
+  layout: 'corner';
+  gradientStart?: CornerGradientStart;
 };
 
 type GradientProps = BaseProps & {
@@ -15,7 +22,7 @@ type GradientProps = BaseProps & {
   dotCount?: number;
 };
 
-type PixelDecorationProps = GridOrCornerProps | GradientProps;
+type PixelDecorationProps = GridProps | CornerProps | GradientProps;
 
 const COLOR_STEP_VALUES = [10, 20, 30, 40, 50] as const;
 const MAX_INDEX = COLOR_STEP_VALUES.length - 1;
@@ -32,6 +39,19 @@ const sizeMap = {
   md: 'size-1.5',
   lg: 'size-2',
 };
+
+const cornerOrigins: Record<CornerGradientStart, [number, number]> = {
+  'top-left': [0, 0],
+  'top-right': [0, 2],
+  'bottom-left': [2, 0],
+  'bottom-right': [2, 2],
+};
+
+const cornerColorByDistance = {
+  0: 'bg-muted-foreground/40',
+  1: 'bg-muted-foreground/20',
+  2: 'bg-muted-foreground/10',
+} as Record<number, string>;
 
 const getGradientColors = (dotCount: number = 5, gradientStart: 'center' | 'start' | 'end') => {
   if (dotCount <= 0) return [];
@@ -70,17 +90,21 @@ export function PixelDecoration({ className, size = 'sm', layout, ...rest }: Pix
   }
 
   if (layout === 'corner') {
+    const { gradientStart = 'top-left' } = rest as CornerProps;
+    const [originRow, originCol] = cornerOrigins[gradientStart];
+    const cells = Array.from({ length: 9 }, (_, index) => {
+      const row = Math.floor(index / 3);
+      const col = index % 3;
+      const distance = Math.abs(row - originRow) + Math.abs(col - originCol);
+
+      return distance <= 2 ? cornerColorByDistance[distance] : undefined;
+    });
+
     return (
       <div className={cn('grid grid-cols-3 gap-1', className)}>
-        <div className={cn('bg-muted-foreground/40', sizeMap[size])} />
-        <div className={cn('bg-muted-foreground/20', sizeMap[size])} />
-        <div className={cn('bg-muted-foreground/10', sizeMap[size])} />
-        <div className={cn('bg-muted-foreground/20', sizeMap[size])} />
-        <div className={cn('bg-muted-foreground/10', sizeMap[size])} />
-        <div className={cn(sizeMap[size])} />
-        <div className={cn('bg-muted-foreground/10', sizeMap[size])} />
-        <div className={cn(sizeMap[size])} />
-        <div className={cn(sizeMap[size])} />
+        {cells.map((color, index) => (
+          <div key={index} className={cn(color, sizeMap[size])} />
+        ))}
       </div>
     );
   }
