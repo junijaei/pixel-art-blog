@@ -151,6 +151,12 @@
     font-feature-settings:
       'rlig' 1,
       'calt' 1;
+    text-rendering: optimizeLegibility;
+    background: radial-gradient(circle at 50% -12rem, oklch(0 0 0 / 0.035), transparent 32rem), var(--background);
+  }
+
+  .dark body {
+    background: radial-gradient(circle at 50% -12rem, oklch(1 0 0 / 0.045), transparent 34rem), var(--background);
   }
 
   /* Smooth scrolling */

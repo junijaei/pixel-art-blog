@@ -16,9 +16,9 @@ export function Heading({ block, children }: HeadingProps) {
   const { rich_text, color } = content;
   const colorClass = getNotionColorClass(color);
   const headingClasses = {
-    heading_1: 'text-4xl',
-    heading_2: 'text-3xl',
-    heading_3: 'text-2xl',
+    heading_1: 'text-3xl sm:text-4xl',
+    heading_2: 'text-2xl sm:text-3xl',
+    heading_3: 'text-xl sm:text-2xl',
   };
   const renderedText = <RichTextRenderer richTextArray={rich_text} />;
   const headingId = `heading-${block.id}`;

@@ -37,16 +37,9 @@ export default function HomeLoading() {
           </div>
         </section>
 
-        {/* Featured Post */}
-        <section className="mb-16 px-6">
-          <div className="mx-auto max-w-2xl">
-            <PostCardSkeleton />
-          </div>
-        </section>
-
         {/* Recent Posts */}
         <section className="px-6">
-          <div className="mx-auto max-w-2xl">
+          <div className="mx-auto max-w-xl">
             <div className="mb-8 flex items-center justify-between">
               <Skeleton className="h-4 w-28" />
               <Skeleton className="h-4 w-16" />

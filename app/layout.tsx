@@ -143,11 +143,11 @@ export default function RootLayout({
           crawlSpeed={200}
         />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <div className="flex">
+          <div className="flex min-h-screen">
             <Suspense fallback={<SidebarSkeleton />}>
               <AsyncSidebar />
             </Suspense>
-            <div className="flex-1">{children}</div>
+            <div className="min-w-0 flex-1">{children}</div>
           </div>
         </ThemeProvider>
         <PageViewTracker />

@@ -74,10 +74,7 @@ function CategoryTreeItem({
             className="hover:bg-sidebar-accent cursor-pointer rounded p-1 transition-colors"
             aria-label={isExpanded ? '카테고리 접기' : '카테고리 펼치기'}
           >
-            <motion.div
-              animate={{ rotate: isExpanded ? 90 : 0 }}
-              transition={{ duration: 0.2, ease: 'easeInOut' }}
-            >
+            <motion.div animate={{ rotate: isExpanded ? 90 : 0 }} transition={{ duration: 0.2, ease: 'easeInOut' }}>
               <PixelChevron className="text-sidebar-foreground/60 h-3 w-3" />
             </motion.div>
           </button>
@@ -89,8 +86,8 @@ function CategoryTreeItem({
         <Link
           href={href}
           className={cn(
-            'flex flex-1 items-center gap-2 rounded-md px-2 py-1 transition-colors',
-            'hover:bg-sidebar-accent text-sidebar-foreground'
+            'flex flex-1 items-center gap-2 rounded-lg px-2 py-1.5 transition-colors',
+            'hover:bg-sidebar-accent/80 text-sidebar-foreground'
           )}
         >
           {/* Folder Icon */}
@@ -230,7 +227,7 @@ export function Sidebar({ categories, className, defaultCollapsed = true }: Side
     <aside
       className={cn(
         'hidden sm:flex',
-        'bg-sidebar border-sidebar-border sticky top-0 h-screen flex-col border-r transition-all duration-300',
+        'bg-sidebar/80 border-sidebar-border/80 sticky top-0 h-screen flex-col border-r backdrop-blur transition-all duration-300',
         isCollapsed ? 'w-12' : 'w-64',
         className
       )}
@@ -238,7 +235,7 @@ export function Sidebar({ categories, className, defaultCollapsed = true }: Side
       {/* Header */}
       <div
         className={cn(
-          'border-sidebar-border flex shrink-0 items-center justify-between border-b',
+          'border-sidebar-border/80 flex shrink-0 items-center justify-between border-b',
           isCollapsed ? 'px-2 py-4' : 'p-4'
         )}
       >

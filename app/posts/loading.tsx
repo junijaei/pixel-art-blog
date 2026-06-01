@@ -8,7 +8,7 @@ export default function PostsLoading() {
 
       <main className="flex-1">
         <section className="px-6 py-16">
-          <div className="mx-auto max-w-2xl">
+          <div className="mx-auto max-w-xl">
             <div className="mb-6 flex items-center gap-4">
               <div className="flex items-center gap-1">
                 <Skeleton className="h-1.5 w-1.5 rounded-full" />
@@ -25,7 +25,7 @@ export default function PostsLoading() {
         </section>
 
         <section className="px-6 pb-20">
-          <div className="mx-auto max-w-2xl">
+          <div className="mx-auto max-w-xl">
             <div className="flex flex-col gap-6">
               <PostCardSkeleton />
               <PostCardSkeleton />
