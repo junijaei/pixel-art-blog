@@ -22,6 +22,9 @@
     "@giscus/react": "^3.1.0",
     "@next/third-parties": "^16.1.6",
     "@notionhq/client": "^5.8.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "@types/three": "^0.184.1",
     "@upstash/redis": "^1.37.0",
     "autoprefixer": "^10.4.23",
     "cheerio": "^1.2.0",
@@ -39,7 +42,8 @@
     "shiki": "^3.21.0",
     "sonner": "^1.7.4",
     "tailwind-merge": "^3.4.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^4.1.3",
