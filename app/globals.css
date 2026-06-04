@@ -171,6 +171,41 @@
 }
 
 /* =====================================================
+ * Theme Toggle Circular Transition
+ * ===================================================== */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+.theme-transition-fallback {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: var(--theme-transition-color);
+  clip-path: circle(0 at var(--theme-transition-x, 100%) var(--theme-transition-y, 0));
+  animation: theme-circle-reveal 600ms cubic-bezier(0.47, -0.12, 1, 1) forwards;
+}
+
+@keyframes theme-circle-reveal {
+  to {
+    clip-path: circle(
+      var(--theme-transition-radius, 150vmax) at var(--theme-transition-x, 100%) var(--theme-transition-y, 0)
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  .theme-transition-fallback {
+    animation: none;
+  }
+}
+
+/* =====================================================
  * Custom Utilities
  * ===================================================== */
 @utility scrollbar-hide {
