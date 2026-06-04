@@ -2,7 +2,7 @@ import { findCategoryByPath, getAllDescendantIds, getCategories, getPosts, toPos
 import type { PostCardData } from '@/types/notion';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { PostsList } from '../_components/posts-list';
+import { PostsList } from '@/components/ui';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export async function generateMetadata({ params }: { params: Promise<{ slug: string[] }> }): Promise<Metadata> {

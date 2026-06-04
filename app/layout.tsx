@@ -1,4 +1,4 @@
-import { AsyncSidebar } from '@/app/_components/async-sidebar';
+import { AsyncSidebar } from '@/components/layouts';
 import '@/app/globals.css';
 import { SidebarSkeleton } from '@/components/layouts';
 import { PageViewTracker } from '@/components/PageViewTracker';

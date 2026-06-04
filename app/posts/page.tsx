@@ -1,7 +1,7 @@
 import { getCategories, getPosts, toPostCardData } from '@/lib/notion';
 import { PostCardData } from '@/types/notion';
 import type { Metadata } from 'next';
-import { PostsList } from './_components/posts-list';
+import { PostsList } from '@/components/ui';
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
