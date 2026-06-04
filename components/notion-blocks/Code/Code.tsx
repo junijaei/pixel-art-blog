@@ -2,7 +2,7 @@
 
 import type { CodeBlock, CodeProps } from '@/components/notion-blocks/Code/index';
 import { MermaidDiagram } from '@/components/notion-blocks/Code/MermaidDiagram';
-import { highlightCode } from '@/lib/notion/shared';
+import { highlightCode } from '@/lib/notion/highlight';
 import { cn } from '@/utils/utils';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';

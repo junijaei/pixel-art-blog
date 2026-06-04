@@ -9,16 +9,7 @@ import {
   RelatedPosts,
   TocWithScrollSpy,
 } from '@/components/ui';
-import {
-  getCategoryDataBundle,
-  getCategoryMaps,
-  getPostBySlug,
-  getPostThumbnailUrl,
-  getPostWithContent,
-  getPosts,
-  getRelatedPosts,
-  parsePostLink,
-} from '@/lib/notion';
+import { getCategories, getPost, getPosts, parsePostLink, toPostCardData } from '@/lib/notion';
 import { formatDateKorean } from '@/utils/utils';
 import type { Metadata } from 'next';
 import Image from 'next/image';
@@ -31,10 +22,10 @@ export const dynamicParams = true;
 // eslint-disable-next-line react-refresh/only-export-components
 export async function generateStaticParams() {
   try {
-    const [posts, categoryMaps] = await Promise.all([getPosts(), getCategoryMaps()]);
+    const [posts, categories] = await Promise.all([getPosts(), getCategories()]);
 
     return posts.map((post) => {
-      const category = categoryMaps.byId.get(post.categoryId);
+      const category = categories.maps.byId.get(post.categoryId);
       const fullPath = category?.fullPath || '';
       const slugPath = fullPath ? `${fullPath}/${post.slug}` : post.slug;
       return { slug: slugPath.split('/').filter(Boolean) };
@@ -54,16 +45,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const parsed = parsePostLink(slugSegments);
   if (!parsed) return { title: 'Post Not Found', robots: { index: false, follow: false } };
 
-  const post = await getPostBySlug(parsed.postId);
+  const post = await getPost({ slug: parsed.postId });
   if (!post) return { title: 'Post Not Found', robots: { index: false, follow: false } };
-
-  let thumbnailUrl: string | null = null;
-  if (post.coverUrl) {
-    const { processCoverImage } = await import('@/lib/cdn');
-    thumbnailUrl = (await processCoverImage(post.coverUrl, post.slug, post.updatedAt)) ?? post.coverUrl;
-  }
-  // @deprecated: getPostThumbnailUrl will be removed once all posts have a Notion cover
-  if (!thumbnailUrl) thumbnailUrl = await getPostThumbnailUrl(parsed.postId);
 
   const canonicalPath = slugSegments.join('/');
 
@@ -83,15 +66,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       locale: 'ko_KR',
       siteName: 'Bit by Bit',
       url: `/${canonicalPath}`,
-      ...(thumbnailUrl && {
-        images: [{ url: thumbnailUrl, width: 1200, height: 630, alt: post.title }],
+      ...(post.coverUrl && {
+        images: [{ url: post.coverUrl, width: 1200, height: 630, alt: post.title }],
       }),
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
-      ...(thumbnailUrl && { images: [thumbnailUrl] }),
+      ...(post.coverUrl && { images: [post.coverUrl] }),
     },
   };
 }
@@ -105,11 +88,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   if (!parsed) return notFound();
 
   // 카테고리 데이터 먼저 로드 (캐시됨)
-  const categoryData = await getCategoryDataBundle();
+  const categories = await getCategories();
 
   // notFound()는 CDN이 404를 캐시 → ISR revalidation 실패 시 영구 404 유발
   // API 에러는 throw하여 ISR이 기존 stale content를 유지하도록 함
-  const postData = await getPostWithContent(parsed.postId, categoryData);
+  const postData = await getPost({ slug: parsed.postId, content: true, categories });
   if (!postData) return notFound();
 
   const { post, blocks, commentMap, metadata, category } = postData;
@@ -117,8 +100,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   // 커버 있으면 첫 번째 블록이 이미지인 경우 중복 방지로 제거
   const displayBlocks = post.coverUrl && blocks[0]?.type === 'image' ? blocks.slice(1) : blocks;
 
-  // 연관된 글 조회 (getPosts/getCategoryMaps 캐시 재사용 — 추가 API 호출 없음)
-  const relatedPosts = await getRelatedPosts(post);
+  // 연관된 글 조회 (getPosts/getCategories 캐시 재사용 — 추가 API 호출 없음)
+  const relatedPosts = toPostCardData(await getPosts({ relatedTo: post, limit: 3 }), categories.maps);
 
   const siteUrl =
     process.env.NEXT_PUBLIC_SITE_URL ||

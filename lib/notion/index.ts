@@ -2,72 +2,52 @@
  * Notion Integration - Public API
  *
  * For SERVER components/pages: import from '@/lib/notion'
- * For CLIENT components: import from '@/lib/notion/shared'
+ * For CLIENT components: import from explicit leaf modules like '@/lib/notion/colors'
  */
 
 // ============================================
-// Server-only marker (prevents client import of this file)
-// ============================================
-import './core/_server';
-
-// ============================================
-// Data Layer Exports (Server Only)
+// Query Exports (Server Only)
 // ============================================
 
-// Block
-export { getBlocks, getBlocksWithChildren } from './data/block.data';
-
-// Category
-export {
-  getCategories,
-  getCategoryById,
-  getCategoryByFullPath,
-  getCategoryDataBundle,
-  getCategoryMaps,
-  getCategoryTree,
-} from './data/category.data';
-
-// Post
-export {
-  getPost,
-  getPostBySlug,
-  getPostCardsData,
-  getPosts,
-  getPostsWithReadingTime,
-  getPostsThumbnails,
-  getPostThumbnailUrl,
-  getPostWithContent,
-  getRelatedPosts,
-} from './data/post.data';
-export type { PostWithContent } from './data/post.data';
+export { getCategories, getPost, getPosts } from './query';
+export type {
+  CategoriesQueryResult,
+  GetCategoriesOptions,
+  GetPostContentOptions,
+  GetPostOptions,
+  GetPostsOptions,
+  PostContent,
+} from './query';
 
 // ============================================
-// Domain Helpers
+// Transform Helpers
 // ============================================
 
-export { createPostLink, findCategoryByPath, getAllDescendantIds, parsePostLink } from './domain/category';
+export { toPostCardData } from './transform';
+
+// ============================================
+// Routing & Transform Helpers
+// ============================================
+
+export { createPostLink, parsePostLink } from './routing';
+export { findCategoryByPath, getAllDescendantIds } from './transform';
 
 // ============================================
 // Config (Server Only)
 // ============================================
 
-export { ISR_CONFIG } from './core/config';
+export { ISR_CONFIG } from './constants';
 
 // ============================================
 // Code Highlighting (Server Only)
 // ============================================
 
-export { getShikiHighlighter, highlightCode } from './core/shiki';
+export { getShikiHighlighter, highlightCode } from './highlight';
 
 // ============================================
-// Shared Types & Utils (re-exported for convenience)
+// Types & Client-safe Utils (re-exported for convenience)
 // ============================================
 
-export type { BlockMetadata, BlockProcessResult, BreadcrumbItem, TocItem } from './shared/types';
-export {
-  extractBaseColor,
-  extractImageUrl,
-  getBlockBackgroundClass,
-  getNotionColorClass,
-  isBackgroundColor,
-} from './shared/utils';
+export type { BlockMetadata, BlockProcessResult, BreadcrumbItem, TocItem } from './types';
+export { extractBaseColor, getBlockBackgroundClass, getNotionColorClass, isBackgroundColor } from './colors';
+export { extractImageUrl } from './images';

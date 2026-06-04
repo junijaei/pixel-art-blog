@@ -2,7 +2,7 @@
 
 import { PixelChevron, PixelCollapse, PixelExpand, PixelFolder, PixelFolderOpen } from '@/components/ui';
 import { useStorage } from '@/hooks/use-storage';
-import { createCategoryLink } from '@/lib/notion/shared';
+import { createCategoryLink } from '@/lib/notion/routing';
 import type { CategoryTreeNode } from '@/types/notion';
 import { cn } from '@/utils/utils';
 import { AnimatePresence, motion } from 'motion/react';

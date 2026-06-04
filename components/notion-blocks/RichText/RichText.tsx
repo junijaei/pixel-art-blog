@@ -1,5 +1,5 @@
 import { Mention } from '@/components/notion-blocks/Mention';
-import { getNotionColorClass } from '@/lib/notion/shared';
+import { getNotionColorClass } from '@/lib/notion/colors';
 import type { RichText, RichTextMention, RichTextText } from '@/types/notion';
 import { cn } from '@/utils/utils';
 import { Fragment, ReactNode } from 'react';
@@ -57,9 +57,7 @@ export function RichText({ richTextArray }: { richTextArray: RichText[] }) {
 
     const rawContent = getContent(richText);
     let element: ReactNode =
-      rawContent !== null && rawContent.includes('\n')
-        ? renderWithNewlines(rawContent)
-        : rawContent;
+      rawContent !== null && rawContent.includes('\n') ? renderWithNewlines(rawContent) : rawContent;
 
     // annotations 적용 (중첩 순서: bold → italic → strikethrough → underline → code)
     if (annotations.code) {

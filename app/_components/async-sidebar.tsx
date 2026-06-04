@@ -1,5 +1,5 @@
 import { Sidebar } from '@/components/layouts';
-import { getCategoryTree } from '@/lib/notion';
+import { getCategories } from '@/lib/notion';
 
 /**
  * Server Component that fetches category data and renders Sidebar.
@@ -8,6 +8,6 @@ import { getCategoryTree } from '@/lib/notion';
  * the Notion API calls.
  */
 export async function AsyncSidebar() {
-  const categories = await getCategoryTree();
-  return <Sidebar categories={categories} />;
+  const categories = await getCategories();
+  return <Sidebar categories={categories.tree} />;
 }

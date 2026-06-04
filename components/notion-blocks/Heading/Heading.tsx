@@ -1,5 +1,5 @@
 ﻿import type { HeadingProps } from '@/components/notion-blocks/Heading/index';
-import { getNotionColorClass } from '@/lib/notion/shared';
+import { getNotionColorClass } from '@/lib/notion/colors';
 import type { RichText } from '@/types/notion';
 import { cn } from '@/utils/utils';
 import { ChildBlockContainer } from '../ChildBlockContainer';

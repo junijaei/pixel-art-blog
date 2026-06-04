@@ -4,8 +4,56 @@
  * NO I/O, NO SDK - pure data transformation
  */
 
-import type { BreadcrumbItem } from '@/lib/notion/shared/types';
-import type { Category, CategoryTreeNode, CategoryWithFullPath } from '@/types/notion';
+import { CATEGORY_PROPERTIES, CATEGORY_STATUS } from '@/lib/notion/constants';
+import type { BreadcrumbItem } from '@/lib/notion/types';
+import type { Category, CategoryPage, CategoryTreeNode, CategoryWithFullPath } from '@/types/notion';
+
+export function toCategory(page: CategoryPage): Category {
+  const props = page.properties;
+
+  const labelProp = props[CATEGORY_PROPERTIES.LABEL];
+  const label = labelProp?.type === 'title' && labelProp.title.length > 0 ? labelProp.title[0].plain_text : '';
+
+  const parentProp = props[CATEGORY_PROPERTIES.PARENT];
+  const parentId = parentProp?.type === 'relation' && parentProp.relation.length > 0 ? parentProp.relation[0].id : null;
+
+  const childrenProp = props[CATEGORY_PROPERTIES.CHILDREN];
+  const hasChildren = childrenProp?.type === 'relation' && childrenProp.relation.length > 0;
+
+  const pathProp = props[CATEGORY_PROPERTIES.PATH];
+  const path = pathProp?.type === 'rich_text' && pathProp.rich_text.length > 0 ? pathProp.rich_text[0].plain_text : '';
+
+  const isActiveProp = props[CATEGORY_PROPERTIES.IS_ACTIVE];
+  const isActive = isActiveProp?.type === 'select' && isActiveProp.select?.name === CATEGORY_STATUS.ACTIVE;
+
+  const postCountProp = props[CATEGORY_PROPERTIES.POST_COUNT];
+  const postCount =
+    postCountProp?.type === 'rollup' && postCountProp.rollup?.type === 'number'
+      ? (postCountProp.rollup?.number ?? 0)
+      : 0;
+
+  const createdAtProp = props[CATEGORY_PROPERTIES.CREATED_AT];
+  const createdAt = createdAtProp?.type === 'created_time' ? createdAtProp.created_time : '';
+
+  const updatedAtProp = props[CATEGORY_PROPERTIES.UPDATED_AT];
+  const updatedAt = updatedAtProp?.type === 'last_edited_time' ? updatedAtProp.last_edited_time : '';
+
+  return {
+    id: page.id,
+    label,
+    parentId,
+    hasChildren,
+    path,
+    isActive,
+    postCount,
+    createdAt,
+    updatedAt,
+  };
+}
+
+export function toCategories(pages: CategoryPage[]): Category[] {
+  return pages.map(toCategory);
+}
 
 /**
  * Build fullPath from categoryId

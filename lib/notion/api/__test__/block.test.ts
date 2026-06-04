@@ -1,8 +1,8 @@
-import { fetchBlocksChildren } from '@/lib/notion/core/block.api';
+import { fetchBlocksChildren } from '@/lib/notion/api/block';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 // Mock Notion client
-vi.mock('@/lib/notion/core/client', () => ({
+vi.mock('@/lib/notion/api/client', () => ({
   notionClient: {
     blocks: {
       children: {
@@ -14,7 +14,7 @@ vi.mock('@/lib/notion/core/client', () => ({
 }));
 
 import { createMockBlock } from '@/__test__/fixture';
-import { notionClient } from '@/lib/notion/core/client';
+import { notionClient } from '@/lib/notion/api/client';
 import type { Block } from '@/types/notion';
 
 type BlockChildrenListResponse = Awaited<ReturnType<typeof notionClient.blocks.children.list>>;

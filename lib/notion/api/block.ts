@@ -3,10 +3,10 @@
  * 블록 데이터 fetching 및 children enrichment 서버 전용 API 함수
  */
 
-import { notionClient } from '@/lib/notion/core/client';
+import { notionClient } from '@/lib/notion/api/client';
 import type { Block } from '@/types/notion';
-import { NOTION_LIMITS } from './config';
-import { withRetry } from './retry';
+import { NOTION_LIMITS } from '@/lib/notion/constants';
+import { withRetry } from '@/lib/notion/api/retry';
 
 export async function fetchBlocks(blockId: string): Promise<Block[]> {
   const blocks: Block[] = [];

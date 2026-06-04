@@ -1,5 +1,5 @@
 import type { QuoteProps } from '@/components/notion-blocks/Quote/index';
-import { getBlockBackgroundClass } from '@/lib/notion/shared';
+import { getBlockBackgroundClass } from '@/lib/notion/colors';
 import { cn } from '@/utils/utils';
 import { RichText } from '../RichText';
 

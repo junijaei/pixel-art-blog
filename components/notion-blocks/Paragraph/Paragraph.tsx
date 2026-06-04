@@ -1,6 +1,6 @@
 import type { ParagraphProps } from '@/components/notion-blocks/Paragraph/index';
 import { RichText } from '@/components/notion-blocks/RichText/RichText';
-import { getNotionColorClass } from '@/lib/notion/shared';
+import { getNotionColorClass } from '@/lib/notion/colors';
 import { cn } from '@/utils/utils';
 import { ChildBlockContainer } from '../ChildBlockContainer';
 

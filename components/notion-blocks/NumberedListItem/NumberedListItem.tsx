@@ -1,5 +1,5 @@
 import type { NumberedListItemProps } from '@/components/notion-blocks/NumberedListItem/index';
-import { getNotionColorClass } from '@/lib/notion/shared';
+import { getNotionColorClass } from '@/lib/notion/colors';
 import { cn } from '@/utils/utils';
 import { RichText } from '../RichText';
 

@@ -1,4 +1,4 @@
-import { getPostCardsData } from '@/lib/notion';
+import { getCategories, getPosts, toPostCardData } from '@/lib/notion';
 import { PostCardData } from '@/types/notion';
 import type { Metadata } from 'next';
 import { PostsList } from './_components/posts-list';
@@ -29,7 +29,8 @@ export default async function PostsPage() {
   let posts: PostCardData[] = [];
 
   try {
-    posts = await getPostCardsData();
+    const [allPosts, categories] = await Promise.all([getPosts(), getCategories()]);
+    posts = toPostCardData(allPosts, categories.maps);
   } catch (error) {
     console.error('Failed to fetch posts from Notion:', error);
   }

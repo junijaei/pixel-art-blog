@@ -1,6 +1,6 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { HeroCosmos, PixelArrow, PixelDecoration, PostCard } from '@/components/ui';
-import { getPostCardsData } from '@/lib/notion';
+import { getCategories, getPosts, toPostCardData } from '@/lib/notion';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -16,10 +16,11 @@ export default async function HomePage() {
     process.env.NEXT_PUBLIC_SITE_URL ||
     (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 
-  let postCards: Awaited<ReturnType<typeof getPostCardsData>> = [];
+  let postCards: ReturnType<typeof toPostCardData> = [];
 
   try {
-    postCards = await getPostCardsData();
+    const [posts, categories] = await Promise.all([getPosts(), getCategories()]);
+    postCards = toPostCardData(posts, categories.maps);
   } catch (error) {
     console.error('Failed to fetch posts from Notion:', error);
   }

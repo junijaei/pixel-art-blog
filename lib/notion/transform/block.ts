@@ -9,8 +9,8 @@
  * NO I/O, NO SDK, NO cache - pure data transformation
  */
 
+import type { BlockMetadata, BlockProcessResult, TocItem } from '@/lib/notion/types';
 import type { Block, HeadingBlock, ImageBlock } from '@/types/notion';
-import type { BlockMetadata, BlockProcessResult, TocItem } from '@/lib/notion/shared/types';
 
 /**
  * Internal Collector class
@@ -23,7 +23,7 @@ class BlockCollector {
   collectToc(block: Block): void {
     if (!this.isHeadingBlock(block)) return;
 
-    const type = block.type as 'heading_1' | 'heading_2' | 'heading_3';
+    const type = block.type;
     const content = block[type];
 
     if (content?.rich_text) {
@@ -50,7 +50,7 @@ class BlockCollector {
 
   collectImage(block: Block): void {
     if (!this.isImageBlock(block)) return;
-    this.imageBlocks.push(block as ImageBlock);
+    this.imageBlocks.push(block);
   }
 
   finalize(): BlockMetadata {

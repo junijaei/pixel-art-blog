@@ -1,4 +1,4 @@
-import { getCategoryMaps, getPosts } from '@/lib/notion';
+import { getCategories, getPosts } from '@/lib/notion';
 import type { MetadataRoute } from 'next';
 
 export const revalidate = 3600;
@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   try {
-    const [posts, categoryMaps] = await Promise.all([getPosts(), getCategoryMaps()]);
+    const [posts, categories] = await Promise.all([getPosts(), getCategories()]);
 
     const latestPostDate =
       posts.length > 0 ? new Date(posts[0].updatedAt || posts[0].publishedAt) : ABOUT_LAST_MODIFIED;
@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       { url: `${SITE_URL}/about`, lastModified: ABOUT_LAST_MODIFIED, changeFrequency: 'monthly', priority: 0.5 },
     ];
 
-    const categoryRoutes: MetadataRoute.Sitemap = Array.from(categoryMaps.byId.values()).map((cat) => ({
+    const categoryRoutes: MetadataRoute.Sitemap = Array.from(categories.maps.byId.values()).map((cat) => ({
       url: `${SITE_URL}/posts/${cat.fullPath || cat.path}`,
       lastModified: new Date(cat.updatedAt),
       changeFrequency: 'weekly' as const,
@@ -37,7 +37,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }));
 
     const postRoutes: MetadataRoute.Sitemap = posts.map((post) => {
-      const category = categoryMaps.byId.get(post.categoryId);
+      const category = categories.maps.byId.get(post.categoryId);
       const fullPath = category?.fullPath || '';
       const slugPath = fullPath ? `${fullPath}/${post.slug}` : post.slug;
       return {

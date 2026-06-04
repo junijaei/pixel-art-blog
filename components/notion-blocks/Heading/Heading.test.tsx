@@ -120,7 +120,7 @@ describe('Heading', () => {
 
     const { container: container1 } = render(<Heading block={block1} />);
     const h2 = container1.querySelector('h2');
-    expect(h2).toHaveClass('text-4xl');
+    expect(h2).toHaveClass('text-3xl', 'sm:text-4xl');
 
     const block2: HeadingBlock = {
       type: 'heading_2',
@@ -147,7 +147,7 @@ describe('Heading', () => {
 
     const { container: container2 } = render(<Heading block={block2} />);
     const h3 = container2.querySelector('h3');
-    expect(h3).toHaveClass('text-3xl');
+    expect(h3).toHaveClass('text-2xl', 'sm:text-3xl');
 
     const block3: HeadingBlock = {
       type: 'heading_3',
@@ -174,7 +174,7 @@ describe('Heading', () => {
 
     const { container: container3 } = render(<Heading block={block3} />);
     const h4 = container3.querySelector('h4');
-    expect(h4).toHaveClass('text-2xl');
+    expect(h4).toHaveClass('text-xl', 'sm:text-2xl');
   });
 
   it('renders rich text with styles', () => {

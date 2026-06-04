@@ -1,5 +1,5 @@
 /**
- * Shiki Code Highlighter - Server only
+ * Shiki Code Highlighter
  */
 
 import type { BundledLanguage } from 'shiki';

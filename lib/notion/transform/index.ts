@@ -1,8 +1,4 @@
-/**
- * Category Domain - Pure business logic
- */
-
-export { createCategoryLink, createPostLink, parsePostLink } from './link';
+﻿export { processBlockTree } from './block';
 export {
   buildBreadcrumbItems,
   buildCategoryMaps,
@@ -11,4 +7,7 @@ export {
   enrichCategoriesWithFullPath,
   findCategoryByPath,
   getAllDescendantIds,
-} from './transform';
+  toCategories,
+  toCategory,
+} from './categories';
+export { toPost, toPostCardData, toPosts } from './posts';

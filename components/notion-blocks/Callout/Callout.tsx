@@ -1,5 +1,5 @@
 import type { CalloutProps } from '@/components/notion-blocks/Callout/index';
-import { getBlockBackgroundClass } from '@/lib/notion/shared';
+import { getBlockBackgroundClass } from '@/lib/notion/colors';
 import { cn } from '@/utils/utils';
 import { RichText } from '../RichText';
 

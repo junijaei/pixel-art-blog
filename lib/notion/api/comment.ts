@@ -1,6 +1,6 @@
 import type { BlockCommentRecord, NotionComment } from '@/types/notion';
-import { notionClient } from './client';
-import { withRetry } from './retry';
+import { notionClient } from '@/lib/notion/api/client';
+import { withRetry } from '@/lib/notion/api/retry';
 
 /** 단일 블록의 댓글을 가져옵니다. */
 async function fetchBlockComments(blockId: string): Promise<NotionComment[]> {

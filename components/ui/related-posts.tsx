@@ -1,5 +1,5 @@
 import { PixelClock, PixelDecoration, PixelTag } from '@/components/ui/pixel';
-import { createPostLink } from '@/lib/notion/shared';
+import { createPostLink } from '@/lib/notion/routing';
 import type { PostCardData } from '@/types/notion';
 import Link from 'next/link';
 

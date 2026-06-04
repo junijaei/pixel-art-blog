@@ -1,11 +1,4 @@
-import {
-  findCategoryByPath,
-  getAllDescendantIds,
-  getCategoryMaps,
-  getCategoryTree,
-  getPostCardsData,
-  getPosts,
-} from '@/lib/notion';
+import { findCategoryByPath, getAllDescendantIds, getCategories, getPosts, toPostCardData } from '@/lib/notion';
 import type { PostCardData } from '@/types/notion';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -18,8 +11,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const slugPath = slug.join('/');
 
   try {
-    const categoryTree = await getCategoryTree();
-    const categoryNode = findCategoryByPath(categoryTree, categoryPath);
+    const categories = await getCategories();
+    const categoryNode = findCategoryByPath(categories.tree, categoryPath);
     if (!categoryNode) return { title: '카테고리', robots: { index: false, follow: false } };
 
     return {
@@ -52,8 +45,8 @@ export const dynamicParams = true;
 // eslint-disable-next-line react-refresh/only-export-components
 export async function generateStaticParams() {
   try {
-    const categoryMaps = await getCategoryMaps();
-    return Array.from(categoryMaps.byId.values()).map((cat) => ({
+    const categories = await getCategories();
+    return Array.from(categories.maps.byId.values()).map((cat) => ({
       slug: cat.fullPath ? cat.fullPath.split('/') : [cat.path],
     }));
   } catch {
@@ -69,14 +62,14 @@ export default async function PostsCategoryPage({ params }: { params: Promise<{ 
   let categoryLabel = '';
 
   try {
-    const [allPosts, categoryTree] = await Promise.all([getPosts(), getCategoryTree()]);
-    const categoryNode = findCategoryByPath(categoryTree, categoryPath);
+    const categories = await getCategories();
+    const categoryNode = findCategoryByPath(categories.tree, categoryPath);
     if (!categoryNode) notFound();
 
     categoryLabel = categoryNode.label;
     const categoryIds = new Set(getAllDescendantIds(categoryNode));
-    const filteredPosts = allPosts.filter((post) => categoryIds.has(post.categoryId));
-    posts = await getPostCardsData(filteredPosts);
+    const filteredPosts = await getPosts({ categoryIds });
+    posts = toPostCardData(filteredPosts, categories.maps);
   } catch (error) {
     console.error('Failed to fetch posts from Notion:', error);
   }
