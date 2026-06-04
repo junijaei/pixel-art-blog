@@ -7,6 +7,7 @@ import { getPosts } from '@/lib/notion/query/posts';
 import type { BreadcrumbItem, TocItem } from '@/lib/notion/types';
 import type { Block, BlockCommentRecord, CategoryWithFullPath, Post } from '@/types/notion';
 import { calculateReadingTime } from '@/utils/utils';
+import { unstable_cache } from 'next/cache';
 import { cache } from 'react';
 
 export interface PostContent {
@@ -33,10 +34,18 @@ export interface GetPostContentOptions {
   categories: CategoriesQueryResult;
 }
 
-const getBlocksWithChildren = cache(async (blockId: string, maxDepth: number = 10): Promise<Block[]> => {
-  const blocks = await fetchBlocks(blockId);
-  return fetchBlocksChildren(blocks, maxDepth);
-});
+const fetchPostBlocksCached = unstable_cache(
+  async (postId: string, _updatedAt: string): Promise<{ enrichedBlocks: Block[]; commentMap: BlockCommentRecord }> => {
+    const rawBlocks = await fetchBlocks(postId);
+    const enrichedBlocks = await fetchBlocksChildren(rawBlocks, 10);
+    const { blocks } = processBlockTree(enrichedBlocks);
+    const blockIds = blocks.map((block) => block.id);
+    const commentMap = await fetchCommentsForBlocks(blockIds);
+    return { enrichedBlocks, commentMap };
+  },
+  ['notion-post-blocks'],
+  { revalidate: 3600 }
+);
 
 const processPostCoverUrl = cache(
   async (coverUrl: string | null, postSlugId: string, lastEditedTime: string): Promise<string | null> => {
@@ -59,11 +68,8 @@ async function applyProcessedCover(post: Post): Promise<Post> {
 }
 
 async function getPostContent(post: Post, categories: CategoriesQueryResult): Promise<PostContent> {
-  const rawBlocks = await getBlocksWithChildren(post.id, 10);
-  const { blocks, metadata: blockMetadata } = processBlockTree(rawBlocks);
-
-  const blockIds = blocks.map((block) => block.id);
-  const commentMap = await fetchCommentsForBlocks(blockIds);
+  const { enrichedBlocks, commentMap } = await fetchPostBlocksCached(post.id, post.updatedAt);
+  const { blocks, metadata: blockMetadata } = processBlockTree(enrichedBlocks);
 
   if (blockMetadata.imageBlocks.length > 0) {
     const { processImageBlocks } = await import('@/lib/cdn');
