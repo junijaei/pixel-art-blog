@@ -1,13 +1,15 @@
 'use client';
 
 import { cn } from '@/utils/utils';
-import { Float, PerspectiveCamera, Stars } from '@react-three/drei';
+import { Environment, Float, Lightformer, PerspectiveCamera, Stars } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
-import { Suspense, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { RefObject, Suspense, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
+
+// --- Config & Types ---
 
 const COLORS = {
   dark: {
@@ -36,6 +38,7 @@ interface SceneConfig {
   coreSecondaryLightIntensity: number;
   coreGlintOpacity: number;
   coreFaceHighlightOpacity: number;
+  coreEnvIntensity: number;
 }
 
 const SCENE_CONFIG_BY_THEME: Record<ThemeMode, SceneConfig> = {
@@ -52,6 +55,7 @@ const SCENE_CONFIG_BY_THEME: Record<ThemeMode, SceneConfig> = {
     coreSecondaryLightIntensity: 2,
     coreGlintOpacity: 0.85,
     coreFaceHighlightOpacity: 0,
+    coreEnvIntensity: 1.0,
   },
   light: {
     ...COLORS.light,
@@ -66,10 +70,13 @@ const SCENE_CONFIG_BY_THEME: Record<ThemeMode, SceneConfig> = {
     coreSecondaryLightIntensity: 36,
     coreGlintOpacity: 0.75,
     coreFaceHighlightOpacity: 0.18,
+    coreEnvIntensity: 2.0,
   },
 };
 
 const SceneConfigContext = createContext<SceneConfig>(SCENE_CONFIG_BY_THEME.light);
+
+// --- Constants ---
 
 const HERO_SECTION_CLASS = 'bg-background relative h-[calc(100vh-60px)] min-h-150 w-full md:h-[calc(100vh-65px)]';
 const HERO_SECTION_ACTIVE_CLASS =
@@ -90,6 +97,8 @@ const DECORATIVE_FRAME_SEGMENTS = [
   'bottom-8 right-8 h-16 w-px',
 ] as const;
 
+// --- Props ---
+
 interface HeroCosmosProps {
   className?: string;
 }
@@ -102,6 +111,15 @@ interface ParticlesProps {
 interface OrbitalRingsProps {
   color?: string;
 }
+
+interface CoreKeyLightProps {
+  color: string;
+  intensity: number;
+  position: [number, number, number];
+  targetRef: RefObject<THREE.Object3D<THREE.Object3DEventMap> | null>;
+}
+
+// --- Shared Hook & Util ---
 
 function useSceneConfig() {
   return useContext(SceneConfigContext);
@@ -120,218 +138,46 @@ function generateParticlePositions(count: number) {
   return positions;
 }
 
-// --- 3D Components ---
+// --- Main ---
 
-function Particles({ count = 2000, color = '#ffffff' }: ParticlesProps) {
-  const mesh = useRef<THREE.Points>(null);
-  const particles = useMemo(() => generateParticlePositions(count), [count]);
-
-  useFrame((state) => {
-    if (!mesh.current) return;
-
-    const time = state.clock.getElapsedTime();
-    mesh.current.rotation.y = time * 0.05;
-    mesh.current.rotation.x = Math.sin(time * 0.1) * 0.1;
-  });
-
-  return (
-    <points ref={mesh}>
-      <bufferGeometry>
-        <bufferAttribute attach="attributes-position" args={[particles, 3]} />
-      </bufferGeometry>
-      <pointsMaterial size={0.015} color={color} transparent opacity={0.6} sizeAttenuation={true} />
-    </points>
-  );
-}
-
-function OrbitalRings({ color = '#ffffff' }: OrbitalRingsProps) {
-  const group = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (!group.current) return;
-
-    group.current.rotation.z = state.clock.getElapsedTime() * 0.1;
-  });
-
-  return (
-    <group ref={group}>
-      {ORBITAL_RING_INDICES.map((index) => (
-        <mesh key={index} rotation={[Math.PI / (index * 1.5), 0, 0]}>
-          <ringGeometry args={[5 + index * 2, 5.02 + index * 2, 128]} />
-          <meshBasicMaterial color={color} transparent opacity={0.15} side={THREE.DoubleSide} />
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-function PixelCore() {
-  const config = useSceneConfig();
-  const innerRef = useRef<THREE.Mesh>(null);
-  const outerRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    const time = state.clock.getElapsedTime();
-
-    if (innerRef.current) {
-      innerRef.current.rotation.x = time * 0.4;
-      innerRef.current.rotation.y = time * 0.2;
-    }
-
-    if (outerRef.current) {
-      outerRef.current.rotation.x = -time * 0.15;
-      outerRef.current.rotation.y = -time * 0.25;
-
-      const scale = 1 + Math.sin(time * 2) * 0.05;
-      outerRef.current.scale.set(scale, scale, scale);
-    }
-  });
-
-  return (
-    <group>
-      {/* Inner Core */}
-      <mesh ref={innerRef}>
-        <icosahedronGeometry args={[1, 0]} />
-        <meshPhysicalMaterial
-          color={config.coreSurfaceColor}
-          emissive={config.lightColor}
-          emissiveIntensity={config.coreEmissiveIntensity}
-          metalness={0.1}
-          roughness={0.03}
-          clearcoat={1}
-          clearcoatRoughness={0.02}
-          ior={2.3}
-          reflectivity={1}
-          specularColor={config.lightColor}
-          specularIntensity={2.5}
-          flatShading
-        />
-      </mesh>
-
-      {/* Concentrated specular glint for a polished black surface */}
-      <mesh position={[-0.42, 0.46, 0.82]} scale={[1, 0.6, 1]}>
-        <sphereGeometry args={[0.14, 16, 16]} />
-        <meshBasicMaterial
-          color={config.lightColor}
-          transparent
-          opacity={config.coreGlintOpacity}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* Always-visible soft facet light for the black core in light mode */}
-      <mesh position={[0.22, 0.08, 0.96]} rotation={[0, 0, Math.PI / 5]} scale={[1, 0.72, 1]}>
-        <circleGeometry args={[0.34, 3]} />
-        <meshBasicMaterial
-          color={config.lightColor}
-          transparent
-          opacity={config.coreFaceHighlightOpacity}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-        />
-      </mesh>
-
-      {/* Outer Crystalline Structure */}
-      <mesh ref={outerRef}>
-        <octahedronGeometry args={[1.8, 0]} />
-        <meshStandardMaterial color={config.foreground} wireframe transparent opacity={0.3} />
-      </mesh>
-
-      {/* Subtle Glow Sphere */}
-      <mesh scale={2.5}>
-        <sphereGeometry args={[1, 16, 16]} />
-        <meshBasicMaterial color={config.foreground} transparent opacity={config.coreGlowOpacity} />
-      </mesh>
-    </group>
-  );
-}
-
-function Scene() {
-  const config = useSceneConfig();
-
-  return (
-    <>
-      <Stars
-        radius={100}
-        depth={50}
-        count={config.starCount}
-        factor={config.starFactor}
-        saturation={0}
-        fade
-        speed={1}
-      />
-      <Particles count={3000} color={config.foreground} />
-      <OrbitalRings color={config.foreground} />
-    </>
-  );
-}
-
-interface CoreKeyLightProps {
-  color: string;
-  intensity: number;
-  position: [number, number, number];
-}
-
-function CoreKeyLight({ color, intensity, position }: CoreKeyLightProps) {
-  const lightRef = useRef<THREE.SpotLight>(null);
-  const targetRef = useRef<THREE.Object3D>(null);
+export function HeroCosmos({ className }: HeroCosmosProps) {
+  const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const { scrollY } = useScroll();
 
   useEffect(() => {
-    if (!lightRef.current || !targetRef.current) return;
-
-    lightRef.current.target = targetRef.current;
-    lightRef.current.target.updateMatrixWorld();
+    setMounted(true);
   }, []);
 
+  const yTranslate = useTransform(scrollY, [0, 500], [0, 100]);
+  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
+  const scale = useTransform(scrollY, [0, 400], [1, 0.95]);
+
+  const theme: ThemeMode = resolvedTheme === 'dark' ? 'dark' : 'light';
+  const sceneConfig = SCENE_CONFIG_BY_THEME[theme];
+
+  if (!mounted) {
+    return <section className={cn(HERO_SECTION_CLASS, className)} />;
+  }
+
   return (
-    <>
-      <object3D ref={targetRef} position={[0, 0, 0]} />
-      <spotLight
-        ref={lightRef}
-        position={position}
-        angle={0.85}
-        penumbra={0.6}
-        intensity={intensity}
-        distance={40}
-        decay={0.8}
-        color={color}
-      />
-    </>
+    <section className={cn(HERO_SECTION_ACTIVE_CLASS, className)}>
+      {/* Three.js Background */}
+      <BackgroundLayer config={sceneConfig} />
+
+      {/* Content */}
+      <HeroContent yTranslate={yTranslate} opacity={opacity} scale={scale} />
+
+      {/* Foreground Core */}
+      <CoreLayer config={sceneConfig} />
+
+      {/* Decorative Frame */}
+      <DecorativeFrame />
+    </section>
   );
 }
 
-function CoreScene() {
-  const config = useSceneConfig();
-
-  return (
-    <>
-      {/* Central Aesthetic Core */}
-      <Float speed={2} rotationIntensity={1} floatIntensity={2}>
-        <PixelCore />
-      </Float>
-
-      {/* World-oriented key lights aimed explicitly at the rotating core. */}
-      <CoreKeyLight color={config.lightColor} intensity={config.coreFrontLightIntensity} position={[-3.2, 3.4, 8]} />
-      <CoreKeyLight color={config.lightColor} intensity={config.coreSecondaryLightIntensity} position={[3.1, 2.8, 8]} />
-    </>
-  );
-}
-
-function CosmosCanvas({ config }: { config: SceneConfig }) {
-  return (
-    <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
-      <PerspectiveCamera makeDefault position={CAMERA_POSITION} fov={75} />
-      <color attach="background" args={[config.background]} />
-      <fog attach="fog" args={[config.background, 10, 35]} />
-      <SceneConfigContext.Provider value={config}>
-        <Suspense fallback={null}>
-          <Scene />
-        </Suspense>
-      </SceneConfigContext.Provider>
-    </Canvas>
-  );
-}
+// --- Sections (HeroCosmos 직속 자식) ---
 
 function BackgroundLayer({ config }: { config: SceneConfig }) {
   return (
@@ -341,21 +187,6 @@ function BackgroundLayer({ config }: { config: SceneConfig }) {
       {/* Overlay Gradients */}
       <div className="via-background/20 to-background absolute inset-0 bg-radial-[circle_at_50%_50%] from-transparent transition-colors duration-700" />
       <div className="from-background absolute inset-x-0 bottom-0 h-40 bg-linear-to-t to-transparent transition-colors duration-700" />
-    </div>
-  );
-}
-
-function CoreLayer({ config }: { config: SceneConfig }) {
-  return (
-    <div className="pointer-events-none absolute inset-0 z-20">
-      <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
-        <PerspectiveCamera makeDefault position={CAMERA_POSITION} fov={75} />
-        <SceneConfigContext.Provider value={config}>
-          <Suspense fallback={null}>
-            <CoreScene />
-          </Suspense>
-        </SceneConfigContext.Provider>
-      </Canvas>
     </div>
   );
 }
@@ -419,12 +250,27 @@ function HeroContent({
 
           <Link
             href="/posts"
-            className="border-border dark:border-muted-foreground/30 bg-background/50 relative z-30 mx-auto inline-block w-fit border px-8 py-4 text-[11px] transition-all duration-700 sm:px-10 sm:py-6"
+            className="border-border dark:border-muted-foreground/30 bg-background/50 relative z-30 mx-auto inline-block w-fit border px-8 py-4 transition-all duration-700 sm:px-10 sm:py-6"
           >
-            <span className="font-pixel text-foreground">View all posts</span>
+            <span className="text-foreground">전체 글 보기</span>
           </Link>
         </motion.div>
       </motion.div>
+    </div>
+  );
+}
+
+function CoreLayer({ config }: { config: SceneConfig }) {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-20">
+      <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
+        <PerspectiveCamera makeDefault position={CAMERA_POSITION} fov={75} />
+        <SceneConfigContext.Provider value={config}>
+          <Suspense fallback={null}>
+            <CoreScene />
+          </Suspense>
+        </SceneConfigContext.Provider>
+      </Canvas>
     </div>
   );
 }
@@ -443,41 +289,260 @@ function DecorativeFrame() {
   );
 }
 
-// --- Main Hero Component ---
+// --- Canvas Containers (Sections 직속 자식) ---
 
-export function HeroCosmos({ className }: HeroCosmosProps) {
-  const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const { scrollY } = useScroll();
+function CosmosCanvas({ config }: { config: SceneConfig }) {
+  return (
+    <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
+      <PerspectiveCamera makeDefault position={CAMERA_POSITION} fov={75} />
+      <color attach="background" args={[config.background]} />
+      <fog attach="fog" args={[config.background, 10, 35]} />
+      <SceneConfigContext.Provider value={config}>
+        <Suspense fallback={null}>
+          <Scene />
+        </Suspense>
+      </SceneConfigContext.Provider>
+    </Canvas>
+  );
+}
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const yTranslate = useTransform(scrollY, [0, 500], [0, 100]);
-  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
-  const scale = useTransform(scrollY, [0, 400], [1, 0.95]);
-
-  const theme: ThemeMode = resolvedTheme === 'dark' ? 'dark' : 'light';
-  const sceneConfig = SCENE_CONFIG_BY_THEME[theme];
-
-  if (!mounted) {
-    return <section className={cn(HERO_SECTION_CLASS, className)} />;
-  }
+function CoreScene() {
+  const targetRef = useRef<THREE.Object3D>(null);
+  const config = useSceneConfig();
 
   return (
-    <section className={cn(HERO_SECTION_ACTIVE_CLASS, className)}>
-      {/* Three.js Background */}
-      <BackgroundLayer config={sceneConfig} />
+    <>
+      <Environment resolution={256} frames={1} background={false}>
+        <Lightformer form="circle" intensity={0.3} scale={[8, 0.8, 1]} position={[0, -5, 3]} />
+      </Environment>
 
-      {/* Content */}
-      <HeroContent yTranslate={yTranslate} opacity={opacity} scale={scale} />
+      <Float speed={2} rotationIntensity={1} floatIntensity={2}>
+        <object3D ref={targetRef} position={[0, 0, 0]} />
+        <PixelCore />
+      </Float>
 
-      {/* Foreground Core */}
-      <CoreLayer config={sceneConfig} />
+      <CoreGlintLight color={config.lightColor} targetRef={targetRef} />
+      <CoreKeyLight
+        color={config.lightColor}
+        intensity={config.coreFrontLightIntensity}
+        position={[-3.2, 3.4, 8]}
+        targetRef={targetRef}
+      />
+      <CoreKeyLight
+        color={config.lightColor}
+        intensity={config.coreSecondaryLightIntensity}
+        position={[7.9, 2.8, 3.5]}
+        targetRef={targetRef}
+      />
+    </>
+  );
+}
 
-      {/* Decorative Frame */}
-      <DecorativeFrame />
-    </section>
+// --- 3D Scenes (Canvas Containers 직속 자식) ---
+
+function Scene() {
+  const config = useSceneConfig();
+
+  return (
+    <>
+      <Stars
+        radius={100}
+        depth={50}
+        count={config.starCount}
+        factor={config.starFactor}
+        saturation={0}
+        fade
+        speed={1}
+      />
+      <Particles count={3000} color={config.foreground} />
+      <OrbitalRings color={config.foreground} />
+    </>
+  );
+}
+
+function PixelCore() {
+  const config = useSceneConfig();
+  const innerRef = useRef<THREE.Mesh>(null);
+  const outerRef = useRef<THREE.Mesh>(null);
+
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+
+    if (innerRef.current) {
+      innerRef.current.rotation.x = time * 0.4;
+      innerRef.current.rotation.y = time * 0.2;
+    }
+
+    if (outerRef.current) {
+      outerRef.current.rotation.x = -time * 0.15;
+      outerRef.current.rotation.y = -time * 0.25;
+
+      const scale = 1 + Math.sin(time * 2) * 0.05;
+      outerRef.current.scale.set(scale, scale, scale);
+    }
+  });
+
+  return (
+    <group>
+      {/* Inner Core */}
+      <mesh ref={innerRef}>
+        <icosahedronGeometry args={[1, 0]} />
+        <meshPhysicalMaterial
+          color={config.coreSurfaceColor}
+          emissive={config.lightColor}
+          emissiveIntensity={config.coreEmissiveIntensity}
+          metalness={0.1}
+          roughness={0.03}
+          clearcoat={1}
+          clearcoatRoughness={0.035}
+          ior={2.3}
+          reflectivity={1}
+          specularColor={config.lightColor}
+          specularIntensity={3.0}
+          envMapIntensity={config.coreEnvIntensity}
+          flatShading
+        />
+      </mesh>
+
+      {/* Concentrated specular glint for a polished black surface */}
+      <mesh position={[-0.42, 0.46, 0.82]} scale={[1, 0.6, 1]}>
+        <sphereGeometry args={[0.14, 16, 16]} />
+        <meshBasicMaterial
+          color={config.lightColor}
+          transparent
+          opacity={config.coreGlintOpacity}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Always-visible soft facet light for the black core in light mode */}
+      <mesh position={[0.22, 0.08, 0.96]} rotation={[0, 0, Math.PI / 5]} scale={[1, 0.72, 1]}>
+        <circleGeometry args={[0.34, 3]} />
+        <meshBasicMaterial
+          color={config.lightColor}
+          transparent
+          opacity={config.coreFaceHighlightOpacity}
+          blending={THREE.AdditiveBlending}
+          depthWrite={false}
+        />
+      </mesh>
+
+      {/* Outer Crystalline Structure */}
+      <mesh ref={outerRef}>
+        <octahedronGeometry args={[1.8, 0]} />
+        <meshStandardMaterial color={config.foreground} wireframe transparent opacity={0.3} />
+      </mesh>
+
+      {/* Subtle Glow Sphere */}
+      <mesh scale={2.5}>
+        <sphereGeometry args={[1, 16, 16]} />
+        <meshBasicMaterial color={config.foreground} transparent opacity={config.coreGlowOpacity} />
+      </mesh>
+    </group>
+  );
+}
+
+function CoreKeyLight({ color, intensity, position, targetRef }: CoreKeyLightProps) {
+  const lightRef = useRef<THREE.SpotLight>(null);
+
+  useEffect(() => {
+    if (!lightRef.current || !targetRef.current) return;
+
+    lightRef.current.target = targetRef.current;
+    lightRef.current.target.updateMatrixWorld();
+  }, [targetRef]);
+
+  return (
+    <spotLight
+      ref={lightRef}
+      position={position}
+      angle={0.85}
+      penumbra={0.6}
+      intensity={intensity}
+      distance={40}
+      decay={0.8}
+      color={color}
+    />
+  );
+}
+
+function CoreGlintLight({
+  color,
+  targetRef,
+}: {
+  color: THREE.ColorRepresentation;
+  targetRef: RefObject<THREE.Object3D<THREE.Object3DEventMap> | null>;
+}) {
+  const lightRef = useRef<THREE.SpotLight>(null);
+
+  useEffect(() => {
+    if (!lightRef.current || !targetRef.current) return;
+
+    lightRef.current.target = targetRef.current;
+    lightRef.current.target.updateMatrixWorld();
+  }, [targetRef]);
+
+  useFrame((state) => {
+    if (!lightRef.current) return;
+
+    const time = state.clock.getElapsedTime();
+
+    lightRef.current.intensity = 6 + Math.max(0, Math.sin(time * 5.5)) * 11;
+
+    const angle = time * 1.35;
+    const xRadius = 5.2;
+    const yRadius = 0.75;
+    const baseY = 0.25;
+    const fixedZ = 1.65;
+
+    lightRef.current.position.set(Math.sin(angle) * xRadius, baseY + Math.sin(angle * 2 + 0.35) * yRadius, fixedZ);
+  });
+
+  return <spotLight ref={lightRef} angle={0.22} penumbra={0.18} distance={30} decay={1.2} color={color} />;
+}
+
+// --- 3D Primitives (3D Scenes 직속 자식) ---
+
+function Particles({ count = 2000, color = '#ffffff' }: ParticlesProps) {
+  const mesh = useRef<THREE.Points>(null);
+  const particles = useMemo(() => generateParticlePositions(count), [count]);
+
+  useFrame((state) => {
+    if (!mesh.current) return;
+
+    const time = state.clock.getElapsedTime();
+    mesh.current.rotation.y = time * 0.05;
+    mesh.current.rotation.x = Math.sin(time * 0.1) * 0.1;
+  });
+
+  return (
+    <points ref={mesh}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[particles, 3]} />
+      </bufferGeometry>
+      <pointsMaterial size={0.015} color={color} transparent opacity={0.6} sizeAttenuation={true} />
+    </points>
+  );
+}
+
+function OrbitalRings({ color = '#ffffff' }: OrbitalRingsProps) {
+  const group = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    if (!group.current) return;
+
+    group.current.rotation.z = state.clock.getElapsedTime() * 0.1;
+  });
+
+  return (
+    <group ref={group}>
+      {ORBITAL_RING_INDICES.map((index) => (
+        <mesh key={index} rotation={[Math.PI / (index * 1.5), 0, 0]}>
+          <ringGeometry args={[5 + index * 2, 5.02 + index * 2, 128]} />
+          <meshBasicMaterial color={color} transparent opacity={0.15} side={THREE.DoubleSide} />
+        </mesh>
+      ))}
+    </group>
   );
 }
