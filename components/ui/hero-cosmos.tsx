@@ -260,7 +260,8 @@ function HeroContent({
 function CoreLayer({ config }: { config: SceneConfig }) {
   return (
     <div className="pointer-events-none absolute inset-0 z-20">
-      <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
+      {/* R3F가 컨테이너에 inline pointer-events:auto를 강제하므로 style로 덮어써야 클릭이 통과한다 */}
+      <Canvas style={{ pointerEvents: 'none' }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
         <PerspectiveCamera makeDefault position={CAMERA_POSITION} fov={75} />
         <SceneConfigContext.Provider value={config}>
           <Suspense fallback={null}>
@@ -290,7 +291,7 @@ function DecorativeFrame() {
 
 function CosmosCanvas({ config }: { config: SceneConfig }) {
   return (
-    <Canvas dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
+    <Canvas style={{ pointerEvents: 'none' }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
       <PerspectiveCamera makeDefault position={CAMERA_POSITION} fov={75} />
       <color attach="background" args={[config.background]} />
       <fog attach="fog" args={[config.background, 10, 35]} />
