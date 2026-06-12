@@ -166,10 +166,10 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {/* 뒤로 가기 */}
           <Link
             href="/posts"
-            className="group text-muted-foreground hover:text-foreground mb-10 inline-flex items-center gap-2 text-sm transition-colors sm:mb-14"
+            className="group text-muted-foreground hover:text-foreground font-pixel mb-10 inline-flex items-center gap-2.5 text-[10px] tracking-[0.25em] uppercase transition-colors sm:mb-14"
           >
             <PixelArrow className="h-3 w-3 rotate-180 transition-transform group-hover:-translate-x-0.5" />
-            <span>Back to posts</span>
+            <span>Back to Index</span>
           </Link>
 
           {/* 포스트 헤더 */}
@@ -177,6 +177,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             <div className="mb-6 flex items-center gap-3">
               <Breadcrumb items={metadata.breadcrumbs} currentPath={category?.path || ''} />
               <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-30" />
+              <div className="bg-border h-px flex-1" />
             </div>
 
             <h1 className="mb-5 text-3xl leading-tight font-bold tracking-tight break-keep sm:text-5xl">
@@ -185,15 +186,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
             {post.description && <p className="text-muted-foreground text-lg leading-8">{post.description}</p>}
 
-            <div className="border-border/70 mt-8 flex flex-wrap items-center justify-between gap-4 pt-5">
-              <div className="text-muted-foreground flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-2">
-                  <PixelClock className="mt-0.5 h-3 w-3" />
-                  <time dateTime={post.publishedAt}>{formatDateKorean(post.publishedAt)}</time>
-                </div>
-                <span aria-hidden>·</span>
-                <span>{metadata.readingTime}</span>
+            <div className="text-muted-foreground mt-8 flex flex-wrap items-center gap-4 text-sm">
+              <div className="flex items-center gap-2">
+                <PixelClock className="mt-0.5 h-3 w-3" />
+                <time dateTime={post.publishedAt}>{formatDateKorean(post.publishedAt)}</time>
               </div>
+              <span aria-hidden>·</span>
+              <span>{metadata.readingTime}</span>
             </div>
           </header>
 
@@ -227,7 +226,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </article>
 
           {post.tags.length > 0 && (
-            <div className="mt-32 mb-8 flex flex-wrap gap-2">
+            <div className="mt-20 mb-10 flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <span
                   key={tag}
@@ -243,7 +242,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <section>
             <div className="mb-8 flex items-center gap-3 pt-6">
               <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-45" />
-              <span className="font-galmuri9 text-muted-foreground text-[10px] tracking-widest uppercase">
+              <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">
                 Comments
               </span>
               <div className="bg-border h-px flex-1" />
@@ -260,9 +259,9 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               <PixelDecoration layout="corner" className="opacity-30" />
               <Link
                 href="/posts"
-                className="group text-muted-foreground hover:text-foreground flex items-center gap-2 text-sm transition-colors"
+                className="group text-muted-foreground hover:text-foreground font-pixel flex items-center gap-2.5 text-[10px] tracking-[0.25em] uppercase transition-colors"
               >
-                <span>All posts</span>
+                <span>All Posts</span>
                 <PixelArrow className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </div>

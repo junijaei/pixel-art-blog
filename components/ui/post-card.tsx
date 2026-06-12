@@ -1,32 +1,39 @@
-import { PixelClock, PixelTag } from '@/components/ui/pixel';
+import { PixelArrow } from '@/components/ui/pixel';
 import { createPostLink } from '@/lib/notion/routing';
 import type { PostCardProps } from '@/types/notion';
 import Link from 'next/link';
 
-export function PostCard({ slug, title, description, date, categoryPath, categoryLabel }: PostCardProps) {
+export function PostCard({ slug, title, description, date, categoryPath, categoryLabel, index }: PostCardProps) {
   const href = createPostLink(categoryPath, slug);
+  const indexLabel = index !== undefined ? String(index + 1).padStart(3, '0') : null;
 
   return (
     <Link
       href={href}
-      className="group border-border/80 bg-card/80 hover:border-muted-foreground/35 hover:bg-card focus-visible:ring-ring block w-full rounded-xl border p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="group focus-visible:ring-ring relative block rounded-lg py-7 focus-visible:ring-2 focus-visible:ring-offset-2"
     >
-      <div className="mb-4 flex items-start justify-between gap-4">
-        <div className="text-muted-foreground flex min-w-0 items-center gap-2">
-          <PixelTag className="h-3 w-3" />
-          <span className="truncate text-xs">{categoryLabel}</span>
+      <article className="flex flex-col gap-3 sm:flex-row sm:gap-10">
+        {/* Index + Date */}
+        <div className="flex items-baseline gap-3 sm:w-28 sm:shrink-0 sm:flex-col sm:gap-2.5 sm:pt-1.5">
+          {indexLabel && (
+            <span className="font-pixel text-muted-foreground/40 group-hover:text-foreground text-[10px] tracking-widest transition-colors duration-300">
+              {indexLabel}
+            </span>
+          )}
+          <time className="text-muted-foreground text-xs tabular-nums">{date}</time>
         </div>
-        <div className="text-muted-foreground flex shrink-0 items-center gap-1 text-xs tabular-nums">
-          <PixelClock className="h-2.5 w-2.5" />
-          <span>{date}</span>
+
+        {/* Content */}
+        <div className="min-w-0 flex-1 sm:pr-10">
+          <span className="font-galmuri9 text-muted-foreground mb-2.5 inline-block text-[10px] tracking-wider uppercase">
+            {categoryLabel}
+          </span>
+          <h3 className="mb-2.5 text-lg leading-snug font-semibold tracking-tight break-keep sm:text-xl">{title}</h3>
+          <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">{description}</p>
         </div>
-      </div>
+      </article>
 
-      <h3 className="group-hover:text-foreground/75 mb-2.5 text-lg leading-snug font-semibold tracking-[-0.01em] transition-colors">
-        {title}
-      </h3>
-
-      <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">{description}</p>
+      <PixelArrow className="text-foreground absolute top-1/2 right-1 hidden h-3.5 w-3.5 -translate-x-2 -translate-y-1/2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 sm:block" />
     </Link>
   );
 }

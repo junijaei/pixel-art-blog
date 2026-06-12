@@ -1,8 +1,7 @@
 import { BlogFooter, BlogHeader } from '@/components/layouts';
-import { HeroCosmos, PixelArrow, PixelDecoration, PostCard } from '@/components/ui';
+import { FrameLink, HeroCosmos, PixelDecoration, PostCard } from '@/components/ui';
 import { getCategories, getPosts, toPostCardData } from '@/lib/notion';
 import type { Metadata } from 'next';
-import Link from 'next/link';
 
 export const revalidate = 3600; // 1시간
 
@@ -60,14 +59,24 @@ export default async function HomePage() {
 
         {/* Recent Posts */}
         {recentPosts.length > 0 && (
-          <section className="my-10 px-6 sm:my-16">
-            <div className="mx-auto max-w-xl">
-              <h2 className="font-pixel my-6 text-[11px] tracking-wider">RECENT POSTS</h2>
+          <section className="px-6 py-14 sm:py-20">
+            <div className="mx-auto max-w-2xl">
+              <div className="flex items-center gap-3">
+                <h2 className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">
+                  Recent Posts
+                </h2>
+                <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
+                <div className="bg-border h-px flex-1" />
+                <span className="font-pixel text-muted-foreground/50 text-[10px] tracking-widest tabular-nums">
+                  {String(recentPosts.length).padStart(2, '0')} ENTRIES
+                </span>
+              </div>
 
-              <div className="flex flex-col items-center gap-5">
-                {recentPosts.map((post) => (
+              <div className="divide-border/60 border-border/60 mt-3 divide-y border-b">
+                {recentPosts.map((post, i) => (
                   <PostCard
                     key={post.id}
+                    index={i}
                     slug={post.slug}
                     title={post.title}
                     description={post.description}
@@ -76,13 +85,10 @@ export default async function HomePage() {
                     categoryLabel={post.categoryLabel}
                   />
                 ))}
-                <Link
-                  href="/posts"
-                  className="group text-muted-foreground hover:text-foreground mx-auto mt-8 flex items-center gap-2 text-sm transition-colors"
-                >
-                  <span>전체 보기</span>
-                  <PixelArrow className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-                </Link>
+              </div>
+
+              <div className="mt-12 flex justify-center">
+                <FrameLink href="/posts">전체 글 보기</FrameLink>
               </div>
             </div>
           </section>

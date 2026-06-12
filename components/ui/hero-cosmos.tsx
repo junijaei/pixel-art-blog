@@ -1,11 +1,11 @@
 'use client';
 
+import { FrameLink } from '@/components/ui/frame-link';
 import { cn } from '@/utils/utils';
 import { Environment, Float, Lightformer, PerspectiveCamera, Stars } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import { useTheme } from 'next-themes';
-import Link from 'next/link';
 import { RefObject, Suspense, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
 
@@ -248,12 +248,9 @@ function HeroContent({
             기록합니다.
           </p>
 
-          <Link
-            href="/posts"
-            className="border-border dark:border-muted-foreground/30 bg-background/50 relative z-30 mx-auto inline-block w-fit border px-8 py-4 transition-all duration-700 sm:px-10 sm:py-6"
-          >
-            <span className="text-foreground">전체 글 보기</span>
-          </Link>
+          <FrameLink href="/posts" className="bg-background/50 relative z-30 sm:px-12 sm:py-5">
+            전체 글 보기
+          </FrameLink>
         </motion.div>
       </motion.div>
     </div>

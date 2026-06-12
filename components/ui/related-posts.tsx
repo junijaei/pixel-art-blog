@@ -41,7 +41,7 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
     <section className="mt-16">
       <div className="mb-4 flex items-center gap-3 pt-6">
         <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-45" />
-        <span className="font-galmuri9 text-muted-foreground text-[10px] tracking-widest uppercase">Related Posts</span>
+        <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">Related Posts</span>
         <div className="bg-border h-px flex-1" />
       </div>
 

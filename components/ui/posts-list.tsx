@@ -9,37 +9,40 @@ interface PostsListProps {
 }
 
 export function PostsList({ posts, categoryLabel }: PostsListProps) {
+  const countLabel = String(posts.length).padStart(2, '0');
+
   return (
     <div className="flex min-h-screen flex-col">
       <BlogHeader />
 
       <main className="flex-1">
-        <section className="px-6 pt-16 pb-12 sm:pt-20">
-          <div className="mx-auto max-w-xl">
-            <div className="mb-7 flex items-center gap-3">
-              <span className="text-muted-foreground font-galmuri9 text-[10px] tracking-widest uppercase">
-                {capitalizeFirst(categoryLabel)} Posts
-              </span>
+        {/* Page Header */}
+        <section className="px-6 pt-16 sm:pt-24">
+          <div className="mx-auto max-w-2xl">
+            <div className="flex items-center gap-3">
+              <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">Index</span>
               <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
+              <div className="bg-border h-px flex-1" />
+              <span className="font-pixel text-muted-foreground/50 text-[10px] tracking-widest tabular-nums">
+                {countLabel} POSTS
+              </span>
             </div>
 
-            <h1 className="font-mulmaru mb-4 text-4xl leading-tight font-semibold tracking-tight sm:text-5xl">
+            <h1 className="font-mulmaru mt-7 text-4xl leading-tight font-semibold tracking-tight break-keep sm:text-6xl">
               {capitalizeFirst(categoryLabel)}
             </h1>
-
-            <p className="text-muted-foreground max-w-xl text-lg leading-8">
-              {posts.length > 0 ? `총 ${posts.length}개의 포스트` : '포스트가 없습니다.'}
-            </p>
           </div>
         </section>
 
-        {posts.length > 0 && (
-          <section className="px-6 pb-20">
-            <div className="mx-auto max-w-xl">
-              <div className="flex flex-col gap-5">
-                {posts.map((post) => (
+        {/* Post Index */}
+        <section className="px-6 pt-10 pb-24 sm:pt-14">
+          <div className="mx-auto max-w-2xl">
+            {posts.length > 0 ? (
+              <div className="border-border/60 divide-border/60 divide-y border-y">
+                {posts.map((post, i) => (
                   <PostCard
                     key={post.id}
+                    index={i}
                     slug={post.slug}
                     title={post.title}
                     description={post.description}
@@ -49,9 +52,15 @@ export function PostsList({ posts, categoryLabel }: PostsListProps) {
                   />
                 ))}
               </div>
-            </div>
-          </section>
-        )}
+            ) : (
+              <div className="border-border/60 flex flex-col items-center gap-5 border-y py-24">
+                <PixelDecoration layout="grid" className="opacity-50" />
+                <p className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">No entries</p>
+                <p className="text-muted-foreground text-sm">아직 작성된 포스트가 없습니다.</p>
+              </div>
+            )}
+          </div>
+        </section>
       </main>
 
       <BlogFooter />

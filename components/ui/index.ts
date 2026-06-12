@@ -1,4 +1,5 @@
 export * from './breadcrumb';
+export * from './frame-link';
 export * from './posts-list';
 export * from './giscus-comments';
 export * from './image-modal';

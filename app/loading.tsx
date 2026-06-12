@@ -37,7 +37,7 @@ export default function HomeLoading() {
               <div className="mx-auto mt-32 max-w-2xl space-y-3 sm:mt-0">
                 <Skeleton className="mx-auto h-3 w-full sm:h-4" />
                 <Skeleton className="mx-auto h-3 w-4/5 sm:h-4" />
-                <Skeleton className="mx-auto mt-12 h-11 w-36 rounded-sm sm:h-16 sm:w-44" />
+                <Skeleton className="mx-auto mt-12 h-12 w-40 rounded-sm sm:h-14 sm:w-44" />
               </div>
             </div>
           </div>
@@ -60,21 +60,23 @@ export default function HomeLoading() {
         </div>
 
         {/* Recent Posts */}
-        <section className="my-10 px-6 sm:my-16">
-          <div className="mx-auto max-w-xl">
-            <Skeleton className="my-6 h-4 w-28" />
-
-            <div className="flex flex-col items-center gap-5">
-              <PostCardSkeleton />
-              <PostCardSkeleton />
-              <PostCardSkeleton />
-              <PostCardSkeleton />
-              <PostCardSkeleton />
-              <div className="mx-auto mt-8 flex items-center gap-2">
-                <Skeleton className="h-4 w-16" />
-                <Skeleton className="h-3 w-3" />
-              </div>
+        <section className="px-6 py-14 sm:py-20">
+          <div className="mx-auto max-w-2xl">
+            <div className="flex items-center gap-3">
+              <Skeleton className="h-3 w-28" />
+              <div className="bg-border h-px flex-1" />
+              <Skeleton className="h-3 w-16" />
             </div>
+
+            <div className="divide-border/60 border-border/60 mt-3 divide-y border-b">
+              <PostCardSkeleton />
+              <PostCardSkeleton />
+              <PostCardSkeleton />
+              <PostCardSkeleton />
+              <PostCardSkeleton />
+            </div>
+
+            <Skeleton className="mx-auto mt-12 h-12 w-40 rounded-sm" />
           </div>
         </section>
       </main>

@@ -1,31 +1,28 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
 /**
- * Skeleton placeholder that mirrors the PostCard layout.
+ * Skeleton placeholder that mirrors the PostCard index-row layout.
  * Used in loading.tsx files for page navigation transitions.
  */
 export function PostCardSkeleton() {
   return (
-    <div className="border-border/80 bg-card/80 w-full rounded-xl border p-6">
-      {/* Metadata row */}
-      <div className="mb-4 flex items-start justify-between gap-4">
-        <div className="flex min-w-0 items-center gap-2">
-          <Skeleton className="h-3 w-3 rounded-full" />
+    <div className="py-7">
+      <div className="flex flex-col gap-3 sm:flex-row sm:gap-10">
+        {/* Index + Date column */}
+        <div className="flex items-baseline gap-3 sm:w-28 sm:shrink-0 sm:flex-col sm:gap-2.5 sm:pt-1.5">
+          <Skeleton className="h-3 w-8" />
           <Skeleton className="h-3 w-20" />
         </div>
-        <div className="flex shrink-0 items-center gap-1">
-          <Skeleton className="h-2.5 w-2.5 rounded-full" />
-          <Skeleton className="h-3 w-20" />
+
+        {/* Content column */}
+        <div className="min-w-0 flex-1 sm:pr-10">
+          <Skeleton className="mb-3 h-3 w-16" />
+          <Skeleton className="mb-3 h-6 w-3/4" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-2/3" />
+          </div>
         </div>
-      </div>
-
-      {/* Title */}
-      <Skeleton className="mb-2.5 h-6 w-3/4" />
-
-      {/* Description */}
-      <div className="space-y-2">
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-2/3" />
       </div>
     </div>
   );
