@@ -248,7 +248,7 @@ function HeroContent({
             기록합니다.
           </p>
 
-          <FrameLink href="/posts" className="bg-background/50 relative z-30 sm:px-12 sm:py-5">
+          <FrameLink href="/posts" className="relative z-30">
             전체 글 보기
           </FrameLink>
         </motion.div>
