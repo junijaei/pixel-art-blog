@@ -1,10 +1,10 @@
-import { AsyncSidebar } from '@/components/layouts/async-sidebar';
+import { AsyncSidebar } from '@/shared/layouts/async-sidebar';
 import '@/app/globals.css';
-import { BlogFooter, BlogHeader, SidebarSkeleton } from '@/components/layouts';
-import { PageViewTracker } from '@/components/PageViewTracker';
-import { ScrollDepthTracker } from '@/components/ScrollDepthTracker';
-import { ThemeProvider } from '@/components/theme-provider';
-import { cn } from '@/utils';
+import { BlogFooter, BlogHeader, SidebarSkeleton } from '@/shared/layouts';
+import { PageViewTracker } from '@/features/analytics/components/PageViewTracker';
+import { ScrollDepthTracker } from '@/features/analytics/components/ScrollDepthTracker';
+import { ThemeProvider } from '@/features/theme/components/theme-provider';
+import { cn } from '@/shared/lib';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Silkscreen } from 'next/font/google';

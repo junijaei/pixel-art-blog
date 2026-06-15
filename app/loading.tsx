@@ -1,4 +1,5 @@
-import { PixelDecoration, PostCardSkeleton, Skeleton } from '@/components/ui';
+import { PostCardSkeleton } from '@/features/post/components';
+import { PixelDecoration, Skeleton } from '@/shared/ui';
 
 const HERO_FRAME_SEGMENTS = [
   'top-8 left-8 h-px w-16',

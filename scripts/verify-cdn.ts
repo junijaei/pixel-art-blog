@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { checkImageExists } from '../lib/cdn/api';
-import { getCacheStats, loadCache } from '../lib/cdn/cache';
+import { checkImageExists } from '@/features/media/lib/api';
+import { getCacheStats, loadCache } from '@/features/media/lib/cache';
 
 const IMG_URL = process.env.NEXT_PUBLIC_IMG_URL ?? '';
 

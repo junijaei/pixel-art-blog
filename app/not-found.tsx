@@ -1,4 +1,4 @@
-import ErrorLayout from '@/components/layouts/error-layout';
+import ErrorLayout from '@/shared/layouts/error-layout';
 import type { Metadata } from 'next';
 
 // eslint-disable-next-line react-refresh/only-export-components

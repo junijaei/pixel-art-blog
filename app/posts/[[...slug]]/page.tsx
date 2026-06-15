@@ -1,7 +1,8 @@
-import { PixelDecoration, PostCard } from '@/components/ui';
-import { findCategoryByPath, getAllDescendantIds, getCategories, getPosts, toPostCardData } from '@/lib/notion';
-import type { PostCardData } from '@/types/notion';
-import { capitalizeFirst } from '@/utils';
+import { PostCard } from '@/features/post/components';
+import { PixelDecoration } from '@/shared/ui';
+import { findCategoryByPath, getAllDescendantIds, getCategories, getPosts, toPostCardData } from '@/features/post';
+import type { PostCardData } from '@/features/post/model';
+import { capitalizeFirst } from '@/shared/lib';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 

@@ -1,5 +1,5 @@
-import { recordPageView } from '@/lib/analytics/pageview';
-import type { PageViewPayload, PageViewResult } from '@/lib/analytics/types';
+import { recordPageView } from '@/features/analytics/lib/pageview';
+import type { PageViewPayload, PageViewResult } from '@/features/analytics/lib/types';
 import { NextRequest, NextResponse } from 'next/server';
 
 const BOT_UA = /bot|crawl|spider|headless|puppeteer|playwright|lighthouse/i;

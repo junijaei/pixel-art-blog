@@ -1,4 +1,4 @@
-import { getCategories, getPosts } from '@/lib/notion';
+import { getCategories, getPosts } from '@/features/post';
 import type { MetadataRoute } from 'next';
 
 export const revalidate = 3600;

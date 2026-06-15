@@ -1,0 +1,71 @@
+/**
+ * Post Database Types
+ */
+
+import type {
+  CheckboxPropertyValue,
+  CreatedTimePropertyValue,
+  DatabasePage,
+  DatePropertyValue,
+  LastEditedTimePropertyValue,
+  MultiSelectPropertyValue,
+  PropertyValue,
+  RelationPropertyValue,
+  RichTextPropertyValue,
+  StatusPropertyValue,
+  TitlePropertyValue,
+} from '@/features/post/model';
+
+export type PostStatus = 'scheduled' | 'draft' | 'completed';
+
+export interface PostProperties {
+  ID: PropertyValue;
+  title: TitlePropertyValue;
+  category: RelationPropertyValue;
+  status: StatusPropertyValue;
+  description: RichTextPropertyValue;
+  isPublished: CheckboxPropertyValue;
+  publishedAt: DatePropertyValue;
+  slug: RichTextPropertyValue;
+  tag: MultiSelectPropertyValue;
+  createdAt: CreatedTimePropertyValue;
+  updatedAt: LastEditedTimePropertyValue;
+}
+
+export type PostPage = DatabasePage & {
+  properties: PostProperties;
+};
+
+export interface Post {
+  id: string;
+  title: string;
+  categoryId: string;
+  status: PostStatus;
+  description: string;
+  isPublished: boolean;
+  publishedAt: string;
+  slug: string;
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+  coverUrl: string | null;
+}
+
+export interface PostFilterOptions {
+  publishedOnly?: boolean;
+  categoryId?: string | string[];
+  tag?: string;
+  status?: PostStatus;
+}
+
+export type PostSortField = 'title' | 'publishedAt' | 'createdAt' | 'updatedAt';
+
+export interface PostSortOptions {
+  field: PostSortField;
+  direction: 'ascending' | 'descending';
+}
+
+export const DEFAULT_POST_SORT: PostSortOptions = {
+  field: 'publishedAt',
+  direction: 'descending',
+};

@@ -1,11 +1,4 @@
-import {
-  PixelArrow,
-  PixelDecoration,
-  PixelFile,
-  PixelGithub,
-  PixelLinkedin,
-  PixelMail,
-} from '@/components/ui';
+import { PixelArrow, PixelDecoration, PixelFile, PixelGithub, PixelLinkedin, PixelMail } from '@/shared/ui';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 

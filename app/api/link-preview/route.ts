@@ -1,4 +1,4 @@
-import { scrapePreview } from '@/lib/link-preview/scrape';
+import { scrapePreview } from '@/features/link-preview/lib/scrape';
 import { NextRequest, NextResponse } from 'next/server';
 
 export interface LinkPreviewData {

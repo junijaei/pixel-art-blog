@@ -1,4 +1,5 @@
-import { PostCardSkeleton, Skeleton } from '@/components/ui';
+import { PostCardSkeleton } from '@/features/post/components';
+import { Skeleton } from '@/shared/ui';
 
 export default function PostsLoading() {
   return (
