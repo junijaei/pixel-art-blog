@@ -1,5 +1,5 @@
 /**
- * Lightweight placeholder shown while AsyncSidebar fetches data.
+ * Lightweight placeholder shown while CategorySidebar fetches data.
  * Matches the collapsed sidebar width (w-12) so layout does not shift.
  */
 export function SidebarSkeleton() {

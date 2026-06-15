@@ -1,4 +1,4 @@
-import { AsyncSidebar } from '@/shared/layouts/async-sidebar';
+import { CategorySidebar } from '@/features/post/components/sidebar';
 import '@/app/globals.css';
 import { BlogFooter, BlogHeader, SidebarSkeleton } from '@/shared/layouts';
 import { PageViewTracker } from '@/features/analytics/components/PageViewTracker';
@@ -145,7 +145,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen">
             <Suspense fallback={<SidebarSkeleton />}>
-              <AsyncSidebar />
+              <CategorySidebar />
             </Suspense>
             <div className="flex min-w-0 flex-1 flex-col">
               <BlogHeader />

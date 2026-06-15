@@ -1,9 +1,9 @@
-import { Sidebar } from '@/shared/layouts/sidebar';
+import { Sidebar } from './Sidebar';
 import type { CategoryTreeNode } from '@/features/post/model';
 import type { Meta, StoryObj } from '@storybook/nextjs';
 
 const meta: Meta<typeof Sidebar> = {
-  title: 'Layouts/Sidebar',
+  title: 'Post/Sidebar',
   component: Sidebar,
   parameters: {
     layout: 'fullscreen',
