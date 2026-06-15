@@ -123,11 +123,18 @@ export default function AboutPage() {
                   <span key={segment} aria-hidden className={`bg-foreground/25 absolute ${segment}`} />
                 ))}
                 <img
-                  src="/profile.png"
+                  src="/profile-light.png"
                   width={176}
                   height={176}
                   alt="프로필 이미지. 엘모가 컴퓨터 앞에 앉아 코딩을 하고 있다."
-                  className="border-border/80 rounded-xl border"
+                  className="border-border/80 rounded-xl border dark:hidden"
+                />
+                <img
+                  src="/profile-dark.png"
+                  width={176}
+                  height={176}
+                  alt="프로필 이미지. 엘모가 컴퓨터 앞에 앉아 코딩을 하고 있다."
+                  className="border-border/80 hidden rounded-xl border dark:block"
                 />
               </div>
               <figcaption className="font-pixel text-muted-foreground/50 mt-4 text-center text-[9px] tracking-widest uppercase">
