@@ -1,6 +1,6 @@
 import { AsyncSidebar } from '@/components/layouts/async-sidebar';
 import '@/app/globals.css';
-import { SidebarSkeleton } from '@/components/layouts';
+import { BlogFooter, BlogHeader, SidebarSkeleton } from '@/components/layouts';
 import { PageViewTracker } from '@/components/PageViewTracker';
 import { ScrollDepthTracker } from '@/components/ScrollDepthTracker';
 import { ThemeProvider } from '@/components/theme-provider';
@@ -147,7 +147,11 @@ export default function RootLayout({
             <Suspense fallback={<SidebarSkeleton />}>
               <AsyncSidebar />
             </Suspense>
-            <div className="min-w-0 flex-1">{children}</div>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <BlogHeader />
+              {children}
+              <BlogFooter />
+            </div>
           </div>
         </ThemeProvider>
         <PageViewTracker />

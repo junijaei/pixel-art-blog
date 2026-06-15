@@ -1,4 +1,3 @@
-import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { PixelDecoration, PostCardSkeleton, Skeleton } from '@/components/ui';
 
 const HERO_FRAME_SEGMENTS = [
@@ -14,10 +13,7 @@ const HERO_FRAME_SEGMENTS = [
 
 export default function HomeLoading() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <BlogHeader />
-
-      <main className="flex-1">
+    <main className="flex-1">
         {/* Hero Section */}
         <section className="bg-background relative h-[calc(100vh-60px)] min-h-150 w-full overflow-hidden md:h-[calc(100vh-65px)]">
           <div className="absolute inset-0 z-0">
@@ -79,9 +75,6 @@ export default function HomeLoading() {
             <Skeleton className="mx-auto mt-12 h-12 w-40 rounded-sm" />
           </div>
         </section>
-      </main>
-
-      <BlogFooter />
-    </div>
+    </main>
   );
 }

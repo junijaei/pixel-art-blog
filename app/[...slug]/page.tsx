@@ -1,4 +1,3 @@
-import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { BlockRenderer } from '@/components/notion-blocks';
 import {
   Breadcrumb,
@@ -109,7 +108,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const postUrl = `${siteUrl}/${slugSegments.join('/')}`;
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -157,8 +156,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           }),
         }}
       />
-      <BlogHeader />
-
       <main className="w-full flex-1 px-6 py-12 sm:py-20">
         {metadata.tocItems.length > 0 && <TocWithScrollSpy items={metadata.tocItems} />}
 
@@ -269,7 +266,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         </div>
       </main>
 
-      <BlogFooter />
-    </div>
+    </>
   );
 }

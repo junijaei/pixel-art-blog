@@ -1,4 +1,3 @@
-import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { FrameLink, HeroCosmos, PixelDecoration, PostCard } from '@/components/ui';
 import { getCategories, getPosts, toPostCardData } from '@/lib/notion';
 import type { Metadata } from 'next';
@@ -27,7 +26,7 @@ export default async function HomePage() {
   const recentPosts = postCards.slice(0, 5);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -45,8 +44,6 @@ export default async function HomePage() {
           }),
         }}
       />
-      <BlogHeader />
-
       <main className="flex-1">
         {/* Hero Section */}
         <HeroCosmos />
@@ -94,7 +91,6 @@ export default async function HomePage() {
           </section>
         )}
       </main>
-      <BlogFooter />
-    </div>
+    </>
   );
 }

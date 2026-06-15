@@ -1,12 +1,8 @@
-import { BlogFooter, BlogHeader } from '@/components/layouts';
 import { PostCardSkeleton, Skeleton } from '@/components/ui';
 
 export default function PostsLoading() {
   return (
-    <div className="flex min-h-screen flex-col">
-      <BlogHeader />
-
-      <main className="flex-1">
+    <main className="flex-1">
         {/* Page Header */}
         <section className="px-6 pt-16 sm:pt-24">
           <div className="mx-auto max-w-2xl">
@@ -38,9 +34,6 @@ export default function PostsLoading() {
             </div>
           </div>
         </section>
-      </main>
-
-      <BlogFooter />
-    </div>
+    </main>
   );
 }

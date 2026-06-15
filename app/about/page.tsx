@@ -1,5 +1,3 @@
-import { BlogFooter } from '@/components/layouts/footer';
-import { BlogHeader } from '@/components/layouts/header';
 import {
   PixelArrow,
   PixelDecoration,
@@ -86,7 +84,7 @@ function SectionLabel({ label, meta }: { label: string; meta?: string }) {
 
 export default function AboutPage() {
   return (
-    <div className="flex min-h-screen flex-col">
+    <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -102,8 +100,6 @@ export default function AboutPage() {
           }),
         }}
       />
-      <BlogHeader />
-
       <main className="flex-1 px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-2xl">
           {/* Page Header */}
@@ -215,8 +211,6 @@ export default function AboutPage() {
           </section>
         </div>
       </main>
-
-      <BlogFooter />
-    </div>
+    </>
   );
 }
