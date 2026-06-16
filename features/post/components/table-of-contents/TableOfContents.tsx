@@ -94,16 +94,22 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
     return index === activeScopeStart && items[index]?.level === minLevel;
   };
 
+  const isInteractive = isVisible && activeIndex !== -1;
+
   return (
     <nav
       aria-label="목차 목록"
+      aria-hidden={!isVisible}
+      aria-disabled={!isInteractive}
+      style={{ pointerEvents: isInteractive ? undefined : 'none' }}
       className={cn(
         'hidden lg:block',
         'fixed top-1/4 right-8 z-10',
         'max-h-[60vh] w-56 overflow-y-auto',
         'scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent',
         'transition-opacity duration-500',
-        isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none',
+        isVisible ? 'opacity-100' : 'opacity-0',
+        !isInteractive && 'pointer-events-none',
         className
       )}
     >
@@ -115,33 +121,42 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
           const isScopeParent = isActiveSectionParent(index);
           const relativeDepth = item.level - minLevel; // 0 = 최상위, 1 = 2단계, 2 = 3단계
 
-          const isVisible =
+          const shouldShowItem =
             relativeDepth === 0 ||
             (relativeDepth === 1 && inSection) ||
             (relativeDepth === 2 &&
               items[activeIndex]?.level !== minLevel &&
               (isActive || isDirectParentInScope(index)));
+          const linkInteractive = isInteractive && shouldShowItem;
 
           return (
             <li
               key={item.id}
+              aria-hidden={!shouldShowItem}
               className={cn(
-                'relative grid transition-[grid-template-rows] duration-300 ease-in-out',
-                isVisible ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]'
+                'relative overflow-hidden transition-[max-height,opacity,transform] duration-200 ease-out motion-reduce:transition-none',
+                shouldShowItem
+                  ? 'max-h-8 translate-y-0 opacity-100'
+                  : 'pointer-events-none max-h-0 -translate-y-1 opacity-0'
               )}
             >
               <div className="overflow-hidden">
                 <a
-                  href={`#${item.id}`}
+                  href={linkInteractive ? `#${item.id}` : undefined}
+                  tabIndex={linkInteractive ? undefined : -1}
+                  aria-disabled={!linkInteractive}
                   className={cn(
                     'group relative flex items-center justify-end gap-3 py-1.5',
                     'transition-all duration-300',
+                    !linkInteractive && 'pointer-events-none cursor-default',
                     isActive && 'text-foreground',
                     !isActive && inSection && 'text-foreground/70 hover:text-foreground',
                     !inSection && 'text-muted-foreground/40 hover:text-muted-foreground/70'
                   )}
                   onClick={(e) => {
                     e.preventDefault();
+                    if (!linkInteractive) return;
+
                     const element = document.getElementById(item.id);
                     if (element) {
                       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
