@@ -1,11 +1,10 @@
-import { CategorySidebar } from '@/features/post/components/sidebar';
-import { getCategories } from '@/features/post';
 import '@/app/globals.css';
-import { BlogFooter, BlogHeader } from '@/shared/layouts';
-import { SidebarSkeleton } from '@/shared/ui';
 import { PageViewTracker } from '@/features/analytics/components/PageViewTracker';
 import { ScrollDepthTracker } from '@/features/analytics/components/ScrollDepthTracker';
+import { getCategories } from '@/features/post';
+import { CategorySidebar, SidebarSkeleton } from '@/features/post/components/sidebar';
 import { ThemeProvider } from '@/features/theme/components/theme-provider';
+import { BlogFooter, BlogHeader } from '@/shared/layouts';
 import { cn } from '@/shared/lib';
 import { GoogleAnalytics } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
@@ -147,7 +146,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen">
             <Suspense fallback={<SidebarSkeleton />}>
-              <CategorySidebar categoriesPromise={getCategories().then((result) => result.tree)} />
+              <AsyncCategorySidebar />
             </Suspense>
             <div className="flex min-w-0 flex-1 flex-col">
               <BlogHeader />
@@ -162,4 +161,9 @@ export default function RootLayout({
       </body>
     </html>
   );
+}
+
+async function AsyncCategorySidebar() {
+  const { tree } = await getCategories();
+  return <CategorySidebar categories={tree} />;
 }
