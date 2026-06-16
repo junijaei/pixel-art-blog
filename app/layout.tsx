@@ -1,6 +1,8 @@
 import { CategorySidebar } from '@/features/post/components/sidebar';
+import { getCategories } from '@/features/post';
 import '@/app/globals.css';
-import { BlogFooter, BlogHeader, SidebarSkeleton } from '@/shared/layouts';
+import { BlogFooter, BlogHeader } from '@/shared/layouts';
+import { SidebarSkeleton } from '@/shared/ui';
 import { PageViewTracker } from '@/features/analytics/components/PageViewTracker';
 import { ScrollDepthTracker } from '@/features/analytics/components/ScrollDepthTracker';
 import { ThemeProvider } from '@/features/theme/components/theme-provider';
@@ -145,7 +147,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <div className="flex min-h-screen">
             <Suspense fallback={<SidebarSkeleton />}>
-              <CategorySidebar />
+              <CategorySidebar categoriesPromise={getCategories().then((result) => result.tree)} />
             </Suspense>
             <div className="flex min-w-0 flex-1 flex-col">
               <BlogHeader />

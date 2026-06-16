@@ -1,10 +1,11 @@
-import { Sidebar } from './Sidebar';
+import { CategorySidebar } from './CategorySidebar';
 import type { CategoryTreeNode } from '@/features/post/model';
 import type { Meta, StoryObj } from '@storybook/nextjs';
+import { Suspense } from 'react';
 
-const meta: Meta<typeof Sidebar> = {
-  title: 'Post/Sidebar',
-  component: Sidebar,
+const meta: Meta<typeof CategorySidebar> = {
+  title: 'Post/CategorySidebar',
+  component: CategorySidebar,
   parameters: {
     layout: 'fullscreen',
     nextjs: {
@@ -13,11 +14,18 @@ const meta: Meta<typeof Sidebar> = {
       },
     },
   },
+  decorators: [
+    (Story) => (
+      <Suspense fallback={null}>
+        <Story />
+      </Suspense>
+    ),
+  ],
   tags: ['autodocs'],
 };
 
 export default meta;
-type Story = StoryObj<typeof Sidebar>;
+type Story = StoryObj<typeof CategorySidebar>;
 
 // ---- Mock Data ----
 
@@ -125,7 +133,7 @@ const sampleCategories: CategoryTreeNode[] = [
  */
 export const Collapsed: Story = {
   args: {
-    categories: sampleCategories,
+    categoriesPromise: Promise.resolve(sampleCategories),
   },
 };
 
@@ -135,7 +143,7 @@ export const Collapsed: Story = {
  */
 export const Expanded: Story = {
   args: {
-    categories: sampleCategories,
+    categoriesPromise: Promise.resolve(sampleCategories),
     defaultCollapsed: false,
   },
 };
@@ -146,7 +154,7 @@ export const Expanded: Story = {
  */
 export const WithActiveCategory: Story = {
   args: {
-    categories: sampleCategories,
+    categoriesPromise: Promise.resolve(sampleCategories),
     defaultCollapsed: false,
   },
   parameters: {
@@ -163,7 +171,7 @@ export const WithActiveCategory: Story = {
  */
 export const Empty: Story = {
   args: {
-    categories: [],
+    categoriesPromise: Promise.resolve([]),
     defaultCollapsed: false,
   },
 };
@@ -174,7 +182,7 @@ export const Empty: Story = {
 export const DeepNested: Story = {
   args: {
     defaultCollapsed: false,
-    categories: [
+    categoriesPromise: Promise.resolve([
       {
         ...baseCategory,
         id: 'root',
@@ -237,6 +245,6 @@ export const DeepNested: Story = {
           },
         ],
       },
-    ],
+    ]),
   },
 };
