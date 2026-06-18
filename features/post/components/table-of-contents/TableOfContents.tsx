@@ -101,11 +101,12 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
       aria-label="목차 목록"
       aria-hidden={!isVisible}
       aria-disabled={!isInteractive}
+      inert={!isInteractive ? true : undefined}
       style={{ pointerEvents: isInteractive ? undefined : 'none' }}
       className={cn(
         'hidden lg:block',
         'fixed top-1/4 right-8 z-10',
-        'max-h-[60vh] w-56 overflow-y-auto',
+        'max-h-[60vh] w-56 overflow-x-hidden overflow-y-auto',
         'scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent',
         'transition-opacity duration-500',
         isVisible ? 'opacity-100' : 'opacity-0',
@@ -146,12 +147,21 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
                   tabIndex={linkInteractive ? undefined : -1}
                   aria-disabled={!linkInteractive}
                   className={cn(
-                    'group relative flex items-center justify-end gap-3 py-1.5',
+                    'group relative flex items-center justify-end gap-3 py-1.5 pr-1',
                     'transition-all duration-300',
                     !linkInteractive && 'pointer-events-none cursor-default',
-                    isActive && 'text-foreground',
-                    !isActive && inSection && 'text-foreground/70 hover:text-foreground',
-                    !inSection && 'text-muted-foreground/40 hover:text-muted-foreground/70'
+                    relativeDepth === 0 && 'mr-0',
+                    relativeDepth > 0 &&
+                      "before:bg-border/70 after:bg-border/70 before:pointer-events-none before:absolute before:top-1/2 before:h-px before:w-2 before:-translate-y-1/2 before:rounded-full before:content-[''] after:pointer-events-none after:absolute after:top-0 after:bottom-0 after:w-px after:rounded-full after:content-['']",
+                    relativeDepth === 1 && 'mr-2 pr-3 after:right-0',
+                    relativeDepth === 2 && 'mr-4 pr-4 after:right-2',
+                    relativeDepth === 1 && 'before:right-0',
+                    relativeDepth === 2 && 'before:right-2',
+                    isActive
+                      ? 'text-foreground'
+                      : inSection
+                        ? 'text-foreground/70 hover:text-foreground'
+                        : 'text-muted-foreground/40 hover:text-muted-foreground/70'
                   )}
                   onClick={(e) => {
                     e.preventDefault();
