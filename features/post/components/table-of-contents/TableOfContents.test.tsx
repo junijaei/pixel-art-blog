@@ -1,15 +1,24 @@
-import { TableOfContents, TocItem } from '@/features/post/components/table-of-contents/TableOfContents';
+import {
+  TableOfContents,
+  TOC_HASH_CHANGE_EVENT,
+  TocItem,
+} from '@/features/post/components/table-of-contents/TableOfContents';
+import { TocWithScrollSpy } from '@/features/post/components/table-of-contents/TocWithScrollSpy';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
 // Mock IntersectionObserver
-const mockIntersectionObserver = vi.fn();
-mockIntersectionObserver.mockReturnValue({
-  observe: () => null,
-  unobserve: () => null,
-  disconnect: () => null,
-});
-window.IntersectionObserver = mockIntersectionObserver;
+class MockIntersectionObserver {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+
+  constructor() {
+    return this;
+  }
+}
+
+window.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver;
 
 describe('TableOfContents', () => {
   const sampleItems: TocItem[] = [
@@ -64,21 +73,33 @@ describe('TableOfContents', () => {
       });
     });
 
-    it('disables every TOC link before an active heading is known', () => {
+    it('keeps visible root links interactive before an active heading is known', () => {
       const { container } = render(<TableOfContents items={sampleItems} />);
       const nav = screen.getByRole('navigation');
       const link = screen.getByText('Introduction').closest('a');
+
+      expect(nav).toHaveAttribute('aria-disabled', 'false');
+      expect(link).toHaveAttribute('href', '#heading-1');
+      expect(link).not.toHaveAttribute('tabindex');
+      expect(container.querySelectorAll('a[href]').length).toBe(1);
+    });
+
+    it('updates the hash and delegates scrolling to the hash scroll listener', () => {
+      render(<TableOfContents items={sampleItems} activeId="heading-3" />);
+      const link = screen.getByText('Getting Started').closest('a');
       const scrollIntoView = vi.fn();
+      const pushState = vi.spyOn(window.history, 'pushState').mockImplementation(() => undefined);
+      const dispatchEvent = vi.spyOn(window, 'dispatchEvent');
       Element.prototype.scrollIntoView = scrollIntoView;
 
-      expect(nav).toHaveAttribute('aria-disabled', 'true');
-      expect(nav).toHaveStyle({ pointerEvents: 'none' });
-      expect(link).not.toHaveAttribute('href');
-      expect(link).toHaveAttribute('tabindex', '-1');
-
       fireEvent.click(link!);
+
       expect(scrollIntoView).not.toHaveBeenCalled();
-      expect(container.querySelectorAll('a[href]').length).toBe(0);
+      expect(pushState).toHaveBeenCalledWith(null, '', '#heading-2');
+      expect(dispatchEvent).toHaveBeenCalledWith(expect.objectContaining({ type: TOC_HASH_CHANGE_EVENT }));
+
+      pushState.mockRestore();
+      dispatchEvent.mockRestore();
     });
 
     it('disables every TOC link when the article is outside the active reading area', () => {
@@ -88,8 +109,9 @@ describe('TableOfContents', () => {
       const scrollIntoView = vi.fn();
       Element.prototype.scrollIntoView = scrollIntoView;
 
-      expect(nav).toHaveAttribute('aria-hidden', 'true');
+      expect(nav).not.toHaveAttribute('aria-hidden');
       expect(nav).toHaveAttribute('aria-disabled', 'true');
+      expect(nav).toHaveAttribute('inert');
       expect(nav).toHaveStyle({ pointerEvents: 'none' });
       expect(link).not.toHaveAttribute('href');
       expect(link).toHaveAttribute('tabindex', '-1');
@@ -134,6 +156,69 @@ describe('TableOfContents', () => {
       // font-medium is applied to the inner text span
       const textSpan = activeLink.querySelector('span');
       expect(textSpan?.className).toContain('font-medium');
+    });
+  });
+
+  describe('Hash scrolling', () => {
+    it('scrolls to the current hash target on mount', () => {
+      const scrollIntoView = vi.fn();
+      const originalScrollIntoView = Element.prototype.scrollIntoView;
+      const originalRequestAnimationFrame = window.requestAnimationFrame;
+      const originalCancelAnimationFrame = window.cancelAnimationFrame;
+
+      Element.prototype.scrollIntoView = scrollIntoView;
+      window.requestAnimationFrame = (callback) => {
+        callback(0);
+        return 1;
+      };
+      window.cancelAnimationFrame = () => undefined;
+      window.history.replaceState(null, '', '#heading-2');
+
+      try {
+        render(
+          <>
+            <article>
+              <h2 id="heading-2">Getting Started</h2>
+            </article>
+            <TocWithScrollSpy items={sampleItems} />
+          </>
+        );
+
+        expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'start' });
+      } finally {
+        Element.prototype.scrollIntoView = originalScrollIntoView;
+        window.requestAnimationFrame = originalRequestAnimationFrame;
+        window.cancelAnimationFrame = originalCancelAnimationFrame;
+        window.history.replaceState(null, '', '/');
+      }
+    });
+
+    it('scrolls to the top when the current URL has no hash', () => {
+      const scrollTo = vi.spyOn(window, 'scrollTo').mockImplementation(() => undefined);
+      const originalRequestAnimationFrame = window.requestAnimationFrame;
+      const originalCancelAnimationFrame = window.cancelAnimationFrame;
+
+      window.requestAnimationFrame = (callback) => {
+        callback(0);
+        return 1;
+      };
+      window.cancelAnimationFrame = () => undefined;
+      window.history.replaceState(null, '', '/');
+
+      try {
+        render(
+          <>
+            <article />
+            <TocWithScrollSpy items={sampleItems} />
+          </>
+        );
+
+        expect(scrollTo).toHaveBeenCalledWith({ top: 0, behavior: 'auto' });
+      } finally {
+        scrollTo.mockRestore();
+        window.requestAnimationFrame = originalRequestAnimationFrame;
+        window.cancelAnimationFrame = originalCancelAnimationFrame;
+      }
     });
   });
 

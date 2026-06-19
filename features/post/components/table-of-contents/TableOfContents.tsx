@@ -2,6 +2,8 @@
 
 import { cn } from '@/shared/lib/utils';
 
+export const TOC_HASH_CHANGE_EVENT = 'toc-hash-change';
+
 export interface TocItem {
   /** Unique identifier (used for anchor link) */
   id: string;
@@ -94,15 +96,12 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
     return index === activeScopeStart && items[index]?.level === minLevel;
   };
 
-  const isInteractive = isVisible && activeIndex !== -1;
-
   return (
     <nav
       aria-label="목차 목록"
-      aria-hidden={!isVisible}
-      aria-disabled={!isInteractive}
-      inert={!isInteractive ? true : undefined}
-      style={{ pointerEvents: isInteractive ? undefined : 'none' }}
+      aria-disabled={!isVisible}
+      inert={!isVisible ? true : undefined}
+      style={{ pointerEvents: isVisible ? undefined : 'none' }}
       className={cn(
         'hidden lg:block',
         'fixed top-1/4 right-8 z-10',
@@ -110,7 +109,7 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
         'scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent',
         'transition-opacity duration-500',
         isVisible ? 'opacity-100' : 'opacity-0',
-        !isInteractive && 'pointer-events-none',
+        !isVisible && 'pointer-events-none',
         className
       )}
     >
@@ -128,7 +127,7 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
             (relativeDepth === 2 &&
               items[activeIndex]?.level !== minLevel &&
               (isActive || isDirectParentInScope(index)));
-          const linkInteractive = isInteractive && shouldShowItem;
+          const linkInteractive = isVisible && shouldShowItem;
 
           return (
             <li
@@ -167,11 +166,11 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
                     e.preventDefault();
                     if (!linkInteractive) return;
 
-                    const element = document.getElementById(item.id);
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      window.history.pushState(null, '', `#${item.id}`);
+                    const hash = `#${item.id}`;
+                    if (window.location.hash !== hash) {
+                      window.history.pushState(null, '', hash);
                     }
+                    window.dispatchEvent(new CustomEvent(TOC_HASH_CHANGE_EVENT));
                   }}
                 >
                   <span
