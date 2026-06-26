@@ -6,7 +6,7 @@ import { CategorySidebar, SidebarSkeleton } from '@/features/post/components/sid
 import { ThemeProvider } from '@/features/theme/components/theme-provider';
 import { BlogFooter, BlogHeader } from '@/shared/layouts';
 import { cn } from '@/shared/lib';
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
 import { Geist_Mono, Silkscreen } from 'next/font/google';
 import localFont from 'next/font/local';
@@ -122,19 +122,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <head>
-        {process.env.NEXT_PUBLIC_GTM_ID && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-                new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-                })(window,document,'script','dataLayer','GTM-W3X3ZFS8');`,
-            }}
-          />
-        )}
-      </head>
       <body
         className={cn(
           geistMono.variable,
@@ -147,16 +134,6 @@ export default function RootLayout({
           'font-pretendard w-full antialiased'
         )}
       >
-        {process.env.NEXT_PUBLIC_GTM_ID && (
-          <noscript>
-            <iframe
-              src="https://www.googletagmanager.com/ns.html?id=GTM-W3X3ZFS8"
-              height="0"
-              width="0"
-              style={{ display: 'none', visibility: 'hidden' }}
-            ></iframe>
-          </noscript>
-        )}
         <NextTopLoader
           color="var(--foreground)"
           height={2}
@@ -181,6 +158,7 @@ export default function RootLayout({
         <PageViewTracker />
         <ScrollDepthTracker />
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
+        {process.env.NEXT_PUBLIC_GTM_ID && <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />}
       </body>
     </html>
   );
