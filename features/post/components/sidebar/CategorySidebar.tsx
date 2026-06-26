@@ -7,15 +7,28 @@ import { cn } from '@/shared/lib/utils';
 import { PixelChevron, PixelCollapse, PixelExpand, PixelFolder, PixelFolderOpen } from '@/shared/ui/pixel';
 import { AnimatePresence, motion, type Variants } from 'motion/react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname } from 'next/navigation';
 import { useCallback, useMemo, useState } from 'react';
 
-function toCategoryHref(pathname: string): string {
+function normalizePathname(pathname: string): string {
   const path = pathname.length > 1 && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
-  if (path === '/posts' || path.startsWith('/posts/')) return path;
+  return path;
+}
+
+function isPostListPath(pathname: string): boolean {
+  const path = normalizePathname(pathname);
+  return path === '/posts' || path.startsWith('/posts/');
+}
+
+function toCategoryHref(pathname: string, isPostDetailPath: boolean): string | undefined {
+  const path = normalizePathname(pathname);
+  if (isPostListPath(path)) return path;
+  if (!isPostDetailPath) return undefined;
 
   const segments = path.split('/').filter(Boolean);
-  if (segments.length <= 1) return '/posts';
+  if (segments.length === 0) return undefined;
+  if (segments.length === 1) return '/posts';
+
   return `/posts/${segments.slice(0, -1).join('/')}`;
 }
 
@@ -60,7 +73,9 @@ function collectExpandableIds(nodes: CategoryTreeNode[]): string[] {
 
 export function CategorySidebar({ categories }: { categories: CategoryTreeNode[] }) {
   const pathname = usePathname();
-  const activeHref = useMemo(() => toCategoryHref(pathname), [pathname]);
+  const params = useParams<{ slug?: string[] }>();
+  const isPostDetailPath = !isPostListPath(pathname) && Array.isArray(params.slug) && params.slug.length > 0;
+  const activeHref = useMemo(() => toCategoryHref(pathname, isPostDetailPath), [isPostDetailPath, pathname]);
 
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [expandedIds, setExpandedIds] = useStorage<string[]>('expanded-categories', ['all']);
@@ -87,24 +102,24 @@ export function CategorySidebar({ categories }: { categories: CategoryTreeNode[]
     <aside
       className={cn(
         'hidden sm:flex',
-        'bg-sidebar/80 border-sidebar-border/80 sticky top-0 h-screen flex-col border-r backdrop-blur transition-all duration-300',
+        'bg-card/80 border-border/80 sticky top-0 h-screen flex-col border-r backdrop-blur transition-all duration-300',
         isCollapsed ? 'w-12' : 'w-64'
       )}
     >
       {/* Header */}
       <div
         className={cn(
-          'border-sidebar-border/80 flex shrink-0 items-center justify-between border-b',
+          'border-border/80 flex shrink-0 items-center justify-between border-b',
           isCollapsed ? 'px-2 py-4' : 'p-4'
         )}
       >
         {!isCollapsed && (
           <div className="flex items-center gap-1">
-            <span className="text-sidebar-foreground/80 font-pixel text-xs tracking-wider uppercase">Categories</span>
+            <span className="text-foreground/80 font-pixel text-xs tracking-wider uppercase">Categories</span>
             {expandableIds.length > 0 && (
               <button
                 onClick={handleToggleAll}
-                className="hover:bg-sidebar-accent text-sidebar-foreground/60 cursor-pointer rounded p-1 transition-colors"
+                className="hover:bg-accent text-foreground/60 cursor-pointer rounded p-1 transition-colors"
                 aria-label={isAllExpanded ? '카테고리 전체 접기' : '카테고리 전체 펼치기'}
               >
                 {isAllExpanded ? <PixelCollapse className="h-4 w-4" /> : <PixelExpand className="h-4 w-4" />}
@@ -114,7 +129,7 @@ export function CategorySidebar({ categories }: { categories: CategoryTreeNode[]
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className={cn('hover:bg-sidebar-accent ml-auto cursor-pointer rounded p-2 transition-colors')}
+          className={cn('hover:bg-accent ml-auto cursor-pointer rounded p-2 transition-colors')}
           aria-label={isCollapsed ? '사이드바 펼치기' : '사이드바 접기'}
         >
           <PixelChevron
@@ -137,7 +152,7 @@ export function CategorySidebar({ categories }: { categories: CategoryTreeNode[]
           )}
         >
           {categories.length === 0 ? (
-            <div className="text-sidebar-foreground/50 px-3 py-4 text-center text-sm">No categories found</div>
+            <div className="text-foreground/50 px-3 py-4 text-center text-sm">No categories found</div>
           ) : (
             categories.map((node) => (
               <CategoryTreeItem
@@ -161,7 +176,7 @@ export function CategorySidebar({ categories }: { categories: CategoryTreeNode[]
             isCollapsed ? 'opacity-100' : 'pointer-events-none opacity-0'
           )}
         >
-          <PixelFolder className="text-sidebar-foreground/60 h-5 w-5" />
+          <PixelFolder className="text-foreground/60 h-5 w-5" />
         </div>
       </div>
     </aside>
@@ -174,7 +189,7 @@ interface CategoryTreeItemProps {
   level: number;
   expandedIds: string[];
   onToggle: (id: string) => void;
-  activeHref: string;
+  activeHref?: string;
 }
 
 function CategoryTreeItem({ node, parentPath, level, expandedIds, onToggle, activeHref }: CategoryTreeItemProps) {
@@ -203,11 +218,11 @@ function CategoryTreeItem({ node, parentPath, level, expandedIds, onToggle, acti
         {hasChildren ? (
           <button
             onClick={handleToggle}
-            className="hover:bg-sidebar-accent cursor-pointer rounded p-1 transition-colors"
+            className="hover:bg-accent cursor-pointer rounded p-1 transition-colors"
             aria-label={isExpanded ? '하위 카테고리 접기' : '하위 카테고리 펼치기'}
           >
             <motion.div animate={{ rotate: isExpanded ? 90 : 0 }} transition={{ duration: 0.2, ease: 'easeInOut' }}>
-              <PixelChevron className="text-sidebar-foreground/60 h-3 w-3" />
+              <PixelChevron className="text-foreground/60 h-3 w-3" />
             </motion.div>
           </button>
         ) : (
@@ -218,18 +233,18 @@ function CategoryTreeItem({ node, parentPath, level, expandedIds, onToggle, acti
           href={href}
           className={cn(
             'flex flex-1 items-center gap-2 rounded-lg px-2 py-1.5 transition-colors',
-            'hover:bg-sidebar-accent/80 text-sidebar-foreground',
-            isActive && 'text-sidebar-primary font-semibold'
+            'hover:bg-accent/80 text-foreground',
+            isActive && 'bg-accent text-foreground font-semibold'
           )}
         >
           {isExpanded ? (
-            <PixelFolderOpen className="text-sidebar-foreground/80 h-4 w-4 shrink-0" />
+            <PixelFolderOpen className="text-foreground/80 h-4 w-4 shrink-0" />
           ) : (
-            <PixelFolder className="text-sidebar-foreground/80 h-4 w-4 shrink-0" />
+            <PixelFolder className="text-foreground/80 h-4 w-4 shrink-0" />
           )}
           <span className="flex flex-1 items-center justify-between truncate">
             <span className="truncate">{node.label}</span>
-            {count > 0 && <span className="text-sidebar-foreground/50 ml-2 shrink-0 text-xs">({count})</span>}
+            {count > 0 && <span className="text-foreground/50 ml-2 shrink-0 text-xs">({count})</span>}
           </span>
         </Link>
       </div>
