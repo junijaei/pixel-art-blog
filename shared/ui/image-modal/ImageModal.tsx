@@ -2,6 +2,7 @@
 
 import { PixelClose } from '@/shared/ui/pixel';
 import { cn } from '@/shared/lib/utils';
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -33,10 +34,30 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
   const [mounted, setMounted] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // opacity·transform만 애니메이션해 컴포지터에서만 처리된다.
+  // 동작 축소 선호 시에는 즉시 나타나고 사라진다.
+  const overlayMotion = prefersReducedMotion
+    ? {}
+    : {
+        initial: { opacity: 0 },
+        animate: { opacity: 1 },
+        exit: { opacity: 0 },
+        transition: { duration: 0.15, ease: 'easeOut' as const },
+      };
+  const contentMotion = prefersReducedMotion
+    ? {}
+    : {
+        initial: { scale: 0.96 },
+        animate: { scale: 1 },
+        exit: { scale: 0.98 },
+        transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] as const },
+      };
 
   // Escape로 닫고, Tab은 다이얼로그 안에 가둔다
   const handleKeyDown = useCallback(
@@ -88,58 +109,65 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
     };
   }, [isOpen, mounted, handleKeyDown]);
 
-  if (!isOpen || !mounted) {
+  if (!mounted) {
     return null;
   }
 
   return createPortal(
-    <div
-      ref={dialogRef}
-      role="dialog"
-      aria-modal="true"
-      aria-label={`확장된 크기의 ${alt || '이미지'} 모달`}
-      className={cn('fixed inset-0 z-50 flex items-center justify-center overscroll-contain', className)}
-    >
-      {/*
-        백드롭을 콘텐츠 뒤에 깔린 별도 레이어로 둔다.
-        이미지·캡션이 덮지 않은 모든 영역이 이 레이어이므로 사각지대 없이 클릭하면 닫힌다.
-        (라이트·다크 모두에서 뒤 페이지를 눌러주는 무채색 스크림)
-      */}
-      <div
-        aria-hidden
-        data-testid="modal-backdrop"
-        onClick={onClose}
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
-      />
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`확장된 크기의 ${alt || '이미지'} 모달`}
+          {...overlayMotion}
+          className={cn('fixed inset-0 z-50 flex items-center justify-center overscroll-contain', className)}
+        >
+          {/*
+            백드롭을 콘텐츠 뒤에 깔린 별도 레이어로 둔다.
+            이미지·캡션이 덮지 않은 모든 영역이 이 레이어이므로 사각지대 없이 클릭하면 닫힌다.
+            (라이트·다크 모두에서 뒤 페이지를 눌러주는 무채색 스크림)
+          */}
+          <div
+            aria-hidden
+            data-testid="modal-backdrop"
+            onClick={onClose}
+            className="absolute inset-0 backdrop-blur-sm"
+          />
 
-      {/* Close button */}
-      <button
-        ref={closeButtonRef}
-        type="button"
-        onClick={onClose}
-        aria-label="모달 닫기"
-        className={cn(
-          'absolute top-4 right-4 z-10',
-          'rounded-lg p-2',
-          'bg-muted/50 hover:bg-muted',
-          'text-muted-foreground hover:text-foreground',
-          'transition-colors',
-          'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
-        )}
-      >
-        <PixelClose className="h-4 w-4" />
-      </button>
+          {/* Close button */}
+          <button
+            ref={closeButtonRef}
+            type="button"
+            onClick={onClose}
+            aria-label="모달 닫기"
+            className={cn(
+              'absolute top-4 right-4 z-10',
+              'rounded-lg p-2',
+              'bg-muted/50 hover:bg-muted',
+              'text-muted-foreground hover:text-foreground',
+              'transition-colors',
+              'focus:ring-ring focus:ring-2 focus:ring-offset-2 focus:outline-none'
+            )}
+          >
+            <PixelClose className="h-4 w-4" />
+          </button>
 
-      {/* Image container */}
-      <div className="relative z-10 max-h-[90vh] max-w-[90vw]">
-        <img
-          src={src}
-          alt={alt}
-          className={cn('max-h-[85vh] max-w-full rounded-lg', 'border-border border', 'object-contain')}
-        />
-        {caption && <p className="text-muted-foreground mt-4 text-center text-sm whitespace-pre-wrap">{caption}</p>}
-      </div>
-    </div>,
+          {/* Image container — 클릭이 백드롭까지 내려가지 않도록 포인터 이벤트를 흡수한다 */}
+          <motion.div {...contentMotion} className="relative z-10 max-h-[90vh] max-w-[90vw]">
+            <img
+              src={src}
+              alt={alt}
+              className={cn('max-h-[85vh] max-w-full rounded-lg', 'border-border border', 'object-contain')}
+            />
+            {caption && (
+              <p className="text-muted-foreground mt-4 text-center text-sm whitespace-pre-wrap">{caption}</p>
+            )}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>,
     document.body
   );
 }
