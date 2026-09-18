@@ -51,7 +51,7 @@ export function ThemeToggle({ className }: ThemeToggleProps) {
   if (!mounted) {
     return (
       <button
-        className={cn('hover:bg-muted/70 cursor-pointer rounded-lg p-2 transition-colors', className)}
+        className={cn('hover:bg-muted/70 focus-visible:ring-ring cursor-pointer rounded-lg p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none active:translate-y-px', className)}
         aria-label="테마 전환 버튼"
       >
         <div className="h-4 w-4" />

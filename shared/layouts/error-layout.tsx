@@ -1,4 +1,4 @@
-import { PixelArrow, PixelDecoration } from '@/shared/ui';
+import { PixelArrow } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
 import Link from 'next/link';
 
@@ -17,10 +17,13 @@ export default function ErrorLayout({
   code,
   title = '문제가 발생했습니다',
   description = '페이지를 불러오는 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+  onRetry,
 }: {
   code?: string;
   title?: string;
   description?: string;
+  /** 주어지면 재시도 버튼을 노출한다 (Next.js error boundary의 reset) */
+  onRetry?: () => void;
 }) {
   const codeLabel = code ?? 'ERR';
 
@@ -35,11 +38,7 @@ export default function ErrorLayout({
 
       <div className="mx-auto w-full max-w-md text-center">
         {/* Status Label */}
-        <div className="mb-10 flex items-center justify-center gap-3">
-          <PixelDecoration layout="horizontal" dotCount={3} gradientStart="end" className="opacity-35" />
-          <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">System Error</span>
-          <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
-        </div>
+        <p className="font-pixel text-muted-foreground mb-10 text-[10px] tracking-[0.3em] uppercase">System Error</p>
 
         {/* Giant Code */}
         <p aria-hidden className="font-pixel text-7xl leading-none tracking-tight sm:text-8xl">
@@ -53,16 +52,32 @@ export default function ErrorLayout({
 
         {/* Actions */}
         <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row">
+          {onRetry && (
+            <button
+              type="button"
+              onClick={onRetry}
+              className="group bg-foreground text-background focus-visible:ring-ring inline-flex items-center gap-2 rounded-md px-6 py-3 text-sm font-medium transition-opacity duration-200 hover:opacity-90 focus-visible:ring-2 focus-visible:ring-offset-2 active:translate-y-px"
+            >
+              <span>다시 시도</span>
+            </button>
+          )}
           <Link
             href="/"
-            className="group bg-foreground text-background inline-flex items-center gap-2 rounded-md py-3 pr-6 pl-5 text-sm font-medium transition-opacity duration-300 hover:opacity-90"
+            className={cn(
+              'group focus-visible:ring-ring inline-flex items-center gap-2 rounded-md py-3 pr-6 pl-5 text-sm font-medium',
+              'focus-visible:ring-2 focus-visible:ring-offset-2 active:translate-y-px',
+              // 재시도 버튼이 있으면 그쪽이 주 동작이므로 여기는 외곽선 스타일로 물러난다
+              onRetry
+                ? 'border-border hover:border-muted-foreground/50 border transition-colors duration-200'
+                : 'bg-foreground text-background transition-opacity duration-200 hover:opacity-90'
+            )}
           >
             <PixelArrow className="h-3.5 w-3.5 rotate-180 transition-transform group-hover:-translate-x-0.5" />
             <span>홈으로 돌아가기</span>
           </Link>
           <Link
             href="/posts"
-            className="group border-border hover:border-muted-foreground/50 inline-flex items-center gap-2 rounded-md border px-6 py-3 text-sm transition-colors duration-300"
+            className="group border-border hover:border-muted-foreground/50 focus-visible:ring-ring inline-flex items-center gap-2 rounded-md border px-6 py-3 text-sm transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 active:translate-y-px"
           >
             <span>전체 글 보기</span>
             <PixelArrow className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />

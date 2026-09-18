@@ -119,7 +119,7 @@ export function CategorySidebar({ categories }: { categories: CategoryTreeNode[]
             {expandableIds.length > 0 && (
               <button
                 onClick={handleToggleAll}
-                className="hover:bg-accent text-foreground/60 cursor-pointer rounded p-1 transition-colors"
+                className="hover:bg-accent text-foreground/60 focus-visible:ring-ring cursor-pointer rounded p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none active:translate-y-px"
                 aria-label={isAllExpanded ? '카테고리 전체 접기' : '카테고리 전체 펼치기'}
               >
                 {isAllExpanded ? <PixelCollapse className="h-4 w-4" /> : <PixelExpand className="h-4 w-4" />}
@@ -129,7 +129,7 @@ export function CategorySidebar({ categories }: { categories: CategoryTreeNode[]
         )}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className={cn('hover:bg-accent ml-auto cursor-pointer rounded p-2 transition-colors')}
+          className={cn('hover:bg-accent focus-visible:ring-ring ml-auto cursor-pointer rounded p-2 transition-colors focus-visible:ring-2 focus-visible:outline-none active:translate-y-px')}
           aria-label={isCollapsed ? '사이드바 펼치기' : '사이드바 접기'}
         >
           <PixelChevron
@@ -218,7 +218,7 @@ function CategoryTreeItem({ node, parentPath, level, expandedIds, onToggle, acti
         {hasChildren ? (
           <button
             onClick={handleToggle}
-            className="hover:bg-accent cursor-pointer rounded p-1 transition-colors"
+            className="hover:bg-accent focus-visible:ring-ring cursor-pointer rounded p-1 transition-colors focus-visible:ring-2 focus-visible:outline-none active:translate-y-px"
             aria-label={isExpanded ? '하위 카테고리 접기' : '하위 카테고리 펼치기'}
           >
             <motion.div animate={{ rotate: isExpanded ? 90 : 0 }} transition={{ duration: 0.2, ease: 'easeInOut' }}>

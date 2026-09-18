@@ -26,7 +26,7 @@ export function FrameLink({ href, children, className }: FrameLinkProps) {
     <Link
       href={href}
       className={cn(
-        'group bg-background/10 hover:bg-background focus-visible:ring-ring relative inline-flex items-center gap-3 px-6 py-2 backdrop-blur-sm transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 sm:px-9 sm:py-4',
+        'group bg-background/10 hover:bg-background focus-visible:ring-ring relative inline-flex items-center gap-3 px-6 py-2 backdrop-blur-sm transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-offset-2 active:translate-y-px sm:px-9 sm:py-4',
         className
       )}
     >

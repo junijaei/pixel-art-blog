@@ -80,7 +80,7 @@ export function Code({ block, children }: CodeProps) {
               {shouldCollapse && (
                 <button
                   onClick={() => setIsExpanded(!isExpanded)}
-                  className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-2 py-1 text-xs transition-colors"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted/50 focus-visible:ring-ring rounded-md px-2 py-1 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none active:translate-y-px"
                   aria-expanded={isExpanded}
                   aria-label={isExpanded ? 'Collapse code' : 'Expand code'}
                 >
@@ -89,7 +89,7 @@ export function Code({ block, children }: CodeProps) {
               )}
               <button
                 onClick={copyToClipboard}
-                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 rounded-md px-2 py-1 text-xs transition-colors"
+                className="text-muted-foreground hover:text-foreground hover:bg-muted/50 focus-visible:ring-ring rounded-md px-2 py-1 text-xs transition-colors focus-visible:ring-2 focus-visible:outline-none active:translate-y-px"
                 aria-label={isCopied ? 'Code copied' : 'Copy code'}
               >
                 {isCopied ? 'Copied!' : 'Copy'}
