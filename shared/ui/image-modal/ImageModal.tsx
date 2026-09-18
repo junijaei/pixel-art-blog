@@ -40,24 +40,20 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
     setMounted(true);
   }, []);
 
-  // opacity·transform만 애니메이션해 컴포지터에서만 처리된다.
-  // 동작 축소 선호 시에는 즉시 나타나고 사라진다.
-  const overlayMotion = prefersReducedMotion
-    ? {}
-    : {
-        initial: { opacity: 0 },
-        animate: { opacity: 1 },
-        exit: { opacity: 0 },
-        transition: { duration: 0.15, ease: 'easeOut' as const },
-      };
-  const contentMotion = prefersReducedMotion
-    ? {}
-    : {
-        initial: { scale: 0.96 },
-        animate: { scale: 1 },
-        exit: { scale: 0.98 },
-        transition: { duration: 0.18, ease: [0.16, 1, 0.3, 1] as const },
-      };
+  // 레이어마다 같은 이징·지속시간을 쓰고, 닫힘만 더 짧고 easeIn으로 둔다.
+  // 루트에는 variants를 주지 않는다 — backdrop-blur의 조상에서 opacity를
+  // 애니메이션하면 매 프레임 blur를 재합성해 계단 현상이 생긴다.
+  const enter = prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' as const };
+  const exit = prefersReducedMotion ? { duration: 0 } : { duration: 0.13, ease: 'easeIn' as const };
+
+  const overlayVariants = {
+    hidden: { opacity: 0, transition: exit },
+    visible: { opacity: 1, transition: enter },
+  };
+  const contentVariants = {
+    hidden: { opacity: 0, scale: 0.96, transition: exit },
+    visible: { opacity: 1, scale: 1, transition: enter },
+  };
 
   // Escape로 닫고, Tab은 다이얼로그 안에 가둔다
   const handleKeyDown = useCallback(
@@ -121,27 +117,31 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
           role="dialog"
           aria-modal="true"
           aria-label={`확장된 크기의 ${alt || '이미지'} 모달`}
-          {...overlayMotion}
-          className={cn('fixed inset-0 z-50 flex items-center justify-center overscroll-contain', className)}
+          initial="hidden"
+          animate="visible"
+          exit="hidden"
+          className={cn('fixed inset-0 z-60 flex items-center justify-center overscroll-contain', className)}
         >
           {/*
             백드롭을 콘텐츠 뒤에 깔린 별도 레이어로 둔다.
             이미지·캡션이 덮지 않은 모든 영역이 이 레이어이므로 사각지대 없이 클릭하면 닫힌다.
             (라이트·다크 모두에서 뒤 페이지를 눌러주는 무채색 스크림)
           */}
-          <div
+          <motion.div
             aria-hidden
             data-testid="modal-backdrop"
             onClick={onClose}
+            variants={overlayVariants}
             className="absolute inset-0 backdrop-blur-sm"
           />
 
           {/* Close button */}
-          <button
+          <motion.button
             ref={closeButtonRef}
             type="button"
             onClick={onClose}
             aria-label="모달 닫기"
+            variants={overlayVariants}
             className={cn(
               'absolute top-4 right-4 z-10',
               'rounded-lg p-2',
@@ -152,10 +152,10 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
             )}
           >
             <PixelClose className="h-4 w-4" />
-          </button>
+          </motion.button>
 
           {/* Image container — 클릭이 백드롭까지 내려가지 않도록 포인터 이벤트를 흡수한다 */}
-          <motion.div {...contentMotion} className="relative z-10 max-h-[90vh] max-w-[90vw]">
+          <motion.div variants={contentVariants} className="relative z-10 max-h-[90vh] max-w-[90vw]">
             <img
               src={src}
               alt={alt}
