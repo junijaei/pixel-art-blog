@@ -1,4 +1,5 @@
 import { PixelArrow, PixelDecoration, PixelFile, PixelGithub, PixelLinkedin, PixelMail } from '@/shared/ui';
+import { cn } from '@/shared/lib/utils';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 
@@ -104,7 +105,7 @@ export default function AboutPage() {
             <figure className="mx-auto w-fit shrink-0 sm:mx-0">
               <div className="relative">
                 {PROFILE_FRAME_SEGMENTS.map((segment) => (
-                  <span key={segment} aria-hidden className={`bg-foreground/25 absolute ${segment}`} />
+                  <span key={segment} aria-hidden className={cn('bg-foreground/25 absolute', segment)} />
                 ))}
                 <img
                   src="/profile-light.png"

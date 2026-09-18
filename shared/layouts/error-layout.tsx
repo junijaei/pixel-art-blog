@@ -1,4 +1,5 @@
 import { PixelArrow, PixelDecoration } from '@/shared/ui';
+import { cn } from '@/shared/lib/utils';
 import Link from 'next/link';
 
 const ERROR_FRAME_SEGMENTS = [
@@ -28,7 +29,7 @@ export default function ErrorLayout({
       {/* Corner Frame (hero echo) */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         {ERROR_FRAME_SEGMENTS.map((segment) => (
-          <div key={segment} className={`bg-foreground/15 absolute ${segment}`} />
+          <div key={segment} className={cn('bg-foreground/15 absolute', segment)} />
         ))}
       </div>
 

@@ -1,5 +1,6 @@
 import { PostCardSkeleton } from '@/features/post/components';
 import { Skeleton } from '@/shared/ui';
+import { cn } from '@/shared/lib/utils';
 
 const HERO_FRAME_SEGMENTS = [
   'top-8 left-8 h-px w-16',
@@ -41,7 +42,7 @@ export default function HomeLoading() {
 
           <div className="pointer-events-none absolute inset-0 z-30">
             {HERO_FRAME_SEGMENTS.map((style) => (
-              <div key={style} className={`bg-foreground/20 absolute ${style}`} />
+              <div key={style} className={cn('bg-foreground/20 absolute', style)} />
             ))}
 
             <div className="font-pixel text-foreground/20 invisible absolute bottom-10 left-1/2 -translate-x-1/2 text-[9px] tracking-widest sm:visible sm:text-[11px]">

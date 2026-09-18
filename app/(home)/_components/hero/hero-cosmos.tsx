@@ -286,7 +286,7 @@ function DecorativeFrame() {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 z-30">
       {DECORATIVE_FRAME_SEGMENTS.map((style, index) => (
-        <div key={index} className={`bg-foreground/20 absolute transition-colors duration-700 ${style}`} />
+        <div key={index} className={cn('bg-foreground/20 absolute transition-colors duration-700', style)} />
       ))}
 
       <div className="font-pixel text-foreground/20 invisible absolute bottom-10 left-1/2 -translate-x-1/2 text-[9px] tracking-widest transition-colors duration-700 sm:visible sm:text-[11px]">

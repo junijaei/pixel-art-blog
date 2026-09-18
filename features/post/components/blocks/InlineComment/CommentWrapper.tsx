@@ -1,6 +1,7 @@
 'use client';
 
 import { PixelChevronRight, PixelClose, PixelPencil } from '@/shared/ui/pixel';
+import { cn } from '@/shared/lib/utils';
 import type { NotionComment } from '@/features/post/model';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -90,11 +91,11 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
         onClick={handleToggle}
         aria-expanded={open}
         aria-label={`추가 설명 ${comments.length}개 — 클릭하여 보기`}
-        className={[
+        className={cn(
           'focus-visible:ring-ring mt-2 flex items-center gap-1.5 rounded-sm text-[11px] font-medium tracking-wide',
           'transition-colors duration-150 focus-visible:ring-2 focus-visible:outline-none',
-          open ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground',
-        ].join(' ')}
+          open ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'
+        )}
       >
         <PixelPencil className="h-3 w-3" aria-hidden />
         <span>추가 설명</span>
@@ -104,7 +105,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
           </span>
         )}
         <PixelChevronRight
-          className={`h-2.5 w-2.5 transition-transform duration-200${open ? ' rotate-90' : ''}`}
+          className={cn('h-2.5 w-2.5 transition-transform duration-200', open && 'rotate-90')}
           aria-hidden
         />
       </button>
