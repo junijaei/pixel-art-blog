@@ -40,3 +40,11 @@ storybook-static
 .claude/settings.local.json
 
 BLOG_POST_*
+
+# JetBrains IDE (.vscode와 동일한 이유)
+.idea
+
+# 스킬 실체는 .agents/skills/ 에 있다.
+# .claude/skills/ 는 거기로 향하는 심볼릭 링크 모음이고,
+# core.symlinks=false 환경에서는 git이 링크를 역참조해 내용을 통째로 중복 저장한다.
+.claude/skills/
