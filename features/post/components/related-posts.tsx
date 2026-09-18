@@ -11,7 +11,7 @@ function RelatedPostCard({ slug, title, date, categoryPath, categoryLabel }: Rel
   return (
     <Link
       href={href}
-      className="group border-border/80 bg-card/80 hover:border-muted-foreground/35 hover:bg-card focus-visible:ring-ring flex min-h-full flex-1 flex-col gap-2.5 rounded-xl border p-4 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-sm focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="group border-border/80 bg-card/80 hover:border-muted-foreground/35 hover:bg-card focus-visible:ring-ring flex min-h-full flex-1 flex-col gap-2.5 rounded-xl border p-4 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       <div className="text-muted-foreground flex items-center gap-1.5">
         <PixelTag className="h-2.5 w-2.5" />
@@ -40,8 +40,8 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
   return (
     <section className="mt-16">
       <div className="mb-4 flex items-center gap-3 pt-6">
-        <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-45" />
         <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">Related Posts</span>
+        <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
         <div className="bg-border h-px flex-1" />
       </div>
 

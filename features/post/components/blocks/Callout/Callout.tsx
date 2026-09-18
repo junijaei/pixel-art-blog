@@ -8,7 +8,7 @@ export function Callout({ block, children }: CalloutProps) {
   const backgroundColorClass = getBlockBackgroundClass(color);
 
   return (
-    <div className={cn('my-4 rounded-xl border p-4 shadow', 'flex gap-3', backgroundColorClass)}>
+    <div className={cn('my-4 rounded-xl border p-4', 'flex gap-3', backgroundColorClass)}>
       {icon && 'emoji' in icon && icon.emoji && (
         <div className="mt-0.5 shrink-0">
           <span className="text-xl leading-none">{icon.emoji}</span>

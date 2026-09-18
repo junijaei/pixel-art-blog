@@ -98,7 +98,7 @@ export function Code({ block, children }: CodeProps) {
           </div>
 
           <div
-            className={cn('relative transition-all duration-300 ease-in-out', !isExpanded && 'overflow-hidden')}
+            className={cn('relative transition-[max-height] duration-200 ease-out', !isExpanded && 'overflow-hidden')}
             style={{
               maxHeight: isExpanded ? 'none' : `${COLLAPSED_MAX_HEIGHT}px`,
             }}

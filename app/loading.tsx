@@ -1,5 +1,5 @@
 import { PostCardSkeleton } from '@/features/post/components';
-import { PixelDecoration, Skeleton } from '@/shared/ui';
+import { Skeleton } from '@/shared/ui';
 
 const HERO_FRAME_SEGMENTS = [
   'top-8 left-8 h-px w-16',
@@ -50,11 +50,7 @@ export default function HomeLoading() {
           </div>
         </section>
 
-        <div className="flex w-full items-center gap-3">
-          <div className="bg-border h-px flex-1" />
-          <PixelDecoration layout="horizontal" dotCount={3} gradientStart="center" className="opacity-30" />
-          <div className="bg-border h-px flex-1" />
-        </div>
+        <div className="bg-border h-px w-full" />
 
         {/* Recent Posts */}
         <section className="px-6 py-14 sm:py-20">

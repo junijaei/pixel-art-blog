@@ -36,7 +36,7 @@ export function PostCard({ slug, title, description, date, categoryPath, categor
         </div>
       </article>
 
-      <PixelArrow className="text-foreground absolute top-1/2 right-1 hidden h-3.5 w-3.5 -translate-x-2 -translate-y-1/2 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100 sm:block" />
+      <PixelArrow className="text-foreground absolute top-1/2 right-1 hidden h-3.5 w-3.5 -translate-x-2 -translate-y-1/2 opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-0 group-hover:opacity-100 sm:block" />
     </Link>
   );
 }

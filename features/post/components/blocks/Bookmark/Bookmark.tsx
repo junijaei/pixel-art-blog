@@ -19,7 +19,7 @@ export function Bookmark({ block, preview, children }: BookmarkProps) {
         rel="noopener noreferrer"
         className={cn(
           'border-border bg-card my-4 block rounded-xl border p-4',
-          'hover:border-muted-foreground/30 transition-all duration-300',
+          'hover:border-muted-foreground/30 transition-colors duration-200',
           'group'
         )}
       >

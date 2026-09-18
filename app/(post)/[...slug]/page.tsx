@@ -167,7 +167,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           <header className="mb-12">
             <div className="mb-6 flex items-center gap-3">
               <Breadcrumb items={metadata.breadcrumbs} currentPath={category?.path || ''} />
-              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-30" />
               <div className="bg-border h-px flex-1" />
             </div>
 
@@ -188,11 +187,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </header>
 
           {/* 헤더 구분선 */}
-          <div className="mb-14 flex items-center gap-3">
-            <div className="bg-border h-px flex-1" />
-            <PixelDecoration layout="horizontal" dotCount={3} gradientStart="center" className="opacity-30" />
-            <div className="bg-border h-px flex-1" />
-          </div>
+          <div className="bg-border mb-14 h-px w-full" />
 
           {/* 커버 이미지 */}
           {post.coverUrl && (
@@ -221,7 +216,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
               {post.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="bg-muted text-muted-foreground font-galmuri9 rounded-full px-3 py-1 text-[10px] tracking-wider"
+                  className="bg-muted text-muted-foreground font-galmuri9 rounded-md px-3 py-1 text-[10px] tracking-wider"
                 >
                   {tag}
                 </span>
@@ -232,10 +227,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           {/* 댓글 */}
           <section>
             <div className="mb-8 flex items-center gap-3 pt-6">
-              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-45" />
-              <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">
-                Comments
-              </span>
+              <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">Comments</span>
+              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
               <div className="bg-border h-px flex-1" />
             </div>
             <GiscusComments />
@@ -246,8 +239,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
           {/* 하단 내비게이션 */}
           <footer className="mt-8">
-            <div className="flex items-center justify-between">
-              <PixelDecoration layout="corner" className="opacity-30" />
+            <div className="flex items-center justify-end">
               <Link
                 href="/posts"
                 className="group text-muted-foreground hover:text-foreground font-pixel flex items-center gap-2.5 text-[10px] tracking-[0.25em] uppercase transition-colors"
@@ -259,7 +251,6 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           </footer>
         </div>
       </main>
-
     </>
   );
 }

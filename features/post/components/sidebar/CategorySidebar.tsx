@@ -102,7 +102,7 @@ export function CategorySidebar({ categories }: { categories: CategoryTreeNode[]
     <aside
       className={cn(
         'hidden sm:flex',
-        'bg-card/80 border-border/80 sticky top-0 h-screen flex-col border-r backdrop-blur transition-all duration-300',
+        'bg-card/80 border-border/80 sticky top-0 h-screen flex-col border-r transition-[width] duration-200',
         isCollapsed ? 'w-12' : 'w-64'
       )}
     >
@@ -147,7 +147,7 @@ export function CategorySidebar({ categories }: { categories: CategoryTreeNode[]
         <div
           className={cn(
             'absolute inset-0 overflow-y-auto px-2 py-2',
-            'transition-all duration-300',
+            'transition-opacity duration-200',
             isCollapsed ? 'pointer-events-none opacity-0' : 'opacity-100'
           )}
         >
@@ -172,7 +172,7 @@ export function CategorySidebar({ categories }: { categories: CategoryTreeNode[]
         <div
           className={cn(
             'absolute inset-0 flex flex-col items-center gap-2 py-4',
-            'transition-all duration-300',
+            'transition-opacity duration-200',
             isCollapsed ? 'opacity-100' : 'pointer-events-none opacity-0'
           )}
         >

@@ -35,7 +35,7 @@ export function FrameLink({ href, children, className }: FrameLinkProps) {
           key={corner}
           aria-hidden
           className={cn(
-            'border-foreground/60 absolute h-2 w-2 transition-all duration-500 ease-out group-hover:h-1/2 group-hover:w-1/2',
+            'border-foreground/60 absolute h-2 w-2 transition-[height,width] duration-500 ease-out group-hover:h-1/2 group-hover:w-1/2',
             corner
           )}
         />

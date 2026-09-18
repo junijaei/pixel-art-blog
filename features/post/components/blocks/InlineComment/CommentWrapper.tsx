@@ -1,6 +1,6 @@
 'use client';
 
-import { PixelChevronRight, PixelDecoration, PixelPencil } from '@/shared/ui/pixel';
+import { PixelChevronRight, PixelClose, PixelPencil } from '@/shared/ui/pixel';
 import type { NotionComment } from '@/features/post/model';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -89,7 +89,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
       className="group relative my-4 cursor-pointer select-none focus:outline-none"
     >
       {/* 블록 본문 */}
-      <div className="pointer-events-none transition-all duration-150 group-hover:underline decoration-muted-foreground/40 group-hover:underline-offset-2">
+      <div className="pointer-events-none group-hover:underline decoration-muted-foreground/40 group-hover:underline-offset-2">
         {children}
       </div>
 
@@ -101,17 +101,10 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
           open ? 'text-muted-foreground' : 'text-muted-foreground/50 group-hover:text-muted-foreground/70',
         ].join(' ')}
       >
-        <PixelDecoration
-          layout="horizontal"
-          dotCount={3}
-          gradientStart="start"
-          size="sm"
-          className={`transition-opacity duration-150 ${open ? 'opacity-100' : 'opacity-60 group-hover:opacity-80'}`}
-        />
         <PixelPencil className="h-3 w-3" aria-hidden />
         <span>추가 설명</span>
         {comments.length > 1 && (
-          <span className="font-pixel rounded-full bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground">
+          <span className="font-pixel rounded-md bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground">
             {comments.length}
           </span>
         )}
@@ -134,17 +127,16 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
               width: 'min(360px, calc(100vw - 16px))',
               zIndex: 40,
             }}
-            className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-xl pointer-events-auto [&_*]:pointer-events-auto"
+            className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-md pointer-events-auto [&_*]:pointer-events-auto"
             onMouseDown={(e) => e.stopPropagation()}
           >
             {/* 헤더 */}
             <div className="flex items-center justify-between border-b border-border bg-muted/40 px-4 py-2.5">
               <div className="flex items-center gap-2 text-muted-foreground">
-                <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" size="sm" />
                 <PixelPencil className="h-3 w-3" aria-hidden />
                 <span className="text-xs font-semibold tracking-wide">추가 설명</span>
                 {comments.length > 1 && (
-                  <span className="font-pixel rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground/70">
+                  <span className="font-pixel rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground/70">
                     {comments.length}
                   </span>
                 )}
@@ -157,9 +149,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
                 className="flex h-5 w-5 items-center justify-center rounded text-muted-foreground/50 transition-colors hover:bg-muted hover:text-foreground"
                 aria-label="닫기"
               >
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
-                  <path d="M1 1L9 9M9 1L1 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-                </svg>
+                <PixelClose className="h-2.5 w-2.5" />
               </button>
             </div>
 
@@ -176,11 +166,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
                     <p className="text-sm leading-relaxed text-foreground">{renderText(comment)}</p>
                   </div>
                   {i < comments.length - 1 && (
-                    <div aria-hidden className="flex items-center gap-2 px-4">
-                      <div className="h-px flex-1 bg-border" />
-                      <PixelDecoration layout="horizontal" dotCount={3} gradientStart="center" size="sm" />
-                      <div className="h-px flex-1 bg-border" />
-                    </div>
+                    <div aria-hidden className="mx-4 h-px bg-border" />
                   )}
                 </div>
               ))}

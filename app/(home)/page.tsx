@@ -51,11 +51,7 @@ export default async function HomePage() {
         {/* Hero Section */}
         <HeroCosmos />
 
-        <div className="flex w-full items-center gap-3">
-          <div className="bg-border h-px flex-1" />
-          <PixelDecoration layout="horizontal" dotCount={3} gradientStart="center" className="opacity-30" />
-          <div className="bg-border h-px flex-1" />
-        </div>
+        <div className="bg-border h-px w-full" />
 
         {/* Recent Posts */}
         {recentPosts.length > 0 && (

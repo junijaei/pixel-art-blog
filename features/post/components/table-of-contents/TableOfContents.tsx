@@ -147,7 +147,7 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
                   aria-disabled={!linkInteractive}
                   className={cn(
                     'group relative flex items-center justify-end gap-3 py-1.5 pr-1',
-                    'transition-all duration-300',
+                    'transition-colors duration-200',
                     !linkInteractive && 'pointer-events-none cursor-default',
                     relativeDepth === 0 && 'mr-0',
                     relativeDepth > 0 &&
@@ -175,7 +175,7 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
                 >
                   <span
                     className={cn(
-                      'flex items-center gap-1 truncate transition-all duration-300',
+                      'flex items-center gap-1 truncate transition-[font-weight] duration-200',
                       'text-xs',
                       isActive && 'font-medium',
                       isScopeParent && !isActive && 'font-medium'
@@ -188,7 +188,7 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
                     <span
                       data-testid="toc-indicator"
                       className={cn(
-                        'shrink-0 transition-all duration-300',
+                        'shrink-0 transition-[width,height,background-color,border-radius] duration-200',
                         // Active state: Always a solid primary square
                         isActive && 'bg-primary h-2 w-2 rounded-sm',
                         // Level 1 (Parent): Large square or line

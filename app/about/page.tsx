@@ -60,17 +60,12 @@ const CONTACT_LINKS = [
   },
 ] as const;
 
-function SectionLabel({ label, meta }: { label: string; meta?: string }) {
+function SectionLabel({ label }: { label: string }) {
   return (
     <div className="flex items-center gap-3">
       <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">{label}</span>
       <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
       <div className="bg-border h-px flex-1" />
-      {meta && (
-        <span className="font-pixel text-muted-foreground/50 hidden text-[10px] tracking-widest uppercase sm:inline">
-          {meta}
-        </span>
-      )}
     </div>
   );
 }
@@ -96,7 +91,7 @@ export default function AboutPage() {
       <main className="flex-1 px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-2xl">
           {/* Page Header */}
-          <SectionLabel label="About" meta="Juni-Jaei / FE" />
+          <SectionLabel label="About" />
 
           <h1 className="font-mulmaru mt-7 text-4xl leading-tight font-semibold tracking-tight break-keep sm:text-5xl">
             프론트엔드 개발자,
@@ -126,9 +121,6 @@ export default function AboutPage() {
                   className="border-border/80 hidden rounded-xl border dark:block"
                 />
               </div>
-              <figcaption className="font-pixel text-muted-foreground/50 mt-4 text-center text-[9px] tracking-widest uppercase">
-                Junijaei / FE Developer
-              </figcaption>
             </figure>
 
             <div className="space-y-5">
@@ -167,7 +159,7 @@ export default function AboutPage() {
                     <span className="text-muted-foreground group-hover:text-foreground truncate text-sm transition-colors duration-300">
                       {value}
                     </span>
-                    <PixelArrow className="text-foreground ml-auto h-3 w-3 shrink-0 -rotate-45 opacity-0 transition-all duration-300 group-hover:translate-x-0.5 group-hover:opacity-100" />
+                    <PixelArrow className="text-foreground ml-auto h-3 w-3 shrink-0 -rotate-45 opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-x-0.5 group-hover:opacity-100" />
                   </Link>
                 </li>
               ))}
@@ -186,7 +178,7 @@ export default function AboutPage() {
               href="https://assets.junijaei.co.kr/resume/FE_%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%92%E1%85%B4%E1%84%8C%E1%85%A2_%E1%84%8B%E1%85%B5%E1%84%85%E1%85%A7%E1%86%A8%E1%84%89%E1%85%A5.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="group border-border hover:border-muted-foreground/40 hover:bg-card focus-visible:ring-ring flex items-center justify-between rounded-xl border px-5 py-4 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="group border-border hover:border-muted-foreground/40 hover:bg-card focus-visible:ring-ring flex items-center justify-between rounded-xl border px-5 py-4 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
             >
               <div className="flex items-center gap-4">
                 <div className="border-border bg-secondary/40 flex h-10 w-10 items-center justify-center rounded-lg border">
@@ -194,12 +186,10 @@ export default function AboutPage() {
                 </div>
                 <div className="flex flex-col gap-0.5">
                   <span className="text-foreground text-sm font-medium">전희재 이력서</span>
-                  <span className="font-pixel text-muted-foreground text-[9px] tracking-wider uppercase">
-                    PDF / FE Developer
-                  </span>
+                  <span className="font-pixel text-muted-foreground text-[9px] tracking-wider uppercase">PDF</span>
                 </div>
               </div>
-              <PixelArrow className="text-muted-foreground group-hover:text-foreground h-4 w-4 -rotate-45 transition-all duration-300 group-hover:translate-x-0.5" />
+              <PixelArrow className="text-muted-foreground group-hover:text-foreground h-4 w-4 -rotate-45 transition-[color,transform] duration-200 group-hover:translate-x-0.5" />
             </Link>
           </section>
         </div>

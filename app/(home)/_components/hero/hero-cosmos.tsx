@@ -203,16 +203,6 @@ function HeroContent({
   return (
     <div className="relative flex h-full items-center justify-center px-6">
       <motion.div style={{ y: yTranslate, opacity, scale }} className="mx-auto max-w-5xl text-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: SPRING_EASE }}
-        >
-          <span className="font-pixel text-foreground/40 mb-6 inline-block text-[8px] tracking-[0.4em] uppercase transition-colors duration-700 sm:text-[11px]">
-            Frontend Developer Blog
-          </span>
-        </motion.div>
-
         <h1 className="font-mulmaru text-foreground mb-10 text-6xl leading-[1.05] font-black tracking-tighter transition-colors duration-700 md:text-[10rem]">
           <span className="block overflow-hidden">
             <motion.span

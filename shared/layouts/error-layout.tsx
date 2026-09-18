@@ -35,9 +35,9 @@ export default function ErrorLayout({
       <div className="mx-auto w-full max-w-md text-center">
         {/* Status Label */}
         <div className="mb-10 flex items-center justify-center gap-3">
-          <PixelDecoration layout="horizontal" dotCount={3} gradientStart="end" className="opacity-40" />
+          <PixelDecoration layout="horizontal" dotCount={3} gradientStart="end" className="opacity-35" />
           <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">System Error</span>
-          <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-40" />
+          <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
         </div>
 
         {/* Giant Code */}

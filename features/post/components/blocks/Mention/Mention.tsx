@@ -1,10 +1,10 @@
 'use client';
 
-import { PixelLink } from '@/shared/ui';
+import { PixelClock, PixelFile, PixelFolder, PixelLink } from '@/shared/ui';
 import type { LinkPreviewMention, RichTextMention } from '@/features/post/model';
 import { cn } from '@/shared/lib/utils';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, type ComponentType } from 'react';
 
 export interface MentionProps {
   richText: RichTextMention;
@@ -24,18 +24,18 @@ export function Mention({ richText, className }: MentionProps) {
   }
 
   const content = getMentionContent(richText);
-  const icon = getMentionIcon(mention.type);
+  const Icon = getMentionIcon(mention.type);
 
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-0.5',
+        'inline-flex items-center gap-1',
         'bg-muted rounded px-1 py-0.5',
         'text-foreground/80 text-sm',
         className
       )}
     >
-      {icon && <span className="text-muted-foreground">{icon}</span>}
+      {Icon && <Icon className="text-muted-foreground h-3 w-3 shrink-0" />}
       {content}
     </span>
   );
@@ -112,19 +112,17 @@ function getMentionContent(richText: RichTextMention): string {
 
 /**
  * 멘션 타입에 따른 아이콘을 반환합니다.
+ * link_mention은 LinkPreviewMention에서 favicon으로 처리하므로 제외합니다.
  */
-function getMentionIcon(type: string): string | null {
+function getMentionIcon(type: string): ComponentType<{ className?: string }> | null {
   switch (type) {
-    case 'user':
-      return null; // @ 기호가 이름 앞에 붙음
     case 'page':
-      return '📄';
+      return PixelFile;
     case 'database':
-      return '🗃️';
+      return PixelFolder;
     case 'date':
-      return '📅';
-    case 'link_mention':
-      return '🔗';
+      return PixelClock;
+    // 'user'는 @ 기호가 이름 앞에 붙으므로 아이콘 없음
     default:
       return null;
   }
