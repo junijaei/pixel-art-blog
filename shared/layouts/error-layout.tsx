@@ -24,7 +24,7 @@ export default function ErrorLayout({
   const codeLabel = code ?? 'ERR';
 
   return (
-    <main className="relative flex flex-1 items-center justify-center px-6 py-24">
+    <main id="main-content" tabIndex={-1} className="relative flex flex-1 items-center justify-center px-6 py-24">
       {/* Corner Frame (hero echo) */}
       <div className="pointer-events-none absolute inset-0" aria-hidden>
         {ERROR_FRAME_SEGMENTS.map((segment) => (
@@ -69,7 +69,7 @@ export default function ErrorLayout({
         </div>
 
         {/* Status Line */}
-        <p className="font-pixel text-muted-foreground/40 mt-14 text-[9px] tracking-widest uppercase">
+        <p aria-hidden className="font-pixel text-muted-foreground/40 mt-14 text-[9px] tracking-widest uppercase">
           {codeLabel} / BIT-BY-BIT / SIGNAL LOST
         </p>
       </div>

@@ -49,7 +49,7 @@ export function Image({ block, priority = false, children }: ImageProps) {
 
   return (
     <>
-      <figure className="mx-12 my-6 max-w-lg">
+      <figure className="mx-auto my-6 max-w-lg">
         <button
           type="button"
           onClick={() => setIsModalOpen(true)}

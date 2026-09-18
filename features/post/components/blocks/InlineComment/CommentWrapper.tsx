@@ -78,27 +78,22 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
   }, [open, updatePosition]);
 
   return (
-    <div
-      ref={containerRef}
-      onClick={handleToggle}
-      onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleToggle(e)}
-      role="button"
-      tabIndex={0}
-      aria-expanded={open}
-      aria-label={`추가 설명 ${comments.length}개 — 클릭하여 보기`}
-      className="group relative my-4 cursor-pointer select-none focus:outline-none"
-    >
+    <div ref={containerRef} onClick={handleToggle} className="group relative my-4 cursor-pointer select-none">
       {/* 블록 본문 */}
       <div className="pointer-events-none group-hover:underline decoration-muted-foreground/40 group-hover:underline-offset-2">
         {children}
       </div>
 
       {/* 하단 레이블 */}
-      <div
-        aria-hidden
+      <button
+        type="button"
+        onClick={handleToggle}
+        aria-expanded={open}
+        aria-label={`추가 설명 ${comments.length}개 — 클릭하여 보기`}
         className={[
-          'mt-2 flex items-center gap-1.5 text-[11px] font-medium tracking-wide transition-colors duration-150',
-          open ? 'text-muted-foreground' : 'text-muted-foreground/50 group-hover:text-muted-foreground/70',
+          'focus-visible:ring-ring mt-2 flex items-center gap-1.5 rounded-sm text-[11px] font-medium tracking-wide',
+          'transition-colors duration-150 focus-visible:ring-2 focus-visible:outline-none',
+          open ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground',
         ].join(' ')}
       >
         <PixelPencil className="h-3 w-3" aria-hidden />
@@ -112,7 +107,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
           className={`h-2.5 w-2.5 transition-transform duration-200${open ? ' rotate-90' : ''}`}
           aria-hidden
         />
-      </div>
+      </button>
 
       {/* 팝오버 (Portal) */}
       {mounted &&

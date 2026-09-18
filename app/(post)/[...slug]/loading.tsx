@@ -2,7 +2,7 @@ import { Skeleton } from '@/shared/ui';
 
 export default function PostLoading() {
   return (
-    <main className="max-w-dvw flex-1 px-6 py-16">
+    <main id="main-content" tabIndex={-1} className="max-w-dvw flex-1 px-6 py-16">
       <div className="mx-auto max-w-2xl">
         {/* Back link */}
         <Skeleton className="mb-12 h-4 w-24" />

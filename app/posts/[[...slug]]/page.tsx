@@ -97,7 +97,7 @@ export default async function PostsPage({ params }: { params: Promise<{ slug?: s
   const countLabel = String(posts.length).padStart(2, '0');
 
   return (
-    <main className="flex-1">
+    <main id="main-content" tabIndex={-1} className="flex-1">
         {/* Page Header */}
         <section className="px-6 pt-16 sm:pt-24">
           <div className="mx-auto max-w-2xl">

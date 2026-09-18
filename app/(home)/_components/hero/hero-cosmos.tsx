@@ -4,7 +4,7 @@ import { FrameLink } from '@/features/link-preview/components/frame-link';
 import { cn } from '@/shared/lib/utils';
 import { Environment, Float, Lightformer, PerspectiveCamera, Stars } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { motion, useScroll, useTransform, type MotionValue } from 'motion/react';
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import { useTheme } from 'next-themes';
 import { RefObject, Suspense, createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -74,18 +74,27 @@ const SCENE_CONFIG_BY_THEME: Record<ThemeMode, SceneConfig> = {
   },
 };
 
-const SceneConfigContext = createContext<SceneConfig>(SCENE_CONFIG_BY_THEME.light);
+/** 씬 설정 + 동작 축소 선호 여부. 3D 프리미티브들이 useFrame을 멈추는 데 사용한다. */
+type SceneContextValue = SceneConfig & { reducedMotion: boolean };
+
+const SceneConfigContext = createContext<SceneContextValue>({
+  ...SCENE_CONFIG_BY_THEME.light,
+  reducedMotion: false,
+});
 
 // --- Constants ---
 
-const HERO_SECTION_CLASS = 'bg-background relative h-[calc(100vh-60px)] min-h-150 w-full md:h-[calc(100vh-65px)]';
+const HERO_SECTION_CLASS = 'bg-background relative h-[calc(100dvh-60px)] min-h-150 w-full md:h-[calc(100dvh-65px)]';
 const HERO_SECTION_ACTIVE_CLASS =
-  'bg-background relative h-[calc(100vh-60px)] min-h-150 w-full overflow-hidden transition-colors duration-700 md:h-[calc(100vh-65px)]';
+  'bg-background relative h-[calc(100dvh-60px)] min-h-150 w-full overflow-hidden transition-colors duration-700 md:h-[calc(100dvh-65px)]';
 
 const SPRING_EASE = [0.16, 1, 0.3, 1] as const;
 const CAMERA_POSITION = [0, 0, 15] as const;
 const PARTICLE_RANGE = 40;
 const ORBITAL_RING_INDICES = [1, 2, 3] as const;
+/** 동작 축소 시 CoreGlintLight를 고정할 위치·강도(궤도 중앙 / 맥동 중간값). */
+const GLINT_REST_POSITION = [0, 0.25, 1.65] as [number, number, number];
+const GLINT_REST_INTENSITY = 11;
 const DECORATIVE_FRAME_SEGMENTS = [
   'top-8 left-8 h-px w-16',
   'top-8 left-8 h-16 w-px',
@@ -144,6 +153,7 @@ export function HeroCosmos({ className }: HeroCosmosProps) {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
+  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     setMounted(true);
@@ -154,7 +164,8 @@ export function HeroCosmos({ className }: HeroCosmosProps) {
   const scale = useTransform(scrollY, [0, 400], [1, 0.95]);
 
   const theme: ThemeMode = resolvedTheme === 'dark' ? 'dark' : 'light';
-  const sceneConfig = SCENE_CONFIG_BY_THEME[theme];
+  const reducedMotion = !!prefersReducedMotion;
+  const sceneConfig: SceneContextValue = { ...SCENE_CONFIG_BY_THEME[theme], reducedMotion };
 
   if (!mounted) {
     return <section className={cn(HERO_SECTION_CLASS, className)} />;
@@ -166,7 +177,7 @@ export function HeroCosmos({ className }: HeroCosmosProps) {
       <BackgroundLayer config={sceneConfig} />
 
       {/* Content */}
-      <HeroContent yTranslate={yTranslate} opacity={opacity} scale={scale} />
+      <HeroContent yTranslate={yTranslate} opacity={opacity} scale={scale} reducedMotion={reducedMotion} />
 
       {/* Foreground Core */}
       <CoreLayer config={sceneConfig} />
@@ -179,7 +190,7 @@ export function HeroCosmos({ className }: HeroCosmosProps) {
 
 // --- Sections (HeroCosmos 직속 자식) ---
 
-function BackgroundLayer({ config }: { config: SceneConfig }) {
+function BackgroundLayer({ config }: { config: SceneContextValue }) {
   return (
     <div className="absolute inset-0 z-0">
       <CosmosCanvas config={config} />
@@ -195,18 +206,26 @@ function HeroContent({
   opacity,
   scale,
   yTranslate,
+  reducedMotion,
 }: {
   opacity: MotionValue<number>;
   scale: MotionValue<number>;
   yTranslate: MotionValue<number>;
+  reducedMotion: boolean;
 }) {
+  // initial={false}는 진입 애니메이션을 건너뛰고 animate 상태에서 바로 렌더한다.
+  const enter = (from: Record<string, string | number>) => (reducedMotion ? false : from);
+
   return (
     <div className="relative flex h-full items-center justify-center px-6">
-      <motion.div style={{ y: yTranslate, opacity, scale }} className="mx-auto max-w-5xl text-center">
+      <motion.div
+        style={reducedMotion ? undefined : { y: yTranslate, opacity, scale }}
+        className="mx-auto max-w-5xl text-center"
+      >
         <h1 className="font-mulmaru text-foreground mb-10 text-6xl leading-[1.05] font-black tracking-tighter transition-colors duration-700 md:text-[10rem]">
           <span className="block overflow-hidden">
             <motion.span
-              initial={{ y: '100%' }}
+              initial={enter({ y: '100%' })}
               animate={{ y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: SPRING_EASE }}
               className="text-foreground inline-block tracking-wide sm:leading-48"
@@ -216,7 +235,7 @@ function HeroContent({
           </span>
           <span className="-mt-2 block overflow-hidden md:-mt-8">
             <motion.span
-              initial={{ y: '100%' }}
+              initial={enter({ y: '100%' })}
               animate={{ y: 0 }}
               transition={{ duration: 0.8, delay: 0.4, ease: SPRING_EASE }}
               className="text-muted-foreground/60 inline-block tracking-wide transition-[text-stroke] duration-700"
@@ -227,12 +246,12 @@ function HeroContent({
         </h1>
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={enter({ opacity: 0, y: 20 })}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8, duration: 1 }}
           className="mx-auto mt-4 max-w-2xl"
         >
-          <p className="text-foreground/50 mt-32 mb-12 text-xs leading-relaxed tracking-wide text-balance break-keep transition-colors duration-700 sm:mt-0 md:text-base">
+          <p className="text-foreground/70 mt-16 mb-12 text-sm leading-relaxed tracking-wide text-balance break-keep transition-colors duration-700 sm:mt-0 md:text-base">
             Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만들어내는 흐름을 담고 있습니다.
             <br className="hidden sm:inline" /> 이 블로그에서는 프론트엔드를 설계하고 구현하며 쌓아온 생각과 경험을
             기록합니다.
@@ -247,7 +266,7 @@ function HeroContent({
   );
 }
 
-function CoreLayer({ config }: { config: SceneConfig }) {
+function CoreLayer({ config }: { config: SceneContextValue }) {
   return (
     <div className="pointer-events-none absolute inset-0 z-20">
       {/* R3F가 컨테이너에 inline pointer-events:auto를 강제하므로 style로 덮어써야 클릭이 통과한다 */}
@@ -265,13 +284,13 @@ function CoreLayer({ config }: { config: SceneConfig }) {
 
 function DecorativeFrame() {
   return (
-    <div className="pointer-events-none absolute inset-0 z-30">
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-30">
       {DECORATIVE_FRAME_SEGMENTS.map((style, index) => (
         <div key={index} className={`bg-foreground/20 absolute transition-colors duration-700 ${style}`} />
       ))}
 
       <div className="font-pixel text-foreground/20 invisible absolute bottom-10 left-1/2 -translate-x-1/2 text-[9px] tracking-widest transition-colors duration-700 sm:visible sm:text-[11px]">
-        02.13.2026 / JUNI-JAEI / BIT-BY-BIT
+        JUNI-JAEI / BIT-BY-BIT
       </div>
     </div>
   );
@@ -279,7 +298,7 @@ function DecorativeFrame() {
 
 // --- Canvas Containers (Sections 직속 자식) ---
 
-function CosmosCanvas({ config }: { config: SceneConfig }) {
+function CosmosCanvas({ config }: { config: SceneContextValue }) {
   return (
     <Canvas style={{ pointerEvents: 'none' }} dpr={[1, 2]} gl={{ antialias: true, alpha: true }}>
       <PerspectiveCamera makeDefault position={CAMERA_POSITION} fov={75} />
@@ -304,7 +323,11 @@ function CoreScene() {
         <Lightformer form="circle" intensity={0.3} scale={[8, 0.8, 1]} position={[0, -5, 3]} />
       </Environment>
 
-      <Float speed={2} rotationIntensity={1} floatIntensity={2}>
+      <Float
+        speed={config.reducedMotion ? 0 : 2}
+        rotationIntensity={config.reducedMotion ? 0 : 1}
+        floatIntensity={config.reducedMotion ? 0 : 2}
+      >
         <object3D ref={targetRef} position={[0, 0, 0]} />
         <PixelCore />
       </Float>
@@ -340,7 +363,7 @@ function Scene() {
         factor={config.starFactor}
         saturation={0}
         fade
-        speed={1}
+        speed={config.reducedMotion ? 0 : 1}
       />
       <Particles count={3000} color={config.foreground} />
       <OrbitalRings color={config.foreground} />
@@ -354,6 +377,8 @@ function PixelCore() {
   const outerRef = useRef<THREE.Mesh>(null);
 
   useFrame((state) => {
+    if (config.reducedMotion) return;
+
     const time = state.clock.getElapsedTime();
 
     if (innerRef.current) {
@@ -463,6 +488,7 @@ function CoreGlintLight({
   targetRef: RefObject<THREE.Object3D<THREE.Object3DEventMap> | null>;
 }) {
   const lightRef = useRef<THREE.SpotLight>(null);
+  const { reducedMotion } = useSceneConfig();
 
   useEffect(() => {
     if (!lightRef.current || !targetRef.current) return;
@@ -472,7 +498,7 @@ function CoreGlintLight({
   }, [targetRef]);
 
   useFrame((state) => {
-    if (!lightRef.current) return;
+    if (!lightRef.current || reducedMotion) return;
 
     const time = state.clock.getElapsedTime();
 
@@ -487,7 +513,18 @@ function CoreGlintLight({
     lightRef.current.position.set(Math.sin(angle) * xRadius, baseY + Math.sin(angle * 2 + 0.35) * yRadius, fixedZ);
   });
 
-  return <spotLight ref={lightRef} angle={0.22} penumbra={0.18} distance={30} decay={1.2} color={color} />;
+  // 동작 축소 시 useFrame이 멈추므로 정적 위치·강도를 선언적으로 지정한다.
+  return (
+    <spotLight
+      ref={lightRef}
+      angle={0.22}
+      penumbra={0.18}
+      distance={30}
+      decay={1.2}
+      color={color}
+      {...(reducedMotion && { position: GLINT_REST_POSITION, intensity: GLINT_REST_INTENSITY })}
+    />
+  );
 }
 
 // --- 3D Primitives (3D Scenes 직속 자식) ---
@@ -495,9 +532,10 @@ function CoreGlintLight({
 function Particles({ count = 2000, color = '#ffffff' }: ParticlesProps) {
   const mesh = useRef<THREE.Points>(null);
   const particles = useMemo(() => generateParticlePositions(count), [count]);
+  const { reducedMotion } = useSceneConfig();
 
   useFrame((state) => {
-    if (!mesh.current) return;
+    if (!mesh.current || reducedMotion) return;
 
     const time = state.clock.getElapsedTime();
     mesh.current.rotation.y = time * 0.05;
@@ -516,9 +554,10 @@ function Particles({ count = 2000, color = '#ffffff' }: ParticlesProps) {
 
 function OrbitalRings({ color = '#ffffff' }: OrbitalRingsProps) {
   const group = useRef<THREE.Group>(null);
+  const { reducedMotion } = useSceneConfig();
 
   useFrame((state) => {
-    if (!group.current) return;
+    if (!group.current || reducedMotion) return;
 
     group.current.rotation.z = state.clock.getElapsedTime() * 0.1;
   });

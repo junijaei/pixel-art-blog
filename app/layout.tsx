@@ -144,6 +144,12 @@ export default function RootLayout({
           crawlSpeed={200}
         />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <a
+            href="#main-content"
+            className="focus:bg-background focus:text-foreground focus:border-border focus:ring-ring sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-100 focus:rounded-md focus:border focus:px-4 focus:py-2 focus:ring-2"
+          >
+            본문으로 건너뛰기
+          </a>
           <div className="flex min-h-screen">
             <Suspense fallback={<SidebarSkeleton />}>
               <AsyncCategorySidebar />

@@ -88,7 +88,7 @@ export default function AboutPage() {
           }),
         }}
       />
-      <main className="flex-1 px-6 py-16 sm:py-24">
+      <main id="main-content" tabIndex={-1} className="flex-1 px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-2xl">
           {/* Page Header */}
           <SectionLabel label="About" />

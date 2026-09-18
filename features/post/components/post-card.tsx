@@ -16,7 +16,7 @@ export function PostCard({ slug, title, description, date, categoryPath, categor
         {/* Index + Date */}
         <div className="flex items-baseline gap-3 sm:w-28 sm:shrink-0 sm:flex-col sm:gap-2.5">
           {indexLabel && (
-            <span className="font-pixel text-muted-foreground/40 group-hover:text-foreground text-[10px] tracking-widest transition-colors duration-300">
+            <span className="font-pixel text-muted-foreground group-hover:text-foreground text-[10px] tracking-widest transition-colors duration-200">
               {indexLabel}
             </span>
           )}
@@ -27,7 +27,7 @@ export function PostCard({ slug, title, description, date, categoryPath, categor
         <div className="flex min-w-0 flex-1 flex-col gap-2 sm:pr-10">
           <div className="text-muted-foreground/60 mb-1 flex items-center gap-2">
             <PixelTag className="h-3 w-3" />
-            <span className="font-galmuri9 nline-block text-[10px] tracking-wider uppercase">{categoryLabel}</span>
+            <span className="font-galmuri9 text-[10px] tracking-wider uppercase">{categoryLabel}</span>
           </div>
           <h3 className="line-clamp-2 overflow-hidden text-lg leading-snug font-semibold tracking-tight break-keep text-ellipsis sm:text-xl">
             {title}

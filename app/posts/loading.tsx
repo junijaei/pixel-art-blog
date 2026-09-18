@@ -3,7 +3,7 @@ import { Skeleton } from '@/shared/ui';
 
 export default function PostsLoading() {
   return (
-    <main className="flex-1">
+    <main id="main-content" tabIndex={-1} className="flex-1">
         {/* Page Header */}
         <section className="px-6 pt-16 sm:pt-24">
           <div className="mx-auto max-w-2xl">

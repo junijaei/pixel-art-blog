@@ -150,7 +150,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           }),
         }}
       />
-      <main className="w-full flex-1 px-6 py-12 sm:py-20">
+      <main id="main-content" tabIndex={-1} className="w-full flex-1 px-6 py-12 sm:py-20">
         {metadata.tocItems.length > 0 && <TocWithScrollSpy items={metadata.tocItems} />}
 
         <div className="mx-auto max-w-2xl">

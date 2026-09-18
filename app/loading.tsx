@@ -14,9 +14,9 @@ const HERO_FRAME_SEGMENTS = [
 
 export default function HomeLoading() {
   return (
-    <main className="flex-1">
+    <main id="main-content" tabIndex={-1} className="flex-1">
         {/* Hero Section */}
-        <section className="bg-background relative h-[calc(100vh-60px)] min-h-150 w-full overflow-hidden md:h-[calc(100vh-65px)]">
+        <section className="bg-background relative h-[calc(100dvh-60px)] min-h-150 w-full overflow-hidden md:h-[calc(100dvh-65px)]">
           <div className="absolute inset-0 z-0">
             <div className="via-background/20 to-background absolute inset-0 bg-radial-[circle_at_50%_50%] from-transparent" />
             <div className="from-background absolute inset-x-0 bottom-0 h-40 bg-linear-to-t to-transparent" />
@@ -45,7 +45,7 @@ export default function HomeLoading() {
             ))}
 
             <div className="font-pixel text-foreground/20 invisible absolute bottom-10 left-1/2 -translate-x-1/2 text-[9px] tracking-widest sm:visible sm:text-[11px]">
-              02.13.2026 / JUNI-JAEI / BIT-BY-BIT
+              JUNI-JAEI / BIT-BY-BIT
             </div>
           </div>
         </section>
