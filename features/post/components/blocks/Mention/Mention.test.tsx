@@ -1,6 +1,6 @@
 import { Mention } from '@/features/post/components/blocks/Mention/Mention';
 import type { RichTextMention } from '@/features/post/model';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
 // 테스트용 mock mention 생성 헬퍼
@@ -171,6 +171,48 @@ describe('Mention', () => {
   });
 
   describe('Link Preview Mention', () => {
+    function createLinkMention(link_mention: Record<string, unknown>): RichTextMention {
+      return {
+        type: 'mention',
+        mention: { type: 'link_mention', link_mention },
+        annotations: {
+          bold: false,
+          italic: false,
+          strikethrough: false,
+          underline: false,
+          code: false,
+          color: 'default',
+        },
+        plain_text: String(link_mention.href ?? ''),
+        href: null,
+      } as RichTextMention;
+    }
+
+    // favicon은 alt=""라 접근성 트리에서 빠진다. role이 아니라 DOM으로 조회해야 한다.
+    it('icon_url이 없으면 픽셀 링크 아이콘으로 대체한다', () => {
+      const { container } = render(<Mention richText={createLinkMention({ href: 'https://example.com' })} />);
+
+      expect(container.querySelector('img')).not.toBeInTheDocument();
+      expect(container.querySelector('a svg')).toBeInTheDocument();
+    });
+
+    // 폴백 조건이 `icon_url || faviconError`로 뒤집혀 있어, favicon이 깨져도
+    // 계속 깨진 <img>를 그리고 픽셀 아이콘에 도달하지 못하던 회귀를 고정한다.
+    it('favicon 로딩에 실패하면 픽셀 링크 아이콘으로 대체한다', () => {
+      const { container } = render(
+        <Mention
+          richText={createLinkMention({ href: 'https://example.com', icon_url: 'https://example.com/broken.ico' })}
+        />
+      );
+
+      const favicon = container.querySelector('img');
+      expect(favicon).toBeInTheDocument();
+      fireEvent.error(favicon!);
+
+      expect(container.querySelector('img')).not.toBeInTheDocument();
+      expect(container.querySelector('a svg')).toBeInTheDocument();
+    });
+
     it('도메인을 렌더링하고 링크로 동작한다', () => {
       const mention: RichTextMention = {
         type: 'mention',

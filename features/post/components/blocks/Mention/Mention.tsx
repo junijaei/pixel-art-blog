@@ -65,10 +65,10 @@ function LinkPreviewMention({ richText, className }: MentionProps) {
         className
       )}
     >
-      {/* Favicon */}
-      {icon_url || faviconError ? (
+      {/* Favicon — 없거나 로딩에 실패하면 픽셀 링크 아이콘으로 대체 */}
+      {icon_url && !faviconError ? (
         <Image
-          src={icon_url || '/'}
+          src={icon_url}
           alt=""
           width={16}
           height={16}
@@ -77,7 +77,7 @@ function LinkPreviewMention({ richText, className }: MentionProps) {
           unoptimized
         />
       ) : (
-        <PixelLink className="text-muted-foreground mt-0.5 h-4 w-4 shrink-0" />
+        <PixelLink className="text-muted-foreground h-4 w-4 shrink-0" />
       )}
 
       {/* Title */}
