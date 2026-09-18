@@ -1,4 +1,4 @@
-import { PixelArrow, PixelDecoration, PixelFile, PixelGithub, PixelLinkedin, PixelMail } from '@/shared/ui';
+import { PixelArrow, PixelFile, PixelGithub, PixelLinkedin, PixelMail, SectionLabel } from '@/shared/ui';
 import { cn } from '@/shared/lib/utils';
 import type { Metadata } from 'next';
 import Link from 'next/link';
@@ -61,16 +61,6 @@ const CONTACT_LINKS = [
   },
 ] as const;
 
-function SectionLabel({ label }: { label: string }) {
-  return (
-    <div className="flex items-center gap-3">
-      <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">{label}</span>
-      <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
-      <div className="bg-border h-px flex-1" />
-    </div>
-  );
-}
-
 export default function AboutPage() {
   return (
     <>
@@ -92,9 +82,9 @@ export default function AboutPage() {
       <main id="main-content" tabIndex={-1} className="flex-1 px-6 py-16 sm:py-24">
         <div className="mx-auto max-w-2xl">
           {/* Page Header */}
-          <SectionLabel label="About" />
+          <SectionLabel>About</SectionLabel>
 
-          <h1 className="font-mulmaru mt-7 text-4xl leading-tight font-semibold tracking-tight break-keep sm:text-5xl">
+          <h1 className="font-mulmaru mt-6 text-4xl leading-tight font-semibold tracking-tight break-keep sm:text-5xl">
             프론트엔드 개발자,
             <br className="inline sm:hidden" />
             전희재입니다.
@@ -143,7 +133,7 @@ export default function AboutPage() {
 
           {/* Contact */}
           <section className="mt-16 sm:mt-20">
-            <SectionLabel label="Contact" />
+            <SectionLabel as="h2">Contact</SectionLabel>
 
             <ul className="divide-border/60 border-border/60 mt-3 divide-y border-b">
               {CONTACT_LINKS.map(({ label, value, href, icon: Icon, external }) => (
@@ -169,7 +159,7 @@ export default function AboutPage() {
 
           {/* Resume */}
           <section className="mt-16 sm:mt-20">
-            <SectionLabel label="Resume" />
+            <SectionLabel as="h2">Resume</SectionLabel>
 
             <p className="text-muted-foreground mt-6 mb-6 text-sm leading-relaxed">
               더 자세한 경험이 궁금하다면, 아래 이력서를 확인해 주세요.
@@ -179,7 +169,7 @@ export default function AboutPage() {
               href="https://assets.junijaei.co.kr/resume/FE_%E1%84%8C%E1%85%A5%E1%86%AB%E1%84%92%E1%85%B4%E1%84%8C%E1%85%A2_%E1%84%8B%E1%85%B5%E1%84%85%E1%85%A7%E1%86%A8%E1%84%89%E1%85%A5.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="group border-border hover:border-muted-foreground/40 hover:bg-card focus-visible:ring-ring flex items-center justify-between rounded-xl border px-5 py-4 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
+              className="group border-border hover:border-muted-foreground/40 hover:bg-card focus-visible:ring-ring flex items-center justify-between rounded-xl border px-5 py-4 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 active:translate-y-px"
             >
               <div className="flex items-center gap-4">
                 <div className="border-border bg-secondary/40 flex h-10 w-10 items-center justify-center rounded-lg border">

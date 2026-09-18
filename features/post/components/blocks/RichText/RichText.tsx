@@ -64,7 +64,7 @@ export function RichText({ richTextArray }: { richTextArray: RichText[] }) {
       element = (
         <code
           key={index}
-          className="bg-muted font-code rounded px-1.5 py-0.5 text-[0.85em] whitespace-nowrap text-red-600"
+          className="bg-muted text-foreground font-code rounded px-1.5 py-0.5 text-[0.85em] whitespace-nowrap"
         >
           {element}
         </code>
@@ -111,7 +111,7 @@ export function RichText({ richTextArray }: { richTextArray: RichText[] }) {
         <a
           key={index}
           href={url || '#'}
-          className="text-blue-600 hover:underline dark:text-blue-400"
+          className="text-foreground decoration-muted-foreground/50 hover:decoration-foreground underline underline-offset-2 transition-colors"
           target="_blank"
           rel="noopener noreferrer"
         >

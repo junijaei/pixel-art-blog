@@ -1,4 +1,5 @@
-import { PixelClock, PixelDecoration, PixelTag } from '@/shared/ui/pixel';
+import { PixelClock, PixelTag } from '@/shared/ui/pixel';
+import { SectionLabel } from '@/shared/ui/section-label';
 import { createPostLink } from '@/features/post/routing';
 import type { PostCardData } from '@/features/post/model';
 import Link from 'next/link';
@@ -38,14 +39,10 @@ export function RelatedPosts({ posts }: RelatedPostsProps) {
   if (posts.length === 0) return null;
 
   return (
-    <section className="mt-16">
-      <div className="mb-4 flex items-center gap-3 pt-6">
-        <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">Related Posts</span>
-        <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
-        <div className="bg-border h-px flex-1" />
-      </div>
+    <section className="mt-20 sm:mt-24">
+      <SectionLabel as="h2">Related Posts</SectionLabel>
 
-      <div className="scrollbar-hide flex items-stretch gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-[repeat(auto-fit,minmax(180px,1fr))] sm:overflow-visible sm:pb-0">
+      <div className="scrollbar-hide mt-6 flex items-stretch gap-3 overflow-x-auto pb-1 sm:grid sm:grid-cols-[repeat(auto-fit,minmax(180px,1fr))] sm:overflow-visible sm:pb-0">
         {posts.map((post) => (
           <div key={post.id} className="flex w-55 shrink-0 sm:w-auto sm:shrink">
             <RelatedPostCard

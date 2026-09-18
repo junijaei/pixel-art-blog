@@ -21,11 +21,8 @@
     'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue',
     'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', sans-serif;
-  --font-code: 'Geist Mono', 'Geist Mono Fallback', monospace;
+  /* Silkscreen은 라틴 전용이다. 한글이 섞일 수 있는 레이블에는 --font-galmuri9를 쓸 것. */
   --font-pixel: 'Silkscreen', cursive;
-  --font-galmuri11:
-    'Galmuri11', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR',
-    'Silkscreen', cursive;
   --font-galmuri9:
     'Galmuri9', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', 'Silkscreen',
     cursive;
@@ -140,10 +137,14 @@
   mix-blend-mode: normal;
 }
 
+/*
+ * z-index 스케일: 히어로 내부 0-30 < sticky 헤더 50 < 모달 60
+ *                < 스킵 링크 70 < 테마 전환 오버레이 80
+ */
 .theme-transition-fallback {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 80;
   pointer-events: none;
   background: var(--theme-transition-color);
   clip-path: circle(0 at var(--theme-transition-x, 100%) var(--theme-transition-y, 0));

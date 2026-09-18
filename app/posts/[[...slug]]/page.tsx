@@ -1,5 +1,5 @@
 import { PostCard } from '@/features/post/components';
-import { PixelDecoration } from '@/shared/ui';
+import { PixelDecoration, SectionLabel } from '@/shared/ui';
 import { findCategoryByPath, getAllDescendantIds, getCategories, getPosts, toPostCardData } from '@/features/post';
 import type { PostCardData } from '@/features/post/model';
 import { capitalizeFirst } from '@/shared/lib';
@@ -97,51 +97,39 @@ export default async function PostsPage({ params }: { params: Promise<{ slug?: s
   const countLabel = String(posts.length).padStart(2, '0');
 
   return (
-    <main id="main-content" tabIndex={-1} className="flex-1">
+    <main id="main-content" tabIndex={-1} className="flex-1 px-6 py-12 sm:py-20">
+      <div className="mx-auto max-w-2xl">
         {/* Page Header */}
-        <section className="px-6 pt-16 sm:pt-24">
-          <div className="mx-auto max-w-2xl">
-            <div className="flex items-center gap-3">
-              <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">Index</span>
-              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
-              <div className="bg-border h-px flex-1" />
-              <span className="font-pixel text-muted-foreground/50 text-[10px] tracking-widest tabular-nums">
-                {countLabel} POSTS
-              </span>
-            </div>
+        <SectionLabel meta={`${countLabel} POSTS`}>Index</SectionLabel>
 
-            <h1 className="font-mulmaru mt-7 text-4xl leading-tight font-semibold tracking-tight break-keep sm:text-6xl">
-              {capitalizeFirst(categoryLabel)}
-            </h1>
-          </div>
-        </section>
+        <h1 className="font-mulmaru mt-6 text-4xl leading-tight font-semibold tracking-tight break-keep sm:text-6xl">
+          {capitalizeFirst(categoryLabel)}
+        </h1>
+
         {/* Post Index */}
-        <section className="px-6 pt-10 pb-24 sm:pt-14">
-          <div className="mx-auto max-w-2xl">
-            {posts.length > 0 ? (
-              <div className="border-border/60 divide-border/60 divide-y border-y">
-                {posts.map((post, i) => (
-                  <PostCard
-                    key={post.id}
-                    index={i}
-                    slug={post.slug}
-                    title={post.title}
-                    description={post.description}
-                    date={post.date}
-                    categoryPath={post.categoryPath}
-                    categoryLabel={post.categoryLabel}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="border-border/60 flex flex-col items-center gap-5 border-y py-24">
-                <PixelDecoration layout="grid" className="opacity-50" />
-                <p className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">No entries</p>
-                <p className="text-muted-foreground text-sm">아직 작성된 포스트가 없습니다.</p>
-              </div>
-            )}
+        {posts.length > 0 ? (
+          <div className="border-border/60 divide-border/60 mt-12 divide-y border-y">
+            {posts.map((post, i) => (
+              <PostCard
+                key={post.id}
+                index={i}
+                slug={post.slug}
+                title={post.title}
+                description={post.description}
+                date={post.date}
+                categoryPath={post.categoryPath}
+                categoryLabel={post.categoryLabel}
+              />
+            ))}
           </div>
-        </section>
+        ) : (
+          <div className="border-border/60 mt-12 flex flex-col items-center gap-5 border-y py-24">
+            <PixelDecoration layout="grid" className="opacity-50" />
+            <p className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">No entries</p>
+            <p className="text-muted-foreground text-sm">아직 작성된 포스트가 없습니다.</p>
+          </div>
+        )}
+      </div>
     </main>
   );
 }

@@ -48,14 +48,6 @@ const galmuri9 = localFont({
   weight: '400',
 });
 
-const galmuri11 = localFont({
-  src: '../public/fonts/Galmuri11.woff2',
-  variable: '--font-galmuri11',
-  display: 'swap',
-  preload: false,
-  weight: '400',
-});
-
 const mulmaru = localFont({
   src: '../public/fonts/Mulmaru.woff2',
   variable: '--font-mulmaru',
@@ -127,9 +119,8 @@ export default function RootLayout({
           geistMono.variable,
           silkscreen.variable,
           pretendard.variable,
-          d2coding.variable,
           galmuri9.variable,
-          galmuri11.variable,
+          d2coding.variable,
           mulmaru.variable,
           'font-pretendard w-full antialiased'
         )}
@@ -146,7 +137,7 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <a
             href="#main-content"
-            className="focus:bg-background focus:text-foreground focus:border-border focus:ring-ring sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-100 focus:rounded-md focus:border focus:px-4 focus:py-2 focus:ring-2"
+            className="focus:bg-background focus:text-foreground focus:border-border focus:ring-ring sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-70 focus:rounded-md focus:border focus:px-4 focus:py-2 focus:ring-2"
           >
             본문으로 건너뛰기
           </a>

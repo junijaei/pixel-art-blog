@@ -1,7 +1,7 @@
 import { HeroCosmos } from '@/app/(home)/_components/hero';
 import { FrameLink } from '@/features/link-preview';
 import { PostCard } from '@/features/post/components';
-import { PixelDecoration } from '@/shared/ui';
+import { SectionLabel } from '@/shared/ui';
 import { getCategories, getPosts, toPostCardData } from '@/features/post';
 import type { Metadata } from 'next';
 
@@ -55,20 +55,13 @@ export default async function HomePage() {
 
         {/* Recent Posts */}
         {recentPosts.length > 0 && (
-          <section className="px-6 py-14 sm:py-20">
+          <section className="px-6 py-12 sm:py-20">
             <div className="mx-auto max-w-2xl">
-              <div className="flex items-center gap-3">
-                <h2 className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">
-                  Recent Posts
-                </h2>
-                <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
-                <div className="bg-border h-px flex-1" />
-                <span className="font-pixel text-muted-foreground/50 text-[10px] tracking-widest tabular-nums">
-                  {String(recentPosts.length).padStart(2, '0')} ENTRIES
-                </span>
-              </div>
+              <SectionLabel as="h2" meta={`${String(recentPosts.length).padStart(2, '0')} POSTS`}>
+                Recent Posts
+              </SectionLabel>
 
-              <div className="divide-border/60 border-border/60 mt-3 divide-y border-b">
+              <div className="divide-border/60 border-border/60 mt-6 divide-y border-y">
                 {recentPosts.map((post, i) => (
                   <PostCard
                     key={post.id}

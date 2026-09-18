@@ -1,7 +1,7 @@
 import { BlockRenderer } from '@/features/post/components/blocks';
 import { GiscusComments } from '@/features/comments';
 import { RelatedPosts, TocWithScrollSpy } from '@/features/post/components';
-import { Breadcrumb, PixelArrow, PixelClock, PixelDecoration } from '@/shared/ui';
+import { Breadcrumb, PixelArrow, SectionLabel } from '@/shared/ui';
 import { getCategories, getPost, getPosts, parsePostLink, toPostCardData } from '@/features/post';
 import { formatDateKorean } from '@/shared/lib/utils';
 import type { Metadata } from 'next';
@@ -154,45 +154,42 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         {metadata.tocItems.length > 0 && <TocWithScrollSpy items={metadata.tocItems} />}
 
         <div className="mx-auto max-w-2xl">
-          {/* 뒤로 가기 */}
+          {/* 뒤로 가기 — 이 페이지의 유일한 상위 이동 경로 */}
           <Link
             href="/posts"
-            className="group text-muted-foreground hover:text-foreground font-pixel mb-10 inline-flex items-center gap-2.5 text-[10px] tracking-[0.25em] uppercase transition-colors sm:mb-14"
+            className="group text-muted-foreground hover:text-foreground font-pixel focus-visible:ring-ring mb-12 inline-flex items-center gap-2.5 rounded-sm text-[10px] tracking-[0.25em] uppercase transition-colors focus-visible:ring-2 focus-visible:ring-offset-2"
           >
             <PixelArrow className="h-3 w-3 rotate-180 transition-transform group-hover:-translate-x-0.5" />
             <span>Back to Index</span>
           </Link>
 
-          {/* 포스트 헤더 */}
-          <header className="mb-12">
-            <div className="mb-6 flex items-center gap-3">
-              <Breadcrumb items={metadata.breadcrumbs} currentPath={category?.path || ''} />
-              <div className="bg-border h-px flex-1" />
-            </div>
+          {/* 헤더 */}
+          <header>
+            <Breadcrumb items={metadata.breadcrumbs} currentPath={category?.path || ''} />
 
-            <h1 className="mb-5 text-3xl leading-tight font-bold tracking-tight break-keep sm:text-5xl">
+            <h1 className="mt-6 text-4xl leading-[1.08] font-bold tracking-tight break-keep sm:text-5xl">
               {post.title}
             </h1>
 
-            {post.description && <p className="text-muted-foreground text-lg leading-8">{post.description}</p>}
+            {post.description && (
+              <p className="text-muted-foreground mt-5 text-base leading-relaxed break-keep sm:text-lg">
+                {post.description}
+              </p>
+            )}
 
-            <div className="text-muted-foreground mt-8 flex flex-wrap items-center gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <PixelClock className="mt-0.5 h-3 w-3" />
-                <time dateTime={post.publishedAt}>{formatDateKorean(post.publishedAt)}</time>
-              </div>
-              <span aria-hidden>·</span>
+            <p className="text-muted-foreground mt-8 text-xs tabular-nums">
+              <time dateTime={post.publishedAt}>{formatDateKorean(post.publishedAt)}</time>
+              <span aria-hidden> · </span>
               <span>{metadata.readingTime}</span>
-            </div>
+            </p>
           </header>
 
-          {/* 헤더 구분선 */}
-          <div className="bg-border mb-14 h-px w-full" />
+          {/* 페이지 내 유일한 구분선 — 머리말과 본문의 경계 */}
+          <div className="bg-border mt-12 mb-12 h-px w-full" />
 
-          {/* 커버 이미지 */}
           {post.coverUrl && (
             <div
-              className="ring-border/80 relative mb-14 w-full overflow-hidden rounded-xl ring-1"
+              className="border-border/80 relative mb-12 w-full overflow-hidden rounded-xl border"
               style={{ aspectRatio: '1.91/1' }}
             >
               <Image
@@ -207,48 +204,26 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           )}
 
           {/* 본문 */}
-          <article className="prose prose-neutral dark:prose-invert prose-p:leading-8 prose-headings:tracking-tight max-w-none">
+          <article className="prose prose-neutral dark:prose-invert prose-p:leading-8 prose-headings:tracking-tight prose-hr:border-border max-w-none">
             <BlockRenderer blocks={displayBlocks} commentMap={commentMap} />
           </article>
 
+          {/* 본문 이후 섹션들 — 동일한 리듬과 동일한 레이블 처리 */}
           {post.tags.length > 0 && (
-            <div className="mt-20 mb-10 flex flex-wrap gap-2">
-              {post.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="bg-muted text-muted-foreground font-galmuri9 rounded-md px-3 py-1 text-[10px] tracking-wider"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+            <section className="mt-20 sm:mt-24">
+              <SectionLabel as="h2">Tags</SectionLabel>
+              <p className="text-muted-foreground mt-6 text-sm break-keep">{post.tags.join(' · ')}</p>
+            </section>
           )}
 
-          {/* 댓글 */}
-          <section>
-            <div className="mb-8 flex items-center gap-3 pt-6">
-              <span className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">Comments</span>
-              <PixelDecoration layout="horizontal" dotCount={3} gradientStart="start" className="opacity-35" />
-              <div className="bg-border h-px flex-1" />
+          <section className="mt-20 sm:mt-24">
+            <SectionLabel as="h2">Comments</SectionLabel>
+            <div className="mt-6">
+              <GiscusComments />
             </div>
-            <GiscusComments />
           </section>
 
-          {/* 연관된 글 */}
           <RelatedPosts posts={relatedPosts} />
-
-          {/* 하단 내비게이션 */}
-          <footer className="mt-8">
-            <div className="flex items-center justify-end">
-              <Link
-                href="/posts"
-                className="group text-muted-foreground hover:text-foreground font-pixel flex items-center gap-2.5 text-[10px] tracking-[0.25em] uppercase transition-colors"
-              >
-                <span>All Posts</span>
-                <PixelArrow className="h-3 w-3 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-            </div>
-          </footer>
         </div>
       </main>
     </>

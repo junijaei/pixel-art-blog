@@ -54,15 +54,15 @@ export default function HomeLoading() {
         <div className="bg-border h-px w-full" />
 
         {/* Recent Posts */}
-        <section className="px-6 py-14 sm:py-20">
+        <section className="px-6 py-12 sm:py-20">
           <div className="mx-auto max-w-2xl">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <Skeleton className="h-3 w-28" />
               <div className="bg-border h-px flex-1" />
               <Skeleton className="h-3 w-16" />
             </div>
 
-            <div className="divide-border/60 border-border/60 mt-3 divide-y border-b">
+            <div className="divide-border/60 border-border/60 mt-6 divide-y border-y">
               <PostCardSkeleton />
               <PostCardSkeleton />
               <PostCardSkeleton />
