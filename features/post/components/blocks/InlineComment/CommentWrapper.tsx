@@ -52,6 +52,16 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
     [open, updatePosition]
   );
 
+  // 블록 본문은 선택 가능하다. 텍스트를 드래그해 선택하고 마우스를 뗀 것까지
+  // 클릭으로 간주해 팝오버가 열리지 않도록 걸러낸다.
+  const handleContainerClick = useCallback(
+    (e: React.MouseEvent) => {
+      if (window.getSelection()?.toString()) return;
+      handleToggle(e);
+    },
+    [handleToggle]
+  );
+
   useEffect(() => {
     if (!open) return;
 
@@ -79,9 +89,9 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
   }, [open, updatePosition]);
 
   return (
-    <div ref={containerRef} onClick={handleToggle} className="group relative my-4 cursor-pointer select-none">
+    <div ref={containerRef} onClick={handleContainerClick} className="group relative my-4 cursor-pointer">
       {/* 블록 본문 */}
-      <div className="pointer-events-none group-hover:underline decoration-muted-foreground/40 group-hover:underline-offset-2">
+      <div className="group-hover:underline decoration-muted-foreground/40 group-hover:underline-offset-2">
         {children}
       </div>
 
@@ -123,7 +133,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
               width: 'min(360px, calc(100vw - 16px))',
               zIndex: 40,
             }}
-            className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-md pointer-events-auto [&_*]:pointer-events-auto"
+            className="overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-md"
             onMouseDown={(e) => e.stopPropagation()}
           >
             {/* 헤더 */}

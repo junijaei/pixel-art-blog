@@ -196,8 +196,8 @@ function BackgroundLayer({ config }: { config: SceneContextValue }) {
       <CosmosCanvas config={config} />
 
       {/* Overlay Gradients */}
-      <div className="via-background/20 to-background absolute inset-0 bg-radial-[circle_at_50%_50%] from-transparent transition-colors duration-700" />
-      <div className="from-background absolute inset-x-0 bottom-0 h-40 bg-linear-to-t to-transparent transition-colors duration-700" />
+      <div className="via-background/20 to-background pointer-events-none absolute inset-0 bg-radial-[circle_at_50%_50%] from-transparent transition-colors duration-700" />
+      <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t to-transparent transition-colors duration-700" />
     </div>
   );
 }
