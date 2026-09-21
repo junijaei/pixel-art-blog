@@ -102,7 +102,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
         aria-expanded={open}
         aria-label={`추가 설명 ${comments.length}개 — 클릭하여 보기`}
         className={cn(
-          'focus-visible:ring-ring mt-2 flex items-center gap-1.5 rounded-sm text-[11px] font-medium tracking-wide',
+          'focus-visible:ring-ring mt-2 flex items-center gap-1.5 rounded-sm text-xs font-medium tracking-wide',
           'transition-colors duration-150 focus-visible:ring-2 focus-visible:outline-none',
           open ? 'text-foreground' : 'text-muted-foreground group-hover:text-foreground'
         )}
@@ -110,7 +110,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
         <PixelPencil className="h-3 w-3" aria-hidden />
         <span>추가 설명</span>
         {comments.length > 1 && (
-          <span className="font-pixel rounded-md bg-muted px-1.5 py-0.5 text-[9px] text-muted-foreground">
+          <span className="font-pixel rounded-md bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
             {comments.length}
           </span>
         )}
@@ -165,7 +165,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
                 <div key={comment.id}>
                   <div className="flex items-start gap-3 px-4 py-3.5">
                     {comments.length > 1 && (
-                      <span className="font-pixel mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-muted text-[9px] text-muted-foreground">
+                      <span className="font-pixel mt-0.5 flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full bg-muted text-[10px] text-muted-foreground">
                         {i + 1}
                       </span>
                     )}

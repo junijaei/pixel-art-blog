@@ -84,7 +84,7 @@ export default function AboutPage() {
           {/* Page Header */}
           <SectionLabel>About</SectionLabel>
 
-          <h1 className="font-mulmaru mt-6 text-4xl leading-tight font-semibold tracking-tight break-keep sm:text-5xl">
+          <h1 className="font-mulmaru mt-6 text-4xl leading-tight tracking-tight break-keep sm:text-5xl">
             프론트엔드 개발자,
             <br className="inline sm:hidden" />
             전희재입니다.
@@ -144,7 +144,7 @@ export default function AboutPage() {
                     className="group focus-visible:ring-ring flex items-center gap-4 rounded-lg py-4 focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
                     <Icon className="text-muted-foreground group-hover:text-foreground h-4 w-4 shrink-0 transition-colors duration-300" />
-                    <span className="font-pixel text-muted-foreground/50 w-20 shrink-0 text-[9px] tracking-widest uppercase">
+                    <span className="font-pixel text-muted-foreground/50 w-20 shrink-0 text-[10px] tracking-widest uppercase">
                       {label}
                     </span>
                     <span className="text-muted-foreground group-hover:text-foreground truncate text-sm transition-colors duration-300">
@@ -177,7 +177,7 @@ export default function AboutPage() {
                 </div>
                 <div className="flex flex-col gap-0.5">
                   <span className="text-foreground text-sm font-medium">전희재 이력서</span>
-                  <span className="font-pixel text-muted-foreground text-[9px] tracking-wider uppercase">PDF</span>
+                  <span className="font-pixel text-muted-foreground text-[10px] tracking-wider uppercase">PDF</span>
                 </div>
               </div>
               <PixelArrow className="text-muted-foreground group-hover:text-foreground h-4 w-4 -rotate-45 transition-[color,transform] duration-200 group-hover:translate-x-0.5" />

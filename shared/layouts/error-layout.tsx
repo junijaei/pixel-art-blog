@@ -45,7 +45,7 @@ export default function ErrorLayout({
           {codeLabel}
         </p>
 
-        <h1 className="font-mulmaru mt-8 text-2xl leading-snug font-semibold break-keep sm:text-3xl">{title}</h1>
+        <h1 className="font-mulmaru mt-8 text-2xl leading-snug break-keep sm:text-3xl">{title}</h1>
         <p className="text-muted-foreground mx-auto mt-4 max-w-sm text-sm leading-relaxed sm:text-base">
           {description}
         </p>
@@ -84,7 +84,7 @@ export default function ErrorLayout({
         </div>
 
         {/* Status Line */}
-        <p aria-hidden className="font-pixel text-muted-foreground/40 mt-14 text-[9px] tracking-widest uppercase">
+        <p aria-hidden className="font-pixel text-muted-foreground/40 mt-14 text-[10px] tracking-widest uppercase">
           {codeLabel} / BIT-BY-BIT / SIGNAL LOST
         </p>
       </div>

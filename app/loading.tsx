@@ -45,7 +45,7 @@ export default function HomeLoading() {
               <div key={style} className={cn('bg-foreground/20 absolute', style)} />
             ))}
 
-            <div className="font-pixel text-foreground/20 invisible absolute bottom-10 left-1/2 -translate-x-1/2 text-[9px] tracking-widest sm:visible sm:text-[11px]">
+            <div className="font-pixel text-foreground/20 invisible absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] tracking-widest sm:visible">
               JUNI-JAEI / BIT-BY-BIT
             </div>
           </div>

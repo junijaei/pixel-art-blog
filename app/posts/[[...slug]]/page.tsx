@@ -102,7 +102,7 @@ export default async function PostsPage({ params }: { params: Promise<{ slug?: s
         {/* Page Header */}
         <SectionLabel meta={`${countLabel} POSTS`}>Index</SectionLabel>
 
-        <h1 className="font-mulmaru mt-6 text-4xl leading-tight font-semibold tracking-tight break-keep sm:text-6xl">
+        <h1 className="font-mulmaru mt-6 text-4xl leading-tight tracking-tight break-keep sm:text-5xl">
           {capitalizeFirst(categoryLabel)}
         </h1>
 

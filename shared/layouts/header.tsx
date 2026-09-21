@@ -26,7 +26,7 @@ export function BlogHeader() {
             href="/"
             className="group focus-visible:ring-ring flex min-w-0 items-center gap-3 rounded-lg py-1 focus-visible:ring-2 focus-visible:ring-offset-2"
           >
-            <span className="font-pixel truncate text-[13px] tracking-wider">BIT BY BIT</span>
+            <span className="font-pixel truncate text-xs tracking-wider">BIT BY BIT</span>
           </Link>
 
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">

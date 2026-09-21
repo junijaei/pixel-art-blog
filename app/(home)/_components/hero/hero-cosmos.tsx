@@ -222,7 +222,7 @@ function HeroContent({
         style={reducedMotion ? undefined : { y: yTranslate, opacity, scale }}
         className="mx-auto max-w-5xl text-center"
       >
-        <h1 className="font-mulmaru text-foreground mb-10 text-6xl leading-[1.05] font-black tracking-tighter transition-colors duration-700 md:text-[10rem]">
+        <h1 className="font-mulmaru text-foreground mb-10 text-6xl leading-[1.05] tracking-tighter transition-colors duration-700 md:text-[10rem]">
           <span className="block overflow-hidden">
             <motion.span
               initial={enter({ y: '100%' })}
@@ -289,7 +289,7 @@ function DecorativeFrame() {
         <div key={index} className={cn('bg-foreground/20 absolute transition-colors duration-700', style)} />
       ))}
 
-      <div className="font-pixel text-foreground/20 invisible absolute bottom-10 left-1/2 -translate-x-1/2 text-[9px] tracking-widest transition-colors duration-700 sm:visible sm:text-[11px]">
+      <div className="font-pixel text-foreground/20 invisible absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] tracking-widest transition-colors duration-700 sm:visible">
         JUNI-JAEI / BIT-BY-BIT
       </div>
     </div>

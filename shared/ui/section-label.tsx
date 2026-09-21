@@ -11,12 +11,6 @@ export interface SectionLabelProps {
   className?: string;
 }
 
-/**
- * 섹션 시작을 표시하는 레이블.
- *
- * font-pixel(Silkscreen)은 라틴 전용이다. 한글 레이블이 필요하면
- * font-galmuri9를 쓰도록 먼저 확장할 것.
- */
 export function SectionLabel({ children, meta, as: Label = 'span', className }: SectionLabelProps) {
   return (
     <div className={cn('flex items-center gap-4', className)}>
