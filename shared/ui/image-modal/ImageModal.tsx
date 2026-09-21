@@ -40,8 +40,7 @@ export function ImageModal({ src, alt, isOpen, onClose, caption, className }: Im
     setMounted(true);
   }, []);
 
-  // 레이어마다 같은 이징·지속시간을 쓰고, 닫힘만 더 짧고 easeIn으로 둔다.
-  // 루트에는 variants를 주지 않는다 — backdrop-blur의 조상에서 opacity를
+  // 루트에 variants를 주지 말 것 — backdrop-blur의 조상에서 opacity를
   // 애니메이션하면 매 프레임 blur를 재합성해 계단 현상이 생긴다.
   const enter = prefersReducedMotion ? { duration: 0 } : { duration: 0.2, ease: 'easeOut' as const };
   const exit = prefersReducedMotion ? { duration: 0 } : { duration: 0.13, ease: 'easeIn' as const };

@@ -16,12 +16,7 @@
  * CSS 변수를 Tailwind 테마에 매핑
  * ===================================================== */
 @theme inline {
-  /*
-   * Typography
-   * 폰트만은 여기가 정의처다. next/font가 layout.tsx에서 --font-pretendard 같은
-   * 이름으로 생성 패밀리를 심고, 아래 스택이 그 이름을 대소문자 무시로 집어
-   * 시스템 폴백까지 이어 붙인다.
-   */
+  /* Typography */
   --font-pretendard:
     'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue',
     'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji',
@@ -57,11 +52,7 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
 
-  /*
-   * Notion Context Colors
-   * colors.css의 원시값을 직접 매핑한다. default만 시맨틱 판단이 들어가
-   * 본문색/투명으로 보낸다 — Notion의 'default'는 색 지정이 없다는 뜻이다.
-   */
+  /* Notion Context Colors */
   --color-notion-default: var(--foreground);
   --color-notion-gray: var(--notion-gray-text);
   --color-notion-brown: var(--notion-brown-text);
@@ -110,11 +101,7 @@
     @apply border-border outline-ring/50;
   }
 
-  /*
-   * 텍스트 선택 하이라이트.
-   * 브라우저 기본값은 채도 높은 파랑이라 무채색 팔레트에서 유일하게 튄다.
-   * color는 지정하지 않는다 — 코드 블록의 구문 강조 색을 덮어쓰지 않기 위해서다.
-   */
+  /* color는 지정하지 않는다 — 코드 블록의 구문 강조 색이 덮이기 때문 */
   ::selection {
     background-color: var(--selection);
   }
@@ -188,13 +175,8 @@
 }
 
 /*
- * 얇고 조용한 스크롤바. 트랙은 비우고 thumb만 --border 색으로 둔다.
- * tailwind-scrollbar 플러그인을 쓰지 않고 scrollbar-hide와 같은 방식으로 직접 정의한다.
- *
- * scrollbar-color(Firefox)는 일부러 넣지 않는다. Lightning CSS가 var()가 섞인
- * 이 단축 속성을 처리하지 못해 규칙째로 버리고, @utility 안에 두면 블록 전체가
- * 사라진다. 리터럴 색이면 통과하지만 --border와 어긋나므로 쓰지 않는다.
- * Firefox는 아래 scrollbar-width만 적용받아 기본 색의 얇은 스크롤바가 된다.
+ * scrollbar-color(Firefox)를 추가하지 말 것. Lightning CSS가 var()가 섞인 이
+ * 단축 속성을 처리하지 못해 @utility 블록 전체를 조용히 버린다.
  */
 @utility scrollbar-subtle {
   scrollbar-width: thin;
@@ -220,8 +202,6 @@
  * Notion 본문 렌더링에 필요한 전역 클래스
  * ===================================================== */
 @layer components {
-  /* --- 오버플로 방지: 긴 URL·단어가 컨테이너를 벗어나지 않도록 --- */
-
   /* 블록 콘텐츠 영역 (Notion 블록 렌더링 영역) */
   .notion-content {
     overflow-wrap: break-word;
@@ -239,7 +219,7 @@
     word-break: break-all;
   }
 
-  /* --- Shiki 코드 블록 줄 번호 --- */
+  /* Shiki 코드 블록 줄 번호 */
   .shiki-code-block pre {
     counter-reset: shiki-line;
   }

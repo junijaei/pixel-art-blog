@@ -3,9 +3,6 @@
  *
  * 모든 토큰 파일을 import합니다.
  * 순서가 중요합니다: primitives → colors → themes
- *
- * Notion 컨텍스트 색은 별도 시맨틱 층 없이 colors.css의 원시값을
- * globals.css의 @theme inline에서 직접 매핑합니다.
  */
 
 @import './primitives.css';

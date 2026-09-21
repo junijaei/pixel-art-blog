@@ -66,7 +66,6 @@ export default function ErrorLayout({
             className={cn(
               'group focus-visible:ring-ring inline-flex items-center gap-2 rounded-md py-3 pr-6 pl-5 text-sm font-medium',
               'focus-visible:ring-2 focus-visible:ring-offset-2 active:translate-y-px',
-              // 재시도 버튼이 있으면 그쪽이 주 동작이므로 여기는 외곽선 스타일로 물러난다
               onRetry
                 ? 'border-border hover:border-muted-foreground/50 border transition-colors duration-200'
                 : 'bg-foreground text-background transition-opacity duration-200 hover:opacity-90'
