@@ -25,7 +25,7 @@ const silkscreen = Silkscreen({
 const PRETENDARD_LATIN_SUBSET = '/fonts/pretendard-v1.3.9/PretendardVariable.subset.91.woff2';
 
 const d2coding = localFont({
-  src: '../public/fonts/D2Coding.ttf',
+  src: '../shared/assets/fonts/D2Coding.woff2',
   variable: '--font-d2coding',
   display: 'swap',
   preload: false,
@@ -33,7 +33,7 @@ const d2coding = localFont({
 });
 
 const galmuri9 = localFont({
-  src: '../public/fonts/Galmuri9.woff2',
+  src: '../shared/assets/fonts/Galmuri9.woff2',
   variable: '--font-galmuri9',
   display: 'swap',
   preload: false,
@@ -41,7 +41,7 @@ const galmuri9 = localFont({
 });
 
 const mulmaru = localFont({
-  src: '../public/fonts/Mulmaru.woff2',
+  src: '../shared/assets/fonts/Mulmaru.woff2',
   variable: '--font-mulmaru',
   display: 'swap',
   preload: false,
