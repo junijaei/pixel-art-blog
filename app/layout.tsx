@@ -11,6 +11,7 @@ import type { Metadata, Viewport } from 'next';
 import { Silkscreen } from 'next/font/google';
 import localFont from 'next/font/local';
 import NextTopLoader from 'nextjs-toploader';
+import ReactDOM from 'react-dom';
 import { ReactNode, Suspense } from 'react';
 
 const silkscreen = Silkscreen({
@@ -19,13 +20,9 @@ const silkscreen = Silkscreen({
   variable: '--font-silkscreen',
 });
 
-const pretendard = localFont({
-  src: '../public/fonts/PretendardVariable.woff2',
-  variable: '--font-pretendard',
-  display: 'swap',
-  preload: true,
-  weight: '45 920',
-});
+// Pretendard는 unicode-range로 쪼갠 @font-face(shared/styles/fonts/pretendard.css)로 로드한다.
+// 경로를 바꾸면 그 파일의 url()도 같이 고쳐야 한다.
+const PRETENDARD_LATIN_SUBSET = '/fonts/pretendard-v1.3.9/PretendardVariable.subset.91.woff2';
 
 const d2coding = localFont({
   src: '../public/fonts/D2Coding.ttf',
@@ -107,12 +104,14 @@ export default function RootLayout({
 }: Readonly<{
   children: ReactNode;
 }>) {
+  // 라틴 + 최빈 한글 chunk. 모든 페이지가 쓰므로 이것만 미리 받는다.
+  ReactDOM.preload(PRETENDARD_LATIN_SUBSET, { as: 'font', type: 'font/woff2', crossOrigin: 'anonymous' });
+
   return (
     <html lang="ko" suppressHydrationWarning>
       <body
         className={cn(
           silkscreen.variable,
-          pretendard.variable,
           galmuri9.variable,
           d2coding.variable,
           mulmaru.variable,

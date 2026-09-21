@@ -8,6 +8,7 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import '../shared/styles/tokens/index.css';
+@import '../shared/styles/fonts/pretendard.css';
 
 @custom-variant dark (&:is(.dark *));
 
@@ -18,9 +19,9 @@
 @theme inline {
   /* Typography */
   --font-pretendard:
-    'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue',
-    'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji',
-    'Segoe UI Symbol', sans-serif;
+    'Pretendard Variable', 'Pretendard', 'Pretendard Fallback', -apple-system, BlinkMacSystemFont, system-ui, Roboto,
+    'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
   /* Silkscreen에는 한글 글리프가 없다. 한글은 글자 단위로 Galmuri9에 폴백된다. */
   --font-pixel: 'Silkscreen', 'Galmuri9', 'Pretendard Variable', 'Pretendard', sans-serif;
   --font-mulmaru:
