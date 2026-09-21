@@ -1,12 +1,11 @@
 import { BlockRenderer } from '@/features/post/components/blocks';
 import { GiscusComments } from '@/features/comments';
 import { RelatedPosts, TocWithScrollSpy } from '@/features/post/components';
-import { Breadcrumb, PixelArrow, SectionLabel } from '@/shared/ui';
+import { Breadcrumb, SectionLabel } from '@/shared/ui';
 import { getCategories, getPost, getPosts, parsePostLink, toPostCardData } from '@/features/post';
-import { formatDateKorean } from '@/shared/lib/utils';
+import { formatDateDot } from '@/shared/lib/utils';
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 3600; // 1시간
@@ -154,42 +153,34 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         {metadata.tocItems.length > 0 && <TocWithScrollSpy items={metadata.tocItems} />}
 
         <div className="mx-auto max-w-2xl">
-          {/* 뒤로 가기 — 이 페이지의 유일한 상위 이동 경로 */}
-          <Link
-            href="/posts"
-            className="group text-muted-foreground hover:text-foreground font-pixel focus-visible:ring-ring mb-12 inline-flex items-center gap-2.5 rounded-sm text-[10px] tracking-[0.25em] uppercase transition-colors focus-visible:ring-2 focus-visible:ring-offset-2"
-          >
-            <PixelArrow className="h-3 w-3 rotate-180 transition-transform group-hover:-translate-x-0.5" />
-            <span>Back to Index</span>
-          </Link>
-
           {/* 헤더 */}
           <header>
-            <Breadcrumb items={metadata.breadcrumbs} currentPath={category?.path || ''} />
+            {/* 글의 좌표(어디·언제·얼마나). 이 헤어라인이 페이지의 유일한 구분선이다. */}
+            <div className="border-border flex flex-col gap-3 border-b pb-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+              <Breadcrumb items={metadata.breadcrumbs} currentPath={category?.path || ''} />
+              {/* Silkscreen은 라틴 전용이라 날짜를 2026.09.21 형태로 넘겨야 한다. */}
+              <p className="text-muted-foreground font-pixel shrink-0 text-[10px] tracking-widest uppercase tabular-nums">
+                <time dateTime={post.publishedAt}>{formatDateDot(post.publishedAt)}</time>
+                <span aria-hidden> · </span>
+                <span>{metadata.readingTime}</span>
+              </p>
+            </div>
 
-            <h1 className="mt-6 text-4xl leading-[1.08] font-bold tracking-tight break-keep sm:text-5xl">
+            {/* 목록·어바웃 H1과 달리 본문 서체(Pretendard)를 쓰는 것은 의도된 차이다 */}
+            <h1 className="mt-8 text-4xl leading-tight font-bold tracking-tight text-balance break-keep sm:text-5xl">
               {post.title}
             </h1>
 
             {post.description && (
-              <p className="text-muted-foreground mt-5 text-base leading-relaxed break-keep sm:text-lg">
+              <p className="text-muted-foreground mt-4 text-lg leading-relaxed text-pretty break-keep">
                 {post.description}
               </p>
             )}
-
-            <p className="text-muted-foreground mt-8 text-xs tabular-nums">
-              <time dateTime={post.publishedAt}>{formatDateKorean(post.publishedAt)}</time>
-              <span aria-hidden> · </span>
-              <span>{metadata.readingTime}</span>
-            </p>
           </header>
-
-          {/* 페이지 내 유일한 구분선 — 머리말과 본문의 경계 */}
-          <div className="bg-border mt-12 mb-12 h-px w-full" />
 
           {post.coverUrl && (
             <div
-              className="border-border/80 relative mb-12 w-full overflow-hidden rounded-xl border"
+              className="border-border/80 relative mt-16 w-full overflow-hidden rounded-xl border sm:mt-20"
               style={{ aspectRatio: '1.91/1' }}
             >
               <Image
@@ -203,8 +194,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             </div>
           )}
 
-          {/* 본문 */}
-          <article className="prose prose-neutral dark:prose-invert prose-p:leading-8 prose-headings:tracking-tight prose-hr:border-border max-w-none">
+          {/* 본문 — 머리말과의 경계는 선 없이 여백으로 */}
+          <article className="prose prose-neutral dark:prose-invert prose-p:leading-8 prose-headings:tracking-tight prose-hr:border-border mt-16 max-w-none sm:mt-20">
             <BlockRenderer blocks={displayBlocks} commentMap={commentMap} />
           </article>
 
