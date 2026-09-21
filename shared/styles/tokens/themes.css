@@ -2,19 +2,25 @@
  * Theme Tokens
  *
  * Semantic 토큰: 실제 UI 컴포넌트에서 사용되는 토큰
- * colors.css의 원시 값을 참조합니다.
+ * colors.css의 원시 값을 참조합니다. 이 파일에 리터럴 색을 직접 쓰지 않습니다.
+ *
+ * .dark 블록에는 "라이트와 값이 실제로 다른 토큰"만 둡니다.
+ * colors.css의 gray 스케일 자체가 .dark에서 반전되고, next-themes가 .dark를
+ * :root와 같은 <html>에 붙이므로, :root의 var(--gray-N) 참조는 다크에서
+ * 자동으로 반전된 값으로 해석됩니다. 양쪽에 같은 값을 두 번 쓰면 no-op입니다.
  */
 
 :root {
   /* =====================================================
-   * Core UI Tokens - Light Mode
+   * Core UI Tokens
+   * 아래 값들은 gray 스케일 반전을 통해 다크에서 자동으로 뒤집힙니다.
    * ===================================================== */
 
-  /* Page Background - Pure white for readability */
+  /* Page Background */
   --background: var(--gray-0);
   --foreground: var(--gray-900);
 
-  /* Surface Colors - Slightly muted */
+  /* Surface Colors */
   --card: var(--gray-0);
   --card-foreground: var(--gray-900);
   --popover: var(--gray-0);
@@ -43,60 +49,27 @@
   --input: var(--gray-200);
   --ring: var(--gray-400);
 
-  /* 텍스트 선택 하이라이트. gray 스케일이 .dark에서 반전되므로 여기서만 선언한다. */
+  /* 텍스트 선택 하이라이트 */
   --selection: var(--gray-300);
-
-  /* =====================================================
-   * Chart Colors
-   * ===================================================== */
-  --chart-1: oklch(0.65 0.18 45);
-  --chart-2: oklch(0.58 0.12 185);
-  --chart-3: oklch(0.42 0.08 230);
-  --chart-4: oklch(0.78 0.16 85);
-  --chart-5: oklch(0.72 0.15 70);
 }
 
 /* =====================================================
- * Dark Mode Theme
+ * Dark Mode Overrides
+ * 스케일 반전만으로는 부족해 다른 단계를 써야 하는 토큰만 재정의합니다.
  * ===================================================== */
 .dark {
-  /* Page Background - Pure dark for readability */
-  --background: var(--gray-0); /* Pure black in dark mode (colors.css inverts it) */
-  --foreground: var(--gray-900); /* Near white in dark mode */
+  /* 배경 위로 한 단계씩 띄운 표면 */
+  --card: var(--gray-100);
+  --popover: var(--gray-50);
 
-  /* Surface Colors - Elevated surfaces */
-  --card: var(--gray-100); /* Slightly lighter than background */
-  --card-foreground: var(--gray-900);
-  --popover: var(--gray-50); /* Even more elevated */
-  --popover-foreground: var(--gray-900);
-
-  /* Interactive Elements */
-  --primary: var(--gray-900); /* Bright in dark mode */
-  --primary-foreground: var(--gray-0); /* Dark text on bright bg */
+  /* 다크에서는 한 단계 밝은 회색이라야 구분된다 */
   --secondary: var(--gray-200);
-  --secondary-foreground: var(--gray-900);
-
-  /* Muted Elements */
   --muted: var(--gray-200);
-  --muted-foreground: var(--gray-600); /* Less contrast for secondary text */
-
-  /* Accent */
   --accent: var(--gray-200);
-  --accent-foreground: var(--gray-900);
 
-  /* Destructive */
-  --destructive: var(--color-error);
-  --destructive-foreground: var(--gray-0); /* Dark bg for error in dark mode */
+  /* 보조 텍스트 대비 조정 */
+  --muted-foreground: var(--gray-600);
 
-  /* Borders & Inputs */
-  --border: var(--gray-200); /* Subtle borders */
-  --input: var(--gray-200);
-  --ring: var(--gray-500); /* More visible focus ring */
-
-  /* Chart Colors - Dark Mode */
-  --chart-1: oklch(0.55 0.2 265);
-  --chart-2: oklch(0.68 0.14 165);
-  --chart-3: oklch(0.72 0.15 70);
-  --chart-4: oklch(0.62 0.22 305);
-  --chart-5: oklch(0.65 0.2 18);
+  /* 포커스 링을 더 또렷하게 */
+  --ring: var(--gray-500);
 }

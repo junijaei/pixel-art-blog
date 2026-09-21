@@ -36,10 +36,6 @@
    * 소프트하고 파스텔톤의 Notion 스타일 컬러
    * ===================================================== */
 
-  /* Default - Neutral gray */
-  --notion-default-text: oklch(0.44 0.005 270);
-  --notion-default-bg: oklch(0.975 0.003 270);
-
   /* Gray */
   --notion-gray-text: oklch(0.46 0.01 255);
   --notion-gray-bg: oklch(0.965 0.006 255);
@@ -108,9 +104,6 @@
   --gray-1000: oklch(1 0 0);
 
   /* Notion Colors - Dark Mode Adjusted for WCAG AA */
-  --notion-default-text: oklch(0.75 0.01 75);
-  --notion-default-bg: oklch(0.22 0.008 75);
-
   --notion-gray-text: oklch(0.72 0.015 260);
   --notion-gray-bg: oklch(0.24 0.012 260);
 
