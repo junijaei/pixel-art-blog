@@ -5,10 +5,11 @@ import { describe, expect, it, vi } from 'vitest';
 
 // MermaidDiagram 모킹 - mermaid는 브라우저 환경이 필요하므로 테스트에서 모킹
 vi.mock('@/features/post/components/blocks/Code/MermaidDiagram', () => ({
-  MermaidDiagram: ({ code }: { code: string }) => (
-    <div data-testid="mermaid-diagram" data-code={code} />
-  ),
+  MermaidDiagram: ({ code }: { code: string }) => <div data-testid="mermaid-diagram" data-code={code} />,
 }));
+
+// 하이라이팅이 토큰마다 <span>을 만들어 getByText가 깨진다.
+const getRenderedCode = (container: HTMLElement): string => container.querySelector('pre')?.textContent ?? '';
 
 // Helper function to create complete CodeBlock with all required fields
 const createCodeBlock = (code: string, language: string, caption: RichText[] = []): CodeBlock => ({
@@ -56,9 +57,9 @@ describe('Code', () => {
   it('language를 렌더링한다', () => {
     const block = createCodeBlock('const x = 42;', 'javascript');
 
-    render(<Code block={block} />);
+    const { container } = render(<Code block={block} />);
     expect(screen.getByText('javascript')).toBeInTheDocument();
-    expect(screen.getByText('const x = 42;')).toBeInTheDocument();
+    expect(getRenderedCode(container)).toContain('const x = 42;');
   });
 
   it('caption을 렌더링한다', () => {
@@ -88,8 +89,8 @@ describe('Code', () => {
   it('여러 줄 코드를 렌더링한다', () => {
     const block = createCodeBlock('function hello() {\n  console.log("Hello");\n}', 'javascript');
 
-    render(<Code block={block} />);
-    expect(screen.getByText(/function hello\(\)/)).toBeInTheDocument();
+    const { container } = render(<Code block={block} />);
+    expect(getRenderedCode(container)).toContain('function hello()');
   });
 
   it('language 없이 렌더링한다', () => {
@@ -106,6 +107,48 @@ describe('Code', () => {
     const { container } = render(<Code block={block} />);
     expect(screen.getByText('code')).toBeInTheDocument();
     expect(container.querySelector('.text-muted-foreground.text-center')).not.toBeInTheDocument();
+  });
+
+  describe('구문 하이라이팅', () => {
+    it('첫 렌더부터 하이라이팅된 마크업을 포함한다', () => {
+      const block = createCodeBlock('const x = 42;', 'javascript');
+
+      const { container } = render(<Code block={block} />);
+
+      expect(container.querySelector('pre.th-code')).toBeInTheDocument();
+      expect(container.querySelector('.th-token.th-keyword')?.textContent).toBe('const');
+    });
+
+    it('줄마다 data-line 속성을 부여한다', () => {
+      const block = createCodeBlock('const a = 1;\nconst b = 2;', 'javascript');
+
+      const { container } = render(<Code block={block} />);
+      const lines = container.querySelectorAll('.th-line');
+
+      expect(lines).toHaveLength(2);
+      expect(lines[0]).toHaveAttribute('data-line', '1');
+      expect(lines[1]).toHaveAttribute('data-line', '2');
+    });
+
+    it('미지원 언어는 원본 코드를 보존한 채 plaintext로 폴백한다', () => {
+      const code = 'fn main() { println!("hi"); }';
+      const block = createCodeBlock(code, 'rust');
+
+      const { container } = render(<Code block={block} />);
+
+      expect(container.querySelector('pre.th-code--plaintext')).toBeInTheDocument();
+      expect(getRenderedCode(container)).toBe(code);
+    });
+
+    it('HTML 특수문자를 이스케이프한다', () => {
+      const code = 'const html = "<script>alert(1)</script>";';
+      const block = createCodeBlock(code, 'javascript');
+
+      const { container } = render(<Code block={block} />);
+
+      expect(container.querySelector('pre script')).not.toBeInTheDocument();
+      expect(getRenderedCode(container)).toBe(code);
+    });
   });
 
   describe('Collapse/Expand 기능', () => {

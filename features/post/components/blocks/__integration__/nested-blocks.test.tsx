@@ -125,7 +125,7 @@ describe('Nested Blocks Integration - Phase 1', () => {
     });
 
     it('Toggle 안에 Code를 렌더링한다', () => {
-      render(<BlockRenderer blocks={toggleWithCodeFixture} />);
+      const { container } = render(<BlockRenderer blocks={toggleWithCodeFixture} />);
 
       expect(screen.getByText('Toggle with code')).toBeInTheDocument();
 
@@ -133,8 +133,8 @@ describe('Nested Blocks Integration - Phase 1', () => {
       const button = screen.getByRole('button');
       fireEvent.click(button);
 
-      // Code 블록 확인
-      expect(screen.getByText('console.log("Hello World");')).toBeInTheDocument();
+      // Code 블록 확인 (하이라이팅으로 토큰이 <span>으로 쪼개지므로 textContent로 검증)
+      expect(container.querySelector('pre')?.textContent).toContain('console.log("Hello World");');
     });
 
     it('Toggle을 여러 번 클릭하면 open/close가 전환된다', () => {

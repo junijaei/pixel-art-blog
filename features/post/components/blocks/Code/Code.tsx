@@ -1,11 +1,10 @@
-﻿'use client';
+'use client';
 
 import type { CodeBlock, CodeProps } from '@/features/post/components/blocks/Code/index';
 import { MermaidDiagram } from '@/features/post/components/blocks/Code/MermaidDiagram';
 import { highlightCode } from '@/features/post/highlight';
 import { cn } from '@/shared/lib/utils';
-import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { ChildBlockContainer } from '../ChildBlockContainer';
 import { RichText } from '../RichText';
 
@@ -16,8 +15,9 @@ export function Code({ block, children }: CodeProps) {
   const { rich_text, language, caption } = block.code as CodeBlock['code'];
   const codeText = rich_text.map((item) => item.plain_text).join('');
   const [isCopied, setIsCopied] = useState(false);
-  const [highlightedHtml, setHighlightedHtml] = useState<string>('');
-  const { theme } = useTheme();
+
+  // 색상은 CSS 변수라 테마와 무관하다. 테마 변경으로 재계산하지 말 것.
+  const highlightedHtml = useMemo(() => highlightCode(codeText, language), [codeText, language]);
 
   const lineCount = codeText.split('\n').length;
   const shouldCollapse = lineCount > COLLAPSE_LINE_THRESHOLD;
@@ -32,24 +32,6 @@ export function Code({ block, children }: CodeProps) {
       console.error('Failed to copy:', err);
     }
   };
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function highlight() {
-      const isDark = theme === 'dark';
-      const html = await highlightCode(codeText, language, isDark);
-      if (isMounted) {
-        setHighlightedHtml(html);
-      }
-    }
-
-    highlight();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [codeText, language, theme]);
 
   if (language === 'mermaid') {
     return (
@@ -103,16 +85,10 @@ export function Code({ block, children }: CodeProps) {
               maxHeight: isExpanded ? 'none' : `${COLLAPSED_MAX_HEIGHT}px`,
             }}
           >
-            {highlightedHtml ? (
-              <div
-                className="shiki-code-block [&_code]:font-code [&_code]:text-sm [&_code]:leading-relaxed [&_pre]:m-0 [&_pre]:overflow-x-auto [&_pre]:bg-transparent! [&_pre]:p-4"
-                dangerouslySetInnerHTML={{ __html: highlightedHtml }}
-              />
-            ) : (
-              <pre className="flex-1 overflow-x-auto p-4">
-                <code className="font-code text-sm leading-relaxed">{codeText}</code>
-              </pre>
-            )}
+            <div
+              className="code-block [&_code]:font-code [&_code]:text-sm [&_code]:leading-relaxed [&_pre]:m-0 [&_pre]:overflow-x-auto [&_pre]:bg-transparent! [&_pre]:p-4"
+              dangerouslySetInnerHTML={{ __html: highlightedHtml }}
+            />
 
             {shouldCollapse && !isExpanded && (
               <div className="from-muted/0 via-muted/80 to-muted pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-b" />

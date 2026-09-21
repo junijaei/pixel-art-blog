@@ -214,19 +214,135 @@
     word-break: break-all;
   }
 
-  /* Shiki 코드 블록 줄 번호 */
-  .shiki-code-block pre {
-    counter-reset: shiki-line;
+  /*
+   * 코드 블록 토큰 팔레트(vitesse-light / vitesse-dark 원본값).
+   * 하이라이터 마크업에는 색이 없으므로 다크모드 분기가 여기에만 존재한다.
+   */
+  .code-block {
+    --th-token: #393a34;
+    --th-attr: #b07d48;
+    --th-code-inline: #1c6b48;
+    --th-command: #59873a;
+    --th-comment: #a0ada0;
+    --th-deleted: #b31d28;
+    --th-function: #59873a;
+    --th-heading: #1c6b48;
+    --th-inserted: #22863a;
+    --th-keyword: #1e754f;
+    --th-link: #393a3490;
+    --th-literal: #1e754f;
+    --th-meta: #999999;
+    --th-number: #2f798a;
+    --th-operator: #ab5959;
+    --th-property: #998418;
+    --th-selector: #b07d48;
+    --th-string: #b56959;
+    --th-tag: #1e754f;
+    --th-type: #2e8f82;
+    --th-variable: #b07d48;
   }
 
-  .shiki-code-block .line {
-    counter-increment: shiki-line;
+  .dark .code-block {
+    --th-token: #dbd7caee;
+    --th-attr: #bd976a;
+    --th-code-inline: #4d9375;
+    --th-command: #80a665;
+    --th-comment: #758575dd;
+    --th-deleted: #fdaeb7;
+    --th-function: #80a665;
+    --th-heading: #4d9375;
+    --th-inserted: #85e89d;
+    --th-keyword: #4d9375;
+    --th-link: #dedcd590;
+    --th-literal: #4d9375;
+    --th-meta: #666666;
+    --th-number: #4c9a91;
+    --th-operator: #cb7676;
+    --th-property: #b8a965;
+    --th-selector: #bd976a;
+    --th-string: #c98a7d;
+    --th-tag: #4d9375;
+    --th-type: #5da994;
+    --th-variable: #bd976a;
+  }
+
+  .code-block pre.th-code,
+  .code-block .th-token {
+    color: var(--th-token);
+  }
+
+  .code-block .th-attr {
+    color: var(--th-attr);
+  }
+  .code-block .th-code-inline {
+    color: var(--th-code-inline);
+  }
+  .code-block .th-command {
+    color: var(--th-command);
+  }
+  .code-block .th-comment {
+    color: var(--th-comment);
+  }
+  .code-block .th-deleted {
+    color: var(--th-deleted);
+  }
+  .code-block .th-function {
+    color: var(--th-function);
+  }
+  .code-block .th-heading {
+    color: var(--th-heading);
+  }
+  .code-block .th-inserted {
+    color: var(--th-inserted);
+  }
+  .code-block .th-keyword {
+    color: var(--th-keyword);
+  }
+  .code-block .th-link {
+    color: var(--th-link);
+  }
+  .code-block .th-literal {
+    color: var(--th-literal);
+  }
+  .code-block .th-meta {
+    color: var(--th-meta);
+  }
+  .code-block .th-number {
+    color: var(--th-number);
+  }
+  .code-block .th-operator {
+    color: var(--th-operator);
+  }
+  .code-block .th-property {
+    color: var(--th-property);
+  }
+  .code-block .th-selector {
+    color: var(--th-selector);
+  }
+  .code-block .th-string {
+    color: var(--th-string);
+  }
+  .code-block .th-tag {
+    color: var(--th-tag);
+  }
+  .code-block .th-type {
+    color: var(--th-type);
+  }
+  .code-block .th-variable {
+    color: var(--th-variable);
+  }
+
+  /* 줄 번호는 하이라이터가 심은 data-line을 읽는다. lineNumbers 옵션과 한 쌍. */
+  .code-block .th-line {
+    display: inline-block;
+    min-width: 100%;
+    width: max-content;
     padding-left: 2.5rem;
     position: relative;
   }
 
-  .shiki-code-block .line::before {
-    content: counter(shiki-line);
+  .code-block .th-line::before {
+    content: attr(data-line);
     font-family: var(--font-pixel);
     position: absolute;
     top: 0;

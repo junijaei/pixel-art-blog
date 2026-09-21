@@ -39,10 +39,11 @@ export { findCategoryByPath, getAllDescendantIds } from './transform';
 export { ISR_CONFIG } from './constants';
 
 // ============================================
-// Code Highlighting (Server Only)
+// Code Highlighting (동기 API — 서버/클라이언트 공용)
 // ============================================
 
-export { getShikiHighlighter, highlightCode } from './highlight';
+export { codeHighlighter, highlightCode, resolveLanguage } from './highlight';
+export type { HighlightCodeOptions } from './highlight';
 
 // ============================================
 // Types & Client-safe Utils (re-exported for convenience)
