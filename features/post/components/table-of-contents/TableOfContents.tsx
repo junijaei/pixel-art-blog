@@ -106,7 +106,7 @@ export function TableOfContents({ items, activeId, isVisible = true, className }
         'hidden lg:block',
         'fixed top-1/4 right-8 z-10',
         'max-h-[60vh] w-56 overflow-x-hidden overflow-y-auto',
-        'scrollbar-thin scrollbar-thumb-muted scrollbar-track-transparent',
+        'scrollbar-subtle',
         'transition-opacity duration-500',
         isVisible ? 'opacity-100' : 'opacity-0',
         !isVisible && 'pointer-events-none',

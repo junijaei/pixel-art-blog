@@ -109,6 +109,15 @@
     @apply border-border outline-ring/50;
   }
 
+  /*
+   * 텍스트 선택 하이라이트.
+   * 브라우저 기본값은 채도 높은 파랑이라 무채색 팔레트에서 유일하게 튄다.
+   * color는 지정하지 않는다 — 코드 블록의 구문 강조 색을 덮어쓰지 않기 위해서다.
+   */
+  ::selection {
+    background-color: var(--selection);
+  }
+
   body {
     @apply bg-background text-foreground;
     font-feature-settings:
@@ -174,6 +183,34 @@
   scrollbar-width: none;
   &::-webkit-scrollbar {
     display: none;
+  }
+}
+
+/*
+ * 얇고 조용한 스크롤바. 트랙은 비우고 thumb만 --border 색으로 둔다.
+ * tailwind-scrollbar 플러그인을 쓰지 않고 scrollbar-hide와 같은 방식으로 직접 정의한다.
+ *
+ * scrollbar-color(Firefox)는 일부러 넣지 않는다. Lightning CSS가 var()가 섞인
+ * 이 단축 속성을 처리하지 못해 규칙째로 버리고, @utility 안에 두면 블록 전체가
+ * 사라진다. 리터럴 색이면 통과하지만 --border와 어긋나므로 쓰지 않는다.
+ * Firefox는 아래 scrollbar-width만 적용받아 기본 색의 얇은 스크롤바가 된다.
+ */
+@utility scrollbar-subtle {
+  scrollbar-width: thin;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--border);
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--muted-foreground);
   }
 }
 
