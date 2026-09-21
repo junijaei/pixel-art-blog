@@ -18,7 +18,8 @@
 - 픽셀/도트 요소는 **악센트만** (15-20% 비주얼 비중)
 - 모던 디자인이 **주축** (80-85% 비주얼 비중)
 - 가독성 > 미학
-- 픽셀 폰트(Silkscreen)는 라벨, 배지, 작은 헤딩에만 사용. **본문/아티클에 절대 사용 금지**
+- 픽셀 폰트(Silkscreen·Galmuri9)는 라벨, 배지, 작은 헤딩에만 사용. **본문/아티클에 절대 사용 금지**
+- 픽셀 레이블은 언제나 `font-pixel`. 라틴은 Silkscreen, 한글은 글자 단위로 Galmuri9에 폴백된다
 
 ---
 
@@ -186,7 +187,7 @@ import { cn } from '@/lib/utils';
 
 ```typescript
 // ✅ 올바른 픽셀 폰트 적용
-<span className="font-[family-name:var(--font-silkscreen)] text-xs tracking-wider">
+<span className="font-pixel text-xs tracking-wider">
   LABEL
 </span>
 

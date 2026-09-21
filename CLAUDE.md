@@ -52,14 +52,14 @@ This project follows a **"retro-modern fusion"** approach where:
 - Readability is never compromised for aesthetic
 - Minimalism over decoration
 
-**Critical Rule:** Pixel fonts (Silkscreen) are for labels, badges, and small headings ONLY. Never use for body text, articles, or long-form content.
+**Critical Rule:** Pixel fonts (Silkscreen, Galmuri9) are for labels, badges, and small headings ONLY. Never use for body text, articles, or long-form content. Always use `font-pixel`: it renders latin in Silkscreen and falls back to Galmuri9 per-glyph for korean.
 
 ### Tech Stack
 
 - **Framework:** Next.js 16 with App Router
 - **Language:** TypeScript (strict mode)
 - **Styling:** Tailwind CSS v4 with custom design tokens
-- **Fonts:** Geist (sans), Geist Mono (monospace), Silkscreen (pixel accent)
+- **Fonts:** Pretendard (sans/body), Mulmaru (display headings), Silkscreen (latin pixel accent), Galmuri9 (korean pixel accent), D2Coding (code)
 - **UI Components:** Custom components following design system
 - **Testing:** Vitest + React Testing Library
 - **Documentation:** Storybook
@@ -134,7 +134,7 @@ Comprehensive design system documentation is in [DESIGN_SYSTEM.md](DESIGN_SYSTEM
 
 ```tsx
 // Pixel font application (Silkscreen)
-className = 'font-[family-name:var(--font-silkscreen)] text-xs tracking-wider';
+className = 'font-pixel text-xs tracking-wider';
 
 // Use cases: Labels, badges, navigation items, small section headers
 // Never use for: Body text, articles, long-form content, main headings
@@ -157,9 +157,9 @@ className = 'font-[family-name:var(--font-silkscreen)] text-xs tracking-wider';
 
 1. **Hydration Safety:** Never use `Math.random()` in render - use fixed pattern arrays
 2. **Font Loading:** Always load fonts via `next/font/google` in layout.tsx
-3. **Pixel Font Syntax:** Use `font-[family-name:var(--font-silkscreen)]` NOT inline styles
+3. **Pixel Font Syntax:** Use `font-pixel` NOT inline styles
 4. **Border Radius:** Never use `rounded-none` - maintain slight rounding for modern feel
-5. **Readability First:** Body text uses Geist sans with `leading-relaxed`
+5. **Readability First:** Body text uses Pretendard with `leading-relaxed`
 
 ## Configuration Notes
 

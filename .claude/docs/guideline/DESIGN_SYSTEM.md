@@ -146,7 +146,7 @@ const silkscreen = Silkscreen({
 
 ```tsx
 /* Tailwind CSS v4 pattern for pixel font */
-className="font-[family-name:var(--font-silkscreen)]"
+className="font-pixel"
 
 /* SIZE GUIDELINES for pixel font */
 text-[10px]: Labels, badges, tiny captions
@@ -170,7 +170,7 @@ HEADINGS:
   - Hero: text-4xl sm:text-5xl lg:text-6xl, font-bold, leading-tight
   - Section: text-2xl sm:text-3xl, font-semibold
   - Card Title: text-lg sm:text-xl, font-medium
-  - Subsection: text-xs tracking-wider, font-[pixel]
+  - Subsection: text-[10px] tracking-wider, font-pixel
 
 LINE_HEIGHT:
   - Headings: leading-tight (1.25)
@@ -291,7 +291,7 @@ interface CardProps {
   bg-foreground text-background
   rounded-md
   tracking-wider
-  font-[family-name:var(--font-silkscreen)]
+  font-pixel
 ">
   FEATURED
 </span>
@@ -526,7 +526,7 @@ hover:bg-secondary          /* Background highlight */
    - Avoid client-side only calculations
 
 2. FONT_APPLICATION:
-   - Use font-[family-name:var(--font-silkscreen)] not inline style
+   - Use font-pixel not inline style
    - Never use pixel font for body text
    - Always load fonts via next/font/google
 
@@ -589,7 +589,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
         <DotDecoration variant="corner" className="absolute top-4 right-4 opacity-50" />
 
         <div className="mb-4 flex items-center gap-4">
-          <span className="bg-foreground text-background rounded-md px-3 py-1.5 font-[family-name:var(--font-silkscreen)] text-[10px] tracking-wider">
+          <span className="bg-foreground text-background rounded-md px-3 py-1.5 font-pixel text-[10px] tracking-wider">
             FEATURED
           </span>
           <div className="text-muted-foreground flex items-center gap-2">
@@ -667,7 +667,7 @@ export function PostCard({ post, featured = false }: PostCardProps) {
     {/* Decorative intro */}
     <div className="mb-6 flex items-center gap-4">
       <DotDecoration variant="horizontal" />
-      <span className="text-muted-foreground font-[family-name:var(--font-silkscreen)] text-[10px] tracking-widest uppercase">
+      <span className="text-muted-foreground font-pixel text-[10px] tracking-widest uppercase">
         Personal Blog
       </span>
     </div>

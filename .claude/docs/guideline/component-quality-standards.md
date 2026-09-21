@@ -439,7 +439,7 @@ export const Default: Story = {
 ### 10.1 NumberedListItem - 순서 번호
 
 - ✅ **MUST**: `index` prop을 받아서 `index + 1` 표시
-- ✅ **MUST**: 픽셀 폰트 사용: `font-(family-name:--font-silkscreen) text-[10px]`
+- ✅ **MUST**: 픽셀 폰트 사용: `font-pixel text-[10px]`
 
 ```typescript
 export interface NumberedListItemProps {
@@ -451,7 +451,7 @@ export interface NumberedListItemProps {
 export function NumberedListItem({ block, children, index = 0 }: Props) {
   return (
     <li>
-      <span className="font-(family-name:--font-silkscreen) text-[10px]">
+      <span className="font-pixel text-[10px]">
         {index + 1}
       </span>
       {/* ... */}
