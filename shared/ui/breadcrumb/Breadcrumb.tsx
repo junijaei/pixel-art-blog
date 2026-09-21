@@ -21,9 +21,15 @@ export interface BreadcrumbProps {
  */
 export function Breadcrumb({ items, currentPath, className }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className={cn('flex items-center gap-1 text-xs', className)}>
+    <nav
+      aria-label="Breadcrumb"
+      className={cn(
+        'text-muted-foreground font-pixel flex items-center gap-2 text-[10px] tracking-widest uppercase',
+        className
+      )}
+    >
       {/* 태그 아이콘 */}
-      <PixelTag className="text-muted-foreground mr-1 h-3 w-3 shrink-0" />
+      <PixelTag className="h-3 w-3 shrink-0" />
 
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
@@ -31,19 +37,16 @@ export function Breadcrumb({ items, currentPath, className }: BreadcrumbProps) {
         const href = item.path ? `/posts/${item.path}` : '/posts';
 
         return (
-          <span key={item.path || 'all'} className="flex items-center gap-1">
+          <span key={item.path || 'all'} className="flex items-center gap-2">
             <Link
               href={href}
-              className={cn(
-                'transition-colors',
-                isCurrent ? 'text-foreground font-medium' : 'text-muted-foreground hover:text-foreground'
-              )}
+              className={cn('transition-colors', isCurrent ? 'text-foreground' : 'hover:text-foreground')}
             >
               {item.label}
             </Link>
 
             {/* 구분자 - 마지막 항목 제외 */}
-            {!isLast && <PixelChevronRight className="text-muted-foreground/50 mx-0.5 h-3 w-3 shrink-0" />}
+            {!isLast && <PixelChevronRight className="text-muted-foreground/40 h-3 w-3 shrink-0" />}
           </span>
         );
       })}

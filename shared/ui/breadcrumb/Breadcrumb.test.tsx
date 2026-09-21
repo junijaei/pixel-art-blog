@@ -34,7 +34,6 @@ describe('Breadcrumb', () => {
 
     const techLink = screen.getByText('Tech').closest('a');
     expect(techLink).toHaveClass('text-foreground');
-    expect(techLink).toHaveClass('font-medium');
   });
 
   it('구분자가 마지막 항목 전까지만 표시된다', () => {

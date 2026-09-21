@@ -1,4 +1,5 @@
-import { PixelClock, PixelTag } from '@/shared/ui/pixel';
+import { CategoryLabel } from '@/features/post/components/category-label';
+import { PixelClock } from '@/shared/ui/pixel';
 import { SectionLabel } from '@/shared/ui/section-label';
 import { createPostLink } from '@/features/post/routing';
 import type { PostCardData } from '@/features/post/model';
@@ -14,10 +15,7 @@ function RelatedPostCard({ slug, title, date, categoryPath, categoryLabel }: Rel
       href={href}
       className="group border-border/80 bg-card/80 hover:border-muted-foreground/35 hover:bg-card focus-visible:ring-ring flex min-h-full flex-1 flex-col gap-2.5 rounded-xl border p-4 transition-colors duration-200 focus-visible:ring-2 focus-visible:ring-offset-2"
     >
-      <div className="text-muted-foreground flex items-center gap-1.5">
-        <PixelTag className="h-2.5 w-2.5" />
-        <span className="text-[10px]">{categoryLabel}</span>
-      </div>
+      <CategoryLabel>{categoryLabel}</CategoryLabel>
 
       <h3 className="group-hover:text-foreground/75 line-clamp-2 text-sm leading-snug font-medium transition-colors">
         {title}

@@ -1,4 +1,5 @@
-import { PixelArrow, PixelTag } from '@/shared/ui/pixel';
+import { CategoryLabel } from '@/features/post/components/category-label';
+import { PixelArrow } from '@/shared/ui/pixel';
 import { createPostLink } from '@/features/post/routing';
 import type { PostCardProps } from '@/features/post/model';
 import Link from 'next/link';
@@ -25,10 +26,7 @@ export function PostCard({ slug, title, description, date, categoryPath, categor
 
         {/* Content */}
         <div className="flex min-w-0 flex-1 flex-col gap-2 sm:pr-10">
-          <div className="text-muted-foreground/60 mb-1 flex items-center gap-2">
-            <PixelTag className="h-3 w-3" />
-            <span className="font-galmuri9 text-[10px] tracking-wider uppercase">{categoryLabel}</span>
-          </div>
+          <CategoryLabel className="mb-1">{categoryLabel}</CategoryLabel>
           <h3 className="line-clamp-2 overflow-hidden text-lg leading-snug font-semibold tracking-tight break-keep text-ellipsis sm:text-xl">
             {title}
           </h3>
