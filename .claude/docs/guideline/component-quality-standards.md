@@ -530,7 +530,7 @@ import { PixelDot } from '@/components/pixel-icons';
 ### 🟡 중요 (완성도 문제)
 
 3. **Callout 외부 이미지 아이콘**: 현재 emoji만 지원, 외부 URL 지원 필요
-4. **Code 언어별 syntax highlighting**: 현재 plain text만, 향후 shiki/prism 통합
+4. **Code 미지원 언어**: TanStack Highlight 등록 언어 외(java, rust, powershell 등)는 plaintext로 폴백. 필요하면 `defineLanguage`로 추가
 5. **모든 컴포넌트 Storybook 확장**: color variants, annotations 등 추가
 
 ### 🟢 선택 (향상)
