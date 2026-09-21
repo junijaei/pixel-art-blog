@@ -8,18 +8,13 @@ import { BlogFooter, BlogHeader } from '@/shared/layouts';
 import { cn } from '@/shared/lib';
 import { GoogleAnalytics, GoogleTagManager } from '@next/third-parties/google';
 import type { Metadata, Viewport } from 'next';
-import { Geist_Mono, Silkscreen } from 'next/font/google';
+import { Silkscreen } from 'next/font/google';
 import localFont from 'next/font/local';
 import NextTopLoader from 'nextjs-toploader';
 import { ReactNode, Suspense } from 'react';
 
-const geistMono = Geist_Mono({
-  subsets: ['latin'],
-  variable: '--font-geist-mono',
-});
-
 const silkscreen = Silkscreen({
-  weight: ['400', '700'],
+  weight: ['400'],
   subsets: ['latin'],
   variable: '--font-silkscreen',
 });
@@ -37,7 +32,7 @@ const d2coding = localFont({
   variable: '--font-d2coding',
   display: 'swap',
   preload: false,
-  weight: '45 920',
+  weight: '400',
 });
 
 const galmuri9 = localFont({
@@ -116,7 +111,6 @@ export default function RootLayout({
     <html lang="ko" suppressHydrationWarning>
       <body
         className={cn(
-          geistMono.variable,
           silkscreen.variable,
           pretendard.variable,
           galmuri9.variable,

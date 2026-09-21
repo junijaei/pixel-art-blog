@@ -21,15 +21,11 @@
     'Pretendard Variable', 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue',
     'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji',
     'Segoe UI Symbol', sans-serif;
-  /* Silkscreen은 라틴 전용이다. 한글이 섞일 수 있는 레이블에는 --font-galmuri9를 쓸 것. */
-  --font-pixel: 'Silkscreen', cursive;
-  --font-galmuri9:
-    'Galmuri9', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', 'Silkscreen',
-    cursive;
+  /* Silkscreen에는 한글 글리프가 없다. 한글은 글자 단위로 Galmuri9에 폴백된다. */
+  --font-pixel: 'Silkscreen', 'Galmuri9', 'Pretendard Variable', 'Pretendard', sans-serif;
   --font-mulmaru:
-    'mulmaru', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', 'Silkscreen',
-    cursive;
-  --font-code: 'd2coding', 'Geist Mono', 'Geist Mono Fallback', monospace;
+    'mulmaru', 'Pretendard Variable', 'Pretendard', system-ui, -apple-system, 'Segoe UI', 'Noto Sans KR', sans-serif;
+  --font-code: 'd2coding', 'd2coding Fallback', monospace;
 
   /* Core Colors */
   --color-background: var(--background);
