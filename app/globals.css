@@ -101,9 +101,8 @@
     @apply border-border outline-ring/50;
   }
 
-  /* color는 지정하지 않는다 — 코드 블록의 구문 강조 색이 덮이기 때문 */
   ::selection {
-    background-color: var(--selection);
+    @apply bg-foreground text-background;
   }
 
   body {
