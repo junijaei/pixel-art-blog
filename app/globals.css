@@ -110,9 +110,12 @@
     text-rendering: optimizeLegibility;
   }
 
-  /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
+  }
+
+  #main-content {
+    scroll-margin-top: 6rem;
   }
 
   /* Focus visible styles */
