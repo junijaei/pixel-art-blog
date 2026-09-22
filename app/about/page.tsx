@@ -98,14 +98,14 @@ export default function AboutPage() {
                   <span key={segment} aria-hidden className={cn('bg-foreground/25 absolute', segment)} />
                 ))}
                 <img
-                  src="/profile-light.png"
+                  src="/profile-light.webp"
                   width={176}
                   height={176}
                   alt="프로필 이미지. 엘모가 컴퓨터 앞에 앉아 코딩을 하고 있다."
                   className="border-border/80 rounded-xl border dark:hidden"
                 />
                 <img
-                  src="/profile-dark.png"
+                  src="/profile-dark.webp"
                   width={176}
                   height={176}
                   alt="프로필 이미지. 엘모가 컴퓨터 앞에 앉아 코딩을 하고 있다."
