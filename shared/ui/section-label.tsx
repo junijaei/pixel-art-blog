@@ -17,7 +17,7 @@ export function SectionLabel({ children, meta, as: Label = 'span', className }: 
       <Label className="font-pixel text-muted-foreground text-[10px] tracking-[0.3em] uppercase">{children}</Label>
       <div className="bg-border h-px flex-1" />
       {meta && (
-        <span className="font-pixel text-muted-foreground/60 text-[10px] tracking-widest tabular-nums">{meta}</span>
+        <span className="font-pixel text-muted-foreground text-[10px] tracking-widest tabular-nums">{meta}</span>
       )}
     </div>
   );

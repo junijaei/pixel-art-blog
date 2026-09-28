@@ -144,7 +144,7 @@ export default function AboutPage() {
                     className="group focus-visible:ring-ring flex items-center gap-4 rounded-lg py-4 focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
                     <Icon className="text-muted-foreground group-hover:text-foreground h-4 w-4 shrink-0 transition-colors duration-300" />
-                    <span className="font-pixel text-muted-foreground/50 w-20 shrink-0 text-[10px] tracking-widest uppercase">
+                    <span className="font-pixel text-muted-foreground w-20 shrink-0 text-[10px] tracking-widest uppercase">
                       {label}
                     </span>
                     <span className="text-muted-foreground group-hover:text-foreground truncate text-sm transition-colors duration-300">
