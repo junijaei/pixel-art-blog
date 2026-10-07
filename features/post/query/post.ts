@@ -34,17 +34,23 @@ export interface GetPostContentOptions {
   categories: CategoriesQueryResult;
 }
 
+/** 댓글은 글 수정 없이도 바뀌는데 같은 캐시에 묶여 있다. 댓글을 분리하면 이 제약이 사라진다. */
+const POST_BLOCKS_CACHE_TTL_SECONDS = 60 * 60 * 24;
+
 const fetchPostBlocksCached = unstable_cache(
   async (postId: string, _updatedAt: string): Promise<{ enrichedBlocks: Block[]; commentMap: BlockCommentRecord }> => {
     const rawBlocks = await fetchBlocks(postId);
-    const enrichedBlocks = await fetchBlocksChildren(rawBlocks, 10);
+    const enrichedBlocks = await fetchBlocksChildren(rawBlocks);
     const { blocks } = processBlockTree(enrichedBlocks);
     const blockIds = blocks.map((block) => block.id);
     const commentMap = await fetchCommentsForBlocks(blockIds);
     return { enrichedBlocks, commentMap };
   },
   ['notion-post-blocks'],
-  { revalidate: 3600 }
+  // 캐시 키에 updatedAt이 들어가므로 글이 수정되면 TTL과 무관하게 새 키로 떨어진다.
+  // TTL은 "안 바뀐 글을 얼마나 오래 들고 있을지"만 정한다. 페이지 revalidate(1시간)와
+  // 같은 값이면 매 재생성이 캐시 미스가 되므로 반드시 더 길어야 한다.
+  { revalidate: POST_BLOCKS_CACHE_TTL_SECONDS }
 );
 
 const processPostCoverUrl = cache(

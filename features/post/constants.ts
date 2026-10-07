@@ -61,6 +61,9 @@ export const POST_STATUS = {
 export const NOTION_LIMITS = {
   MAX_PAGE_SIZE: 100,
   DEFAULT_PAGE_SIZE: 50,
-  MAX_DEPTH: 2,
+  /** 블록 children 재귀 탐색의 최대 깊이 */
+  MAX_DEPTH: 10,
+  /** Notion 통합당 평균 초당 요청 수 제한 */
   RATE_LIMIT_PER_SECOND: 3,
+  MAX_CONCURRENT: 3,
 } as const;

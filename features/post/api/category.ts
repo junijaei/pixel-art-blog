@@ -1,7 +1,7 @@
 ﻿import type { QueryDataSourceParameters } from '@notionhq/client/build/src/api-endpoints';
 
 import { notionClient } from '@/features/post/api/client';
-import { withRetry } from '@/features/post/api/retry';
+import { notionRequest } from '@/features/post/api/request';
 import { NOTION_LIMITS } from '@/features/post/constants';
 import type { CategoryPage } from '@/features/post/model';
 
@@ -22,7 +22,7 @@ export async function fetchCategoryPages(
   let hasMore = true;
 
   while (hasMore) {
-    const response = await withRetry(() =>
+    const response = await notionRequest(() =>
       notionClient.dataSources.query({
         data_source_id: databaseId,
         page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
@@ -41,6 +41,6 @@ export async function fetchCategoryPages(
 }
 
 export async function fetchCategoryPage(pageId: string): Promise<CategoryPage> {
-  const page = await withRetry(() => notionClient.pages.retrieve({ page_id: pageId }));
+  const page = await notionRequest(() => notionClient.pages.retrieve({ page_id: pageId }));
   return page as CategoryPage;
 }

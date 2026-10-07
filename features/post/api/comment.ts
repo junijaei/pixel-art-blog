@@ -1,11 +1,11 @@
 import type { BlockCommentRecord, NotionComment } from '@/features/post/model';
 import { notionClient } from '@/features/post/api/client';
-import { withRetry } from '@/features/post/api/retry';
+import { notionRequest } from '@/features/post/api/request';
 
 /** 단일 블록의 댓글을 가져옵니다. */
 async function fetchBlockComments(blockId: string): Promise<NotionComment[]> {
   try {
-    const response = await withRetry(() => notionClient.comments.list({ block_id: blockId }));
+    const response = await notionRequest(() => notionClient.comments.list({ block_id: blockId }));
     return response.results as unknown as NotionComment[];
   } catch {
     return [];
