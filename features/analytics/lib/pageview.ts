@@ -1,4 +1,4 @@
-import { getRedis } from './redis';
+import { getRedis } from '@/shared/lib/redis';
 
 // Redis key prefix
 const PV = 'pv';

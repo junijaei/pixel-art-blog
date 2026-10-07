@@ -16,7 +16,8 @@
     "test:coverage": "vitest --coverage",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "cdn:verify": "node --env-file=.env.local --import tsx scripts/verify-cdn.ts"
+    "cdn:verify": "node --env-file=.env.local --import tsx scripts/verify-cdn.ts",
+    "sync:comments": "node --env-file=.env.local --import tsx scripts/sync-comments.ts"
   },
   "dependencies": {
     "@giscus/react": "^3.1.0",
