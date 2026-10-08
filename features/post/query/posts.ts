@@ -35,6 +35,8 @@ const DEFAULT_POST_SORTS: DataSourceSorts = [
   },
 ];
 
+const POST_LIST_CACHE_TTL_SECONDS = 600;
+
 const fetchPostsCached = unstable_cache(
   async () =>
     toPosts(
@@ -44,7 +46,10 @@ const fetchPostsCached = unstable_cache(
       })
     ),
   ['notion-published-posts'],
-  { revalidate: 3600 }
+  // 버전 소스다. 여기서 온 updatedAt이 글 본문 캐시의 키가 된다.
+  // 페이지 revalidate(3600)보다 짧아야 재생성 시점에 최신 버전을 집는다.
+  // 같은 값이면 두 타이머가 어긋나 최악의 경우 한 주기를 통째로 날린다.
+  { revalidate: POST_LIST_CACHE_TTL_SECONDS }
 );
 
 const getAllPosts = cache(async (): Promise<Post[]> => {

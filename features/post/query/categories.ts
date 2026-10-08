@@ -38,6 +38,8 @@ const DEFAULT_CATEGORY_SORTS: DataSourceSorts = [
   },
 ];
 
+const CATEGORY_LIST_CACHE_TTL_SECONDS = 600;
+
 const fetchCategoriesCached = unstable_cache(
   async () =>
     toCategories(
@@ -47,7 +49,8 @@ const fetchCategoriesCached = unstable_cache(
       })
     ),
   ['notion-categories'],
-  { revalidate: 3600 }
+  // 버전 소스다. 페이지 revalidate(3600)보다 짧아야 한다.
+  { revalidate: CATEGORY_LIST_CACHE_TTL_SECONDS }
 );
 
 const getAllCategories = cache(async (): Promise<CategoriesQueryResult> => {

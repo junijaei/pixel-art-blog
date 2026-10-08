@@ -34,7 +34,16 @@ export interface GetPostContentOptions {
   categories: CategoriesQueryResult;
 }
 
-const POST_BLOCKS_CACHE_TTL_SECONDS = 60 * 60 * 24;
+/**
+ * 캐시 키에 updatedAt이 들어가므로 TTL은 정확성에 관여하지 않는다.
+ * 글이 수정되면 TTL과 무관하게 새 키로 떨어진다. TTL이 정하는 건
+ * "안 바뀐 글을 얼마나 오래 들고 있을지"뿐이다.
+ *
+ * 24시간이면 하루에 한 번 안 바뀐 글의 본문까지 전부 다시 읽는다. 그 비용을 없앤다.
+ * 무한(false)으로 두지 않는 것은, Notion이 last_edited_time에 반영하지 않는 변경이
+ * 있을 경우를 대비한 최후의 안전망이다.
+ */
+const POST_BLOCKS_CACHE_TTL_SECONDS = 60 * 60 * 24 * 30;
 
 const fetchPostBlocksCached = unstable_cache(
   async (postId: string, _updatedAt: string): Promise<Block[]> => {
