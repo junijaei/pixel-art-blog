@@ -59,6 +59,10 @@ beforeEach(() => {
   vi.clearAllMocks();
   vi.stubEnv('NOTION_WEBHOOK_SECRET', TOKEN);
   fetchBlockComments.mockResolvedValue([{ id: 'c1' }]);
+  getPosts.mockResolvedValue([{ id: PAGE_ID, slug: '28', categoryId: 'cat-1' }]);
+  getCategories.mockResolvedValue({
+    maps: { byId: new Map([['cat-1', { fullPath: 'notes/translate' }]]) },
+  });
 });
 
 describe('구독 검증 요청', () => {
@@ -112,8 +116,32 @@ describe('댓글 이벤트', () => {
       expect(setBlockComments).toHaveBeenCalledWith(PAGE_ID, BLOCK_ID, [{ id: 'c1' }]);
       // 프로필의 expire(7일)가 인덱스 캐시 TTL(24시간)보다 길어야 지워진 댓글이 되살아나지 않는다
       expect(revalidateTag).toHaveBeenCalledWith(`comments:${PAGE_ID}`, 'days');
+      // 태그만으로는 페이지 HTML이 안 비워져 최대 1시간 옛 내용이 나갔다
+      expect(revalidatePath).toHaveBeenCalledWith('/notes/translate/28');
     }
   );
+
+  it('데이터 캐시를 비운 뒤에 경로를 비운다', async () => {
+    const order: string[] = [];
+    revalidateTag.mockImplementation(() => void order.push('tag'));
+    revalidatePath.mockImplementation(() => void order.push('path'));
+
+    await POST((await request(commentEvent('comment.created'))) as RouteRequest);
+
+    // 순서가 뒤집히면 페이지를 다시 만들 때 옛 댓글을 읽는다
+    expect(order).toEqual(['tag', 'path']);
+  });
+
+  it('글 경로를 찾지 못해도 인덱스 갱신은 끝낸다', async () => {
+    getPosts.mockResolvedValue([]);
+
+    const res = await POST((await request(commentEvent('comment.created'))) as RouteRequest);
+
+    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({ synced: true, revalidated: null });
+    expect(setBlockComments).toHaveBeenCalled();
+    expect(revalidatePath).not.toHaveBeenCalled();
+  });
 
   it('페이지 자체에 달린 댓글은 건너뛴다', async () => {
     const event = commentEvent('comment.created', {

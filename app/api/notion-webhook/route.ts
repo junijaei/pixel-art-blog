@@ -17,21 +17,31 @@ export const dynamic = 'force-dynamic';
  * 이벤트가 순서를 바꿔 도착하거나 유실돼도 결과가 같아지고, 해결(resolve)된 댓글도
  * comments.list가 돌려주지 않으므로 자연히 인덱스에서 빠진다.
  */
-async function syncCommentedBlock(event: NotionWebhookEvent): Promise<boolean> {
+async function syncCommentedBlock(
+  event: NotionWebhookEvent
+): Promise<{ synced: boolean; revalidated: string | null }> {
   const pageId = event.data.page_id;
   const blockId = event.data.parent?.id;
 
-  if (!pageId || !blockId) return false;
+  if (!pageId || !blockId) return { synced: false, revalidated: null };
   // 페이지 자체에 달린 댓글은 블록 단위 인덱스의 대상이 아니다
-  if (blockId === pageId) return false;
+  if (blockId === pageId) return { synced: false, revalidated: null };
 
   const comments = await fetchBlockComments(blockId);
   await setBlockComments(pageId, blockId, comments);
+
+  // 데이터 캐시를 먼저 비워야 페이지를 다시 만들 때 Redis를 새로 읽는다.
   // Next 16의 revalidateTag는 무효화 표식을 얼마나 보관할지 정하는 프로필을 요구한다.
   // 표식이 캐시 항목보다 먼저 사라지면 지워진 댓글이 되살아난다.
   // 'days'는 expire 7일이라 댓글 인덱스 TTL(24시간)을 넉넉히 덮는다.
   revalidateTag(postCommentsTag(pageId), 'days');
-  return true;
+
+  // 태그 무효화는 데이터 캐시까지만 닿는다. 글 페이지 HTML은 revalidate=3600으로 따로
+  // 캐시돼 있어, 경로를 직접 비우지 않으면 새 댓글이 최대 1시간 동안 보이지 않는다.
+  const path = await resolvePostPath(pageId);
+  if (path) revalidatePath(path);
+
+  return { synced: true, revalidated: path };
 }
 
 /** 글 페이지의 공개 경로. 찾지 못하면 null. */
@@ -80,8 +90,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   try {
     if (isCommentEvent(payload)) {
-      const synced = await syncCommentedBlock(payload);
-      return NextResponse.json({ ok: true, handled: payload.type, synced });
+      const result = await syncCommentedBlock(payload);
+      return NextResponse.json({ ok: true, handled: payload.type, ...result });
     }
 
     if (payload.type === 'page.content_updated') {
