@@ -1,5 +1,5 @@
 import { fetchBlocks, fetchBlocksChildren } from '@/features/post/api/block';
-import { fetchCommentsForBlocks } from '@/features/post/api/comment';
+import { getCommentMap } from '@/features/post/api/comment-index';
 import { processBlockTree } from '@/features/post/transform/block';
 import { buildBreadcrumbItems } from '@/features/post/transform/categories';
 import type { CategoriesQueryResult } from '@/features/post/query/categories';
@@ -34,17 +34,20 @@ export interface GetPostContentOptions {
   categories: CategoriesQueryResult;
 }
 
+const POST_BLOCKS_CACHE_TTL_SECONDS = 60 * 60 * 24;
+
 const fetchPostBlocksCached = unstable_cache(
-  async (postId: string, _updatedAt: string): Promise<{ enrichedBlocks: Block[]; commentMap: BlockCommentRecord }> => {
+  async (postId: string, _updatedAt: string): Promise<Block[]> => {
     const rawBlocks = await fetchBlocks(postId);
-    const enrichedBlocks = await fetchBlocksChildren(rawBlocks, 10);
-    const { blocks } = processBlockTree(enrichedBlocks);
-    const blockIds = blocks.map((block) => block.id);
-    const commentMap = await fetchCommentsForBlocks(blockIds);
-    return { enrichedBlocks, commentMap };
+    return fetchBlocksChildren(rawBlocks);
   },
-  ['notion-post-blocks'],
-  { revalidate: 3600 }
+  // v2: 반환 형태가 { enrichedBlocks, commentMap }에서 Block[]로 바뀌었다.
+  // 키를 올리지 않으면 옛 모양의 캐시 항목이 그대로 돌아온다.
+  ['notion-post-blocks', 'v2'],
+  // 캐시 키에 updatedAt이 들어가므로 글이 수정되면 TTL과 무관하게 새 키로 떨어진다.
+  // TTL은 "안 바뀐 글을 얼마나 오래 들고 있을지"만 정한다. 페이지 revalidate(1시간)와
+  // 같은 값이면 매 재생성이 캐시 미스가 되므로 반드시 더 길어야 한다.
+  { revalidate: POST_BLOCKS_CACHE_TTL_SECONDS }
 );
 
 const processPostCoverUrl = cache(
@@ -68,7 +71,10 @@ async function applyProcessedCover(post: Post): Promise<Post> {
 }
 
 async function getPostContent(post: Post, categories: CategoriesQueryResult): Promise<PostContent> {
-  const { enrichedBlocks, commentMap } = await fetchPostBlocksCached(post.id, post.updatedAt);
+  const [enrichedBlocks, commentMap] = await Promise.all([
+    fetchPostBlocksCached(post.id, post.updatedAt),
+    getCommentMap(post.id),
+  ]);
   const { blocks, metadata: blockMetadata } = processBlockTree(enrichedBlocks);
 
   if (blockMetadata.imageBlocks.length > 0) {

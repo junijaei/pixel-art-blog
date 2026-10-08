@@ -6,7 +6,7 @@
 import { notionClient } from '@/features/post/api/client';
 import type { Block } from '@/features/post/model';
 import { NOTION_LIMITS } from '@/features/post/constants';
-import { withRetry } from '@/features/post/api/retry';
+import { notionRequest } from '@/features/post/api/request';
 
 export async function fetchBlocks(blockId: string): Promise<Block[]> {
   const blocks: Block[] = [];
@@ -14,7 +14,7 @@ export async function fetchBlocks(blockId: string): Promise<Block[]> {
   let hasMore = true;
 
   while (hasMore) {
-    const response = await withRetry(() =>
+    const response = await notionRequest(() =>
       notionClient.blocks.children.list({
         block_id: blockId,
         page_size: NOTION_LIMITS.MAX_PAGE_SIZE,
@@ -34,7 +34,7 @@ export async function fetchBlocks(blockId: string): Promise<Block[]> {
  * 블록 배열을 재귀적으로 순회하며 has_children이 true인 블록의 children을 가져와 주입합니다.
  *
  * @param blocks - 블록 배열 (Notion API 응답)
- * @param maxDepth - 최대 재귀 깊이 (기본값: 10, 무한 루프 방지)
+ * @param maxDepth - 최대 재귀 깊이 (기본값: NOTION_LIMITS.MAX_DEPTH, 무한 루프 방지)
  * @param currentDepth - 현재 깊이 (내부 사용)
  * @returns children이 주입된 블록 배열
  *
@@ -47,7 +47,7 @@ export async function fetchBlocks(blockId: string): Promise<Block[]> {
  */
 export async function fetchBlocksChildren(
   blocks: Block[],
-  maxDepth: number = 10,
+  maxDepth: number = NOTION_LIMITS.MAX_DEPTH,
   currentDepth: number = 0
 ): Promise<Block[]> {
   // 최대 깊이 도달 시 children 없이 반환 (무한 루프 방지)

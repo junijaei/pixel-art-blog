@@ -1,5 +1,4 @@
 import '@/app/globals.css';
-import { PageViewTracker } from '@/features/analytics/components/PageViewTracker';
 import { ScrollDepthTracker } from '@/features/analytics/components/ScrollDepthTracker';
 import { getCategories } from '@/features/post';
 import { CategorySidebar, SidebarSkeleton } from '@/features/post/components/sidebar';
@@ -145,7 +144,6 @@ export default function RootLayout({
             </div>
           </div>
         </ThemeProvider>
-        <PageViewTracker />
         <ScrollDepthTracker />
         {process.env.NEXT_PUBLIC_GA_ID && <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />}
         {process.env.NEXT_PUBLIC_GTM_ID && <GoogleTagManager gtmId={process.env.NEXT_PUBLIC_GTM_ID} />}
