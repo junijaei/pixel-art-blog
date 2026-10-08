@@ -32,8 +32,6 @@ export interface BreadcrumbItem {
 export interface BlockMetadata {
   tocItems: TocItem[];
   plainText: string;
-  wordCount: number;
-  charCount: number;
   imageBlocks: ImageBlock[];
 }
 

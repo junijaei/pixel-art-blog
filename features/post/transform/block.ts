@@ -20,48 +20,35 @@ class BlockCollector {
   private textParts: string[] = [];
   private imageBlocks: ImageBlock[] = [];
 
-  collectToc(block: Block): void {
-    if (!this.isHeadingBlock(block)) return;
+  /** 블록 하나에서 필요한 것을 한 번에 거둔다. rich_text는 블록당 한 번만 펼친다. */
+  collect(block: Block): void {
+    if (this.isImageBlock(block)) {
+      this.imageBlocks.push(block);
+      return;
+    }
 
-    const type = block.type;
-    const content = block[type];
+    const richText = this.extractRichText(block);
+    if (!richText) return;
 
-    if (content?.rich_text) {
-      const text = content.rich_text.map((rt) => rt.plain_text).join('');
-      const level = parseInt(type.replace('heading_', ''), 10) as 1 | 2 | 3;
+    const text = richText.map((rt) => rt.plain_text).join('');
 
+    if (this.isHeadingBlock(block)) {
       this.tocItems.push({
         id: `heading-${block.id}`,
         text,
-        level,
+        level: parseInt(block.type.replace('heading_', ''), 10) as 1 | 2 | 3,
       });
     }
-  }
 
-  collectText(block: Block): void {
-    const richText = this.extractRichText(block);
-    if (richText) {
-      const text = richText.map((rt) => rt.plain_text).join('');
-      if (text.trim()) {
-        this.textParts.push(text);
-      }
+    if (text.trim()) {
+      this.textParts.push(text);
     }
-  }
-
-  collectImage(block: Block): void {
-    if (!this.isImageBlock(block)) return;
-    this.imageBlocks.push(block);
   }
 
   finalize(): BlockMetadata {
-    const plainText = this.textParts.join(' ');
-    const trimmedText = plainText.trim();
-
     return {
       tocItems: this.tocItems,
-      plainText,
-      wordCount: trimmedText ? trimmedText.split(/\s+/).length : 0,
-      charCount: plainText.replace(/\s/g, '').length,
+      plainText: this.textParts.join(' '),
       imageBlocks: this.imageBlocks,
     };
   }
@@ -113,9 +100,7 @@ function traverseBlocks(blocks: Block[], collector: BlockCollector, maxDepth = 1
   }
 
   for (const block of blocks) {
-    collector.collectToc(block);
-    collector.collectText(block);
-    collector.collectImage(block);
+    collector.collect(block);
 
     if (block.has_children && 'children' in block && Array.isArray(block.children)) {
       traverseBlocks(block.children, collector, maxDepth, currentDepth + 1);
