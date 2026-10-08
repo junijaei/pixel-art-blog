@@ -15,8 +15,8 @@ importers:
         specifier: ^16.1.6
         version: 16.1.6(next@16.0.10(@babel/core@7.28.6)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(react@19.2.0)
       '@notionhq/client':
-        specifier: ^5.8.0
-        version: 5.8.0
+        specifier: ^5.27.0
+        version: 5.27.0
       '@react-three/drei':
         specifier: ^10.7.7
         version: 10.7.7(@react-three/fiber@9.6.1(@types/react@19.2.10)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.184.0))(@types/react@19.2.10)(@types/three@0.184.1)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(three@0.184.0)
@@ -1499,8 +1499,8 @@ packages:
     resolution: {integrity: sha512-nn5ozdjYQpUCZlWGuxcJY/KpxkWQs4DcbMCmKojjyrYDEAGy4Ce19NN4v5MduafTwJlbKc99UA8YhSVqq9yPZA==}
     engines: {node: '>=12.4.0'}
 
-  '@notionhq/client@5.8.0':
-    resolution: {integrity: sha512-CcmZ+wVDYVFmfCIjoU50x/9j8uhRPF8u23FbEQJhT1ACwn3dbCl6GRN+JMMyQmuVLJlMF7ckpPehDgmprbFtDw==}
+  '@notionhq/client@5.27.0':
+    resolution: {integrity: sha512-JnkLtAzSDrEnvtZ8dQ5L4KO+xyL5g01xK5qmKTmhJ5KFY8LWsMyFG033vHCj0mFcsz9thAMjfcAQz/SWxiexag==}
     engines: {node: '>=18'}
 
   '@open-draft/deferred-promise@2.2.0':
@@ -7990,7 +7990,7 @@ snapshots:
 
   '@nolyfill/is-core-module@1.0.39': {}
 
-  '@notionhq/client@5.8.0': {}
+  '@notionhq/client@5.27.0': {}
 
   '@open-draft/deferred-promise@2.2.0': {}
 
