@@ -167,12 +167,9 @@ describe('댓글 이벤트', () => {
 });
 
 describe('page.content_updated', () => {
-  it('해당 글 경로만 revalidate 한다', async () => {
-    getPosts.mockResolvedValue([{ id: PAGE_ID, slug: '28', categoryId: 'cat-1' }]);
-    getCategories.mockResolvedValue({
-      maps: { byId: new Map([['cat-1', { fullPath: 'notes/translate' }]]) },
-    });
-
+  // 글을 쓰는 동안 계속 울려서 발행하지도 않은 초안 때문에 글 전체를 다시 읽게 된다.
+  // 글 수정은 updatedAt 캐시 키로 이미 반영되므로 이 이벤트가 필요 없다.
+  it('처리하지 않고 무시한다', async () => {
     const event = {
       id: 'evt-2',
       type: 'page.content_updated',
@@ -183,24 +180,10 @@ describe('page.content_updated', () => {
     const res = await POST((await request(event)) as RouteRequest);
 
     expect(res.status).toBe(200);
-    expect(revalidatePath).toHaveBeenCalledWith('/notes/translate/28');
-  });
-
-  it('모르는 글이면 revalidate 하지 않는다', async () => {
-    getPosts.mockResolvedValue([]);
-    getCategories.mockResolvedValue({ maps: { byId: new Map() } });
-
-    const res = await POST(
-      (await request({
-        id: 'evt-3',
-        type: 'page.content_updated',
-        entity: { id: 'unknown', type: 'page' },
-        data: {},
-      })) as RouteRequest
-    );
-
-    expect(res.status).toBe(200);
+    await expect(res.json()).resolves.toMatchObject({ ignored: 'page.content_updated' });
     expect(revalidatePath).not.toHaveBeenCalled();
+    expect(revalidateTag).not.toHaveBeenCalled();
+    expect(getPosts).not.toHaveBeenCalled();
   });
 });
 

@@ -94,12 +94,10 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ ok: true, handled: payload.type, ...result });
     }
 
-    if (payload.type === 'page.content_updated') {
-      const pageId = payload.entity?.id ?? payload.data.page_id;
-      const path = pageId ? await resolvePostPath(pageId) : null;
-      if (path) revalidatePath(path);
-      return NextResponse.json({ ok: true, handled: payload.type, revalidated: path });
-    }
+    // page.content_updated는 다루지 않는다. 글을 쓰는 동안 계속 울려서 발행하지도 않은
+    // 초안 때문에 글 전체를 다시 읽게 된다. 글 수정은 목록 쿼리가 실어오는 updatedAt이
+    // 본문 캐시의 키라서, 그 키가 바뀌는 것만으로 자동 반영된다.
+    // 반면 댓글은 updatedAt을 바꾸지 않으므로 웹훅이 유일한 감지 수단이다.
   } catch (error) {
     // 200을 주면 Notion이 재시도하지 않는다. 실패는 500으로 알려 재전송받는다.
     console.error('[NotionWebhook] 처리 실패:', payload.type, error);
