@@ -1,6 +1,6 @@
 'use client';
 
-import { Environment, Float, Lightformer, PerspectiveCamera, Stars } from '@react-three/drei';
+import { Float, PerspectiveCamera, Stars } from '@react-three/drei';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { RefObject, Suspense, createContext, useContext, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
@@ -190,10 +190,6 @@ function CoreScene() {
 
   return (
     <>
-      <Environment resolution={256} frames={1} background={false}>
-        <Lightformer form="circle" intensity={0.3} scale={[8, 0.8, 1]} position={[0, -5, 3]} />
-      </Environment>
-
       <Float
         speed={config.reducedMotion ? 0 : 2}
         rotationIntensity={config.reducedMotion ? 0 : 1}
@@ -271,19 +267,12 @@ function PixelCore() {
       {/* Inner Core */}
       <mesh ref={innerRef}>
         <icosahedronGeometry args={[1, 0]} />
-        <meshPhysicalMaterial
+        <meshStandardMaterial
           color={config.coreSurfaceColor}
           emissive={config.lightColor}
           emissiveIntensity={config.coreEmissiveIntensity}
           metalness={0.1}
           roughness={0.03}
-          clearcoat={1}
-          clearcoatRoughness={0.035}
-          ior={2.3}
-          reflectivity={1}
-          specularColor={config.lightColor}
-          specularIntensity={3.0}
-          envMapIntensity={config.coreEnvIntensity}
           flatShading
         />
       </mesh>
