@@ -42,7 +42,10 @@ HANGUL = set(range(0xAC00, 0xD7A4))          # 현대 한글 음절 11,172자
 JAMO = set(range(0x1100, 0x1200)) | set(range(0x3130, 0x3190))
 
 TARGETS = [
+    # 코드블록 본문
     ('D2Coding.woff2', LATIN | SYMBOLS | HANGUL | JAMO),
+    # font-pixel 체인의 한글 폴백 (레이블, 배지). 라틴은 Silkscreen이 맡는다.
+    ('Galmuri9.woff2', LATIN | SYMBOLS | HANGUL | JAMO),
 ]
 
 
