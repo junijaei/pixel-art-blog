@@ -9,6 +9,11 @@ import { createPortal } from 'react-dom';
 interface CommentWrapperProps {
   comments: NotionComment[];
   children: React.ReactNode;
+  /**
+   * 기본은 div. 리스트 항목을 감쌀 때만 li로 바꾼다.
+   * ul/ol은 li 외의 요소를 직접 담을 수 없다.
+   */
+  as?: 'div' | 'li';
 }
 
 function renderText(comment: NotionComment) {
@@ -21,12 +26,13 @@ function renderText(comment: NotionComment) {
   ));
 }
 
-export function CommentWrapper({ comments, children }: CommentWrapperProps) {
+export function CommentWrapper({ comments, children, as: Container = 'div' }: CommentWrapperProps) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [popoverStyle, setPopoverStyle] = useState<{ top: number; left: number }>({ top: 0, left: 0 });
 
-  const containerRef = useRef<HTMLDivElement>(null);
+  // 실제로는 as에 따라 div 또는 li 하나다. 교집합으로 선언해야 두 태그 모두에 ref를 넘길 수 있다.
+  const containerRef = useRef<HTMLDivElement & HTMLLIElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -89,7 +95,7 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
   }, [open, updatePosition]);
 
   return (
-    <div ref={containerRef} onClick={handleContainerClick} className="group relative my-4 cursor-pointer">
+    <Container ref={containerRef} onClick={handleContainerClick} className="group relative my-4 cursor-pointer">
       {/* 블록 본문 */}
       <div className="group-hover:underline decoration-muted-foreground/40 group-hover:underline-offset-2">
         {children}
@@ -180,6 +186,6 @@ export function CommentWrapper({ comments, children }: CommentWrapperProps) {
           </div>,
           document.body
         )}
-    </div>
+    </Container>
   );
 }

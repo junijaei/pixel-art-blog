@@ -8,4 +8,6 @@ export interface NumberedListItemProps {
   block: NumberedListBlock;
   children?: ReactNode;
   index?: number;
+  /** BulletedListItem의 as와 같다. */
+  as?: 'li' | 'div';
 }
