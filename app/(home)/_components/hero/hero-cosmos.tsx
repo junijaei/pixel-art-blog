@@ -1,16 +1,11 @@
 'use client';
 
-import type { ThemeMode } from '@/app/(home)/_components/hero/hero-scene';
+import { HeroBackground, HeroCore, type ThemeMode } from '@/app/(home)/_components/hero/hero-scene';
+import { useHeroReducedMotion } from '@/app/(home)/_components/hero/hero-motion';
 import { FrameLink } from '@/features/link-preview/components/frame-link';
 import { cn } from '@/shared/lib/utils';
-import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from 'motion/react';
-import dynamic from 'next/dynamic';
+import { motion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import { useTheme } from 'next-themes';
-import { useEffect, useState } from 'react';
-
-// three/@react-three는 이 둘을 통해서만 들어온다. 정적 import로 바꾸면 홈 초기 번들에 다시 실린다.
-const HeroBackground = dynamic(() => import('./hero-scene').then((m) => m.HeroBackground), { ssr: false });
-const HeroCore = dynamic(() => import('./hero-scene').then((m) => m.HeroCore), { ssr: false });
 
 // --- Constants ---
 
@@ -38,13 +33,8 @@ interface HeroCosmosProps {
 
 export function HeroCosmos({ className }: HeroCosmosProps) {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
   const { scrollY } = useScroll();
-  const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const prefersReducedMotion = useHeroReducedMotion();
 
   const yTranslate = useTransform(scrollY, [0, 500], [0, 100]);
   const opacity = useTransform(scrollY, [0, 400], [1, 0]);
@@ -55,12 +45,12 @@ export function HeroCosmos({ className }: HeroCosmosProps) {
 
   return (
     <section className={cn(HERO_SECTION_ACTIVE_CLASS, className)}>
-      {/* 3D는 테마가 확정된 뒤에만 붙는다. 텍스트는 서버에서 먼저 그려진다. */}
-      {mounted && <HeroBackground theme={theme} reducedMotion={reducedMotion} />}
+      {/* 텍스트와 canvas 자리는 서버에서 렌더링하고 WebGL은 effect에서 초기화한다. */}
+      <HeroBackground theme={theme} reducedMotion={reducedMotion} />
 
       <HeroContent yTranslate={yTranslate} opacity={opacity} scale={scale} reducedMotion={reducedMotion} />
 
-      {mounted && <HeroCore theme={theme} reducedMotion={reducedMotion} />}
+      <HeroCore theme={theme} reducedMotion={reducedMotion} />
 
       <DecorativeFrame />
     </section>
@@ -81,7 +71,7 @@ function HeroContent({
   return (
     <div className="relative flex h-full items-center justify-center px-6">
       <motion.div
-        style={reducedMotion ? undefined : { y: yTranslate, opacity, scale }}
+        style={reducedMotion ? { opacity: 1, transform: 'none' } : { y: yTranslate, opacity, scale }}
         className="mx-auto max-w-5xl text-center"
       >
         <h1 className="font-mulmaru text-foreground mb-10 text-6xl leading-[1.05] tracking-tighter transition-colors duration-700 md:text-[10rem]">
