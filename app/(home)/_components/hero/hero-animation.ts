@@ -1,26 +1,31 @@
-/** One demand-driven loop per canvas; decoration is capped at 30 fps. */
+/** Visibility-aware 60 fps loop with a continuous clock and fractional frame budget. */
 export function createHeroAnimation(draw: (time: number) => void, reducedMotion: boolean) {
-  const interval = 1000 / 30;
+  const interval = 1000 / 60;
   let visible = true;
   let disposed = false;
   let frameId = 0;
   let previous: number | null = null;
   let elapsed = 0;
+  let sinceDraw = 0;
   let dirty = true;
 
   const stop = () => {
     cancelAnimationFrame(frameId);
     frameId = 0;
     previous = null;
+    sinceDraw = 0;
   };
 
   const frame = (now: number) => {
     frameId = 0;
     if (disposed || !visible || document.hidden) return;
-    const delta = previous === null ? 0 : now - previous;
-    if (dirty || previous === null || delta >= interval) {
-      if (!reducedMotion) elapsed += Math.min(delta, 100) / 1000;
-      previous = now;
+    const delta = previous === null ? 0 : Math.min(now - previous, 100);
+    previous = now;
+    if (!reducedMotion) elapsed += delta / 1000;
+    sinceDraw += delta;
+    // RAF timestamps jitter around 16.67 ms; don't accidentally halve the rate.
+    if (dirty || sinceDraw + 0.5 >= interval) {
+      sinceDraw = sinceDraw >= interval ? sinceDraw % interval : 0;
       dirty = false;
       draw(reducedMotion ? 0 : elapsed);
     }

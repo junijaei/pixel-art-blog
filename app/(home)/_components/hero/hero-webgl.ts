@@ -1,9 +1,5 @@
-import {
-  createCoreGeometry,
-  createParticles,
-  createRings,
-  createWireframe,
-} from '@/app/(home)/_components/hero/hero-geometry';
+import { createCoreGeometry, createParticles, createRings } from '@/app/(home)/_components/hero/hero-geometry';
+import { getMeteorProgress } from '@/app/(home)/_components/hero/hero-meteor';
 
 export interface HeroRenderer {
   resize(width: number, height: number, pixelRatio: number, fullHeight?: number): void;
@@ -19,6 +15,7 @@ uniform float uTime;
 uniform float uMode;
 uniform vec3 uProjection;
 uniform float uPixelRatio;
+uniform float uMeteorProgress;
 varying vec3 vNormal;
 varying vec3 vPosition;
 varying vec2 vUv;
@@ -31,25 +28,50 @@ mat3 rotation(float x, float y, float z) {
 }
 void main() {
   vec3 p=aPosition;
+  if (uMode > 5.5) {
+    float cycle=mod(floor(uTime/24.),3.);
+    float direction=cycle < 1.5 ? -1. : 1.;
+    vec2 start=vec2(cycle < .5 ? .9 : (cycle < 1.5 ? .2 : -.8), .62+cycle*.06);
+    vec2 travel=vec2(direction*.65,-.38);
+    vec2 along=normalize(vec2(travel.x*uProjection.y,travel.y));
+    vec2 across=vec2(-along.y,along.x);
+    vec2 head=start+travel*uMeteorProgress;
+    vec2 tail=along*(aPosition.x-1.)*.17+across*aPosition.y*.0025;
+    tail.x/=uProjection.y;
+    gl_Position=vec4(head+tail,0.,1.);
+    vUv=aPosition.xy;
+    vFade=smoothstep(0.,.12,uMeteorProgress)*(1.-smoothstep(.6,1.,uMeteorProgress));
+    vNormal=vec3(0.);
+    vPosition=vec3(0.);
+    return;
+  }
   mat3 model=mat3(1.);
-  if (uMode < .5) model=rotation(sin(uTime*.1)*.1,uTime*.05,0.);
+  if (uMode < .5 || uMode > 4.5) model=rotation(sin(uTime*.035)*.07,uTime*.012,sin(uTime*.025)*.035);
   else if (uMode < 1.5) model=rotation(0.,0.,uTime*.1);
   else if (uMode < 2.5) model=rotation(uTime*.4,uTime*.2,0.);
-  else if (uMode < 3.5) {
-    model=rotation(-uTime*.15,-uTime*.25,0.);
-    p*=1.+sin(uTime*2.)*.05;
-  }
-  if (uMode > 4.5) p=normalize(p)*110.;
+  if (uMode > 4.5) p=normalize(p)*85.;
   p=model*p;
+  if (uMode < .5 || uMode > 4.5) {
+    // The viewer drifts inside a spherical field; near points gain more parallax.
+    p-=vec3(sin(uTime*.09)*1.8,cos(uTime*.065)*1.3,sin(uTime*.055)*2.);
+    p.z+=15.;
+  }
   if (uMode > 1.5 && uMode < 4.5) p.y+=sin(uTime)*.15;
   vNormal=model*aNormal;
   vPosition=p;
   vUv=aPosition.xy/2.5;
   float distance=15.-p.z;
   gl_Position=vec4(p.x*uProjection.x/uProjection.y, p.y*uProjection.x, distance*1.001-0.2001, distance);
-  float pointSize=uMode > 4.5 ? 1.3 : .015*uProjection.z/max(distance,.1);
-  gl_PointSize=clamp(pointSize*uPixelRatio,1.,6.*uPixelRatio);
-  vFade=uMode > 4.5 ? .45+.25*sin(uTime+dot(aPosition,vec3(1.))) : 1.-smoothstep(10.,35.,distance);
+  float seed=fract(dot(aPosition,vec3(.137,.219,.173)));
+  float worldSize=mix(.035,.12,seed*seed);
+  float pointSize=worldSize*uProjection.z/max(distance,1.);
+  if (uMode > 4.5) pointSize=1.8+seed*.4;
+  gl_PointSize=clamp(pointSize,1.8,4.8)*uPixelRatio;
+  float nearFade=smoothstep(3.,9.,distance);
+  float depthFade=1.-smoothstep(25.,65.,distance);
+  float shimmer=.9+.1*sin(uTime*.45+seed*18.);
+  vFade=nearFade*mix(.1,.28,depthFade)*shimmer;
+  if (uMode > 4.5) vFade=.12+seed*.07;
 }
 `;
 
@@ -65,9 +87,16 @@ varying float vFade;
 void main() {
   vec3 color=vec3(uDark);
   float alpha=.15;
-  if (uMode < .5 || uMode > 4.5) {
-    float radius=length(gl_PointCoord-.5)*2.;
-    alpha=(1.-smoothstep(.15,1.,radius))*.6*vFade;
+  if (uMode > 5.5) {
+    float crossSection=1.-smoothstep(.2,1.,abs(vUv.y));
+    float tail=pow(clamp(vUv.x,0.,1.),2.5);
+    alpha=crossSection*tail*vFade*mix(.2,.32,uDark);
+  } else if (uMode < .5 || uMode > 4.5) {
+    // Square silhouettes; only the outermost edge is softened, never rounded.
+    float edge=max(abs(gl_PointCoord.x-.5),abs(gl_PointCoord.y-.5));
+    // Invert a restrained gray around the scene midpoint to keep similar contrast on both themes.
+    color=vec3(mix(.42,.58,uDark));
+    alpha=(1.-smoothstep(.43,.5,edge))*vFade;
   } else if (uMode > 1.5 && uMode < 2.5) {
     vec3 n=normalize(vNormal);
     vec3 view=normalize(vec3(0.,0.,15.)-vPosition);
@@ -81,8 +110,7 @@ void main() {
     float fresnel=pow(1.-max(dot(n,view),0.),4.)*.14;
     color=vec3(mix(.018+diffuse*.28+specular+fresnel,.86+diffuse*.4+specular*.1,uDark));
     alpha=1.;
-  } else if (uMode > 2.5 && uMode < 3.5) alpha=.3;
-  else if (uMode > 3.5 && uMode < 4.5) {
+  } else if (uMode > 3.5 && uMode < 4.5) {
     float radius=length(vUv);
     alpha=(1.-smoothstep(.45,1.,radius))*mix(.045,.12,uDark);
   }
@@ -116,6 +144,7 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, layer: 'background
 
   try {
     if (!program) throw new Error('Cannot allocate WebGL program');
+    const highPrecision = (gl.getShaderPrecisionFormat(gl.FRAGMENT_SHADER, gl.HIGH_FLOAT)?.precision ?? 0) > 0;
     for (const [type, source] of [
       [gl.VERTEX_SHADER, VERTEX_SHADER],
       [gl.FRAGMENT_SHADER, FRAGMENT_SHADER],
@@ -123,7 +152,10 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, layer: 'background
       const shader = gl.createShader(type);
       if (!shader) throw new Error('Cannot allocate WebGL shader');
       shaders.push(shader);
-      gl.shaderSource(shader, source);
+      gl.shaderSource(
+        shader,
+        highPrecision ? source.replace('precision mediump float;', 'precision highp float;') : source
+      );
       gl.compileShader(shader);
       if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) throw new Error('Cannot compile hero shader');
       gl.attachShader(program, shader);
@@ -139,6 +171,7 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, layer: 'background
     const dark = gl.getUniformLocation(program, 'uDark');
     const projection = gl.getUniformLocation(program, 'uProjection');
     const pixelRatio = gl.getUniformLocation(program, 'uPixelRatio');
+    const meteorProgress = gl.getUniformLocation(program, 'uMeteorProgress');
     function buffer(data: Float32Array): WebGLBuffer {
       const result = gl!.createBuffer();
       if (!result) throw new Error('Cannot allocate hero buffer');
@@ -148,11 +181,14 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, layer: 'background
       return result;
     }
     const core = layer === 'core' ? createCoreGeometry() : null;
-    const points = layer === 'background' ? buffer(createParticles(5000)) : null;
+    const points = layer === 'background' ? buffer(createParticles(3200)) : null;
     const rings = layer === 'background' ? buffer(createRings()) : null;
+    const meteor =
+      layer === 'background'
+        ? buffer(new Float32Array([0, -1, 0, 1, -1, 0, 1, 1, 0, 0, -1, 0, 1, 1, 0, 0, 1, 0]))
+        : null;
     const surface = core ? buffer(core.positions) : null;
     const normals = core ? buffer(core.normals) : null;
-    const wire = core ? buffer(createWireframe()) : null;
     const glow = core
       ? buffer(new Float32Array([-2.5, -2.5, 0, 2.5, -2.5, 0, 2.5, 2.5, 0, -2.5, -2.5, 0, 2.5, 2.5, 0, -2.5, 2.5, 0]))
       : null;
@@ -192,11 +228,16 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, layer: 'background
         gl.disableVertexAttribArray(normal);
         gl.vertexAttrib3f(normal, 0, 0, 1);
         if (points && rings) {
-          draw(points, gl.POINTS, 3000, 0);
-          draw(points, gl.POINTS, theme === 'dark' ? 2000 : 800, 5, 3000);
+          draw(points, gl.POINTS, 2400, 0);
+          draw(points, gl.POINTS, 800, 5, 2400);
           draw(rings, gl.TRIANGLES, 3 * 128 * 6, 1);
+          const progress = getMeteorProgress(seconds);
+          if (meteor && progress !== null) {
+            gl.uniform1f(meteorProgress, progress);
+            draw(meteor, gl.TRIANGLES, 6, 6);
+          }
         }
-        if (surface && normals && wire && glow) {
+        if (surface && normals && glow) {
           gl.disable(gl.DEPTH_TEST);
           gl.depthMask(false);
           draw(glow, gl.TRIANGLES, 6, 4);
@@ -206,8 +247,6 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, layer: 'background
           gl.enableVertexAttribArray(normal);
           gl.vertexAttribPointer(normal, 3, gl.FLOAT, false, 0, 0);
           draw(surface, gl.TRIANGLES, 60, 2);
-          gl.disableVertexAttribArray(normal);
-          draw(wire, gl.LINES, 24, 3);
         }
       },
       dispose,

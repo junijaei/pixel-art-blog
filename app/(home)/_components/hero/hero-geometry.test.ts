@@ -1,18 +1,28 @@
 import { describe, expect, it } from 'vitest';
 
-import {
-  createCoreGeometry,
-  createParticles,
-  createRings,
-  createWireframe,
-} from '@/app/(home)/_components/hero/hero-geometry';
+import { createCoreGeometry, createParticles, createRings } from '@/app/(home)/_components/hero/hero-geometry';
 
 describe('hero geometry', () => {
-  it('reproduces the particle field without random render-time input', () => {
+  it('reproduces a spherical particle field surrounding the viewer with varied depth', () => {
     const points = createParticles(3000);
     expect(points).toEqual(createParticles(3000));
     expect(points.length).toBe(9000);
-    expect(Array.from(points).every((value) => Number.isFinite(value) && Math.abs(value) <= 20)).toBe(true);
+    expect(Array.from(points).every(Number.isFinite)).toBe(true);
+    expect(createParticles(0)).toHaveLength(0);
+    const radii: number[] = [];
+    for (let i = 0; i < points.length; i += 3) {
+      const radius = Math.hypot(points[i], points[i + 1], points[i + 2]);
+      expect(radius).toBeGreaterThanOrEqual(8);
+      expect(radius).toBeLessThanOrEqual(55);
+      radii.push(radius);
+    }
+    expect(Math.min(...radii)).toBeLessThan(15);
+    expect(Math.max(...radii)).toBeGreaterThan(50);
+    for (let axis = 0; axis < 3; axis++) {
+      const coordinates = Array.from(points).filter((_, index) => index % 3 === axis);
+      expect(coordinates.filter((value) => value > 0).length).toBeGreaterThan(1200);
+      expect(coordinates.filter((value) => value < 0).length).toBeGreaterThan(1200);
+    }
   });
 
   it('builds twenty outward-facing flat icosahedron faces with unit normals', () => {
@@ -28,8 +38,7 @@ describe('hero geometry', () => {
     }
   });
 
-  it('retains all twelve octahedron edges and three complete tilted orbits', () => {
-    expect(createWireframe().length).toBe(12 * 2 * 3);
+  it('retains three complete tilted orbits', () => {
     const rings = createRings();
     expect(rings.length).toBe(3 * 128 * 6 * 3);
     expect(Array.from(rings).every(Number.isFinite)).toBe(true);

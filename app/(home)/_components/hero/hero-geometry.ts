@@ -1,10 +1,20 @@
 /** Fixed seed keeps the field stable across remounts and theme changes. */
 export function createParticles(count: number): Float32Array {
   let seed = 17321;
-  const positions = new Float32Array(count * 3);
-  for (let i = 0; i < positions.length; i++) {
+  const nextRandom = () => {
     seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-    positions[i] = (seed / 4294967296 - 0.5) * 40;
+    return seed / 4294967296;
+  };
+  const positions = new Float32Array(count * 3);
+  for (let i = 0; i < positions.length; i += 3) {
+    // Uniform directions and volume density surround the camera without a flat backdrop.
+    const azimuth = nextRandom() * Math.PI * 2;
+    const vertical = nextRandom() * 2 - 1;
+    const radius = Math.cbrt(8 ** 3 + nextRandom() * (55 ** 3 - 8 ** 3));
+    const horizontal = Math.sqrt(1 - vertical * vertical);
+    positions[i] = Math.cos(azimuth) * horizontal * radius;
+    positions[i + 1] = vertical * radius;
+    positions[i + 2] = Math.sin(azimuth) * horizontal * radius;
   }
   return positions;
 }
@@ -73,24 +83,6 @@ export function createCoreGeometry(): { positions: Float32Array; normals: Float3
     }
   }
   return { positions, normals };
-}
-
-export function createWireframe(): Float32Array {
-  const vertices = [
-    [1.8, 0, 0],
-    [-1.8, 0, 0],
-    [0, 1.8, 0],
-    [0, -1.8, 0],
-    [0, 0, 1.8],
-    [0, 0, -1.8],
-  ];
-  const positions: number[] = [];
-  for (let a = 0; a < vertices.length; a++) {
-    for (let b = a + 1; b < vertices.length; b++) {
-      if (Math.floor(a / 2) !== Math.floor(b / 2)) positions.push(...vertices[a], ...vertices[b]);
-    }
-  }
-  return new Float32Array(positions);
 }
 
 export function createRings(): Float32Array {

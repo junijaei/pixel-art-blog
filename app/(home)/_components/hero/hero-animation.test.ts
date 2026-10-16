@@ -78,8 +78,21 @@ describe('hero animation scheduling', () => {
     const draw = vi.fn();
     const animation = createHeroAnimation(draw, false);
     for (let time = 0; time <= 1000; time += 5) tick(time);
-    expect(draw.mock.calls.length).toBeGreaterThanOrEqual(28);
-    expect(draw.mock.calls.length).toBeLessThanOrEqual(31);
+    expect(draw.mock.calls.length).toBeGreaterThanOrEqual(59);
+    expect(draw.mock.calls.length).toBeLessThanOrEqual(62);
+    animation.dispose();
+  });
+
+  it('does not drop every other frame when 60 Hz timestamps fluctuate slightly', () => {
+    const draw = vi.fn();
+    const animation = createHeroAnimation(draw, false);
+    let time = 0;
+    for (let i = 0; i < 60; i++) {
+      tick(time);
+      time += i % 2 ? 16.8 : 16.5;
+    }
+    expect(draw.mock.calls.length).toBe(60);
+    expect(draw.mock.lastCall![0]).toBeCloseTo((time - 16.8) / 1000);
     animation.dispose();
   });
 });
