@@ -1,6 +1,6 @@
 'use client';
 
-import { HeroBackground, type ThemeMode } from '@/app/(home)/_components/hero/hero-scene';
+import { HeroBackground, HeroCore, type ThemeMode } from '@/app/(home)/_components/hero/hero-scene';
 import { useHeroReducedMotion } from '@/app/(home)/_components/hero/hero-motion';
 import { FrameLink } from '@/features/link-preview/components/frame-link';
 import { cn } from '@/shared/lib/utils';
@@ -45,10 +45,12 @@ export function HeroCosmos({ className }: HeroCosmosProps) {
 
   return (
     <section className={cn(HERO_SECTION_ACTIVE_CLASS, className)}>
-      {/* React renders the snow canvas on demand while keeping the content in HTML. */}
-      <HeroBackground theme={theme} opacity={opacity} reducedMotion={reducedMotion} />
+      {/* 텍스트와 canvas 자리는 서버에서 렌더링하고 WebGL은 effect에서 초기화한다. */}
+      <HeroBackground theme={theme} reducedMotion={reducedMotion} />
 
       <HeroContent yTranslate={yTranslate} opacity={opacity} scale={scale} reducedMotion={reducedMotion} />
+
+      <HeroCore theme={theme} reducedMotion={reducedMotion} />
 
       <DecorativeFrame />
     </section>
@@ -79,7 +81,7 @@ function HeroContent({
             </span>
           </span>
           <span className="-mt-2 block overflow-hidden md:-mt-8">
-            <span className="text-muted-foreground/60 inline-block tracking-wide transition-[text-stroke] duration-700 motion-safe:animate-[hero-rise_0.8s_cubic-bezier(0.16,1,0.3,1)_0.4s_both]">
+            <span className="text-ring inline-block tracking-wide transition-[text-stroke] duration-700 motion-safe:animate-[hero-rise_0.8s_cubic-bezier(0.16,1,0.3,1)_0.4s_both]">
               By Bit
             </span>
           </span>
@@ -107,10 +109,6 @@ function DecorativeFrame() {
       {DECORATIVE_FRAME_SEGMENTS.map((style, index) => (
         <div key={index} className={cn('bg-foreground/20 absolute transition-colors duration-700', style)} />
       ))}
-
-      <div className="font-pixel text-foreground/20 invisible absolute bottom-10 left-1/2 -translate-x-1/2 text-[10px] tracking-widest transition-colors duration-700 sm:visible">
-        JUNI-JAEI / BIT-BY-BIT
-      </div>
     </div>
   );
 }
