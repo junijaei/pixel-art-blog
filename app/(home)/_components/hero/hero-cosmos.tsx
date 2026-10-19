@@ -1,6 +1,6 @@
 'use client';
 
-import { HeroBackground, HeroCore, type ThemeMode } from '@/app/(home)/_components/hero/hero-scene';
+import { HeroBackground, type ThemeMode } from '@/app/(home)/_components/hero/hero-scene';
 import { useHeroReducedMotion } from '@/app/(home)/_components/hero/hero-motion';
 import { FrameLink } from '@/features/link-preview/components/frame-link';
 import { cn } from '@/shared/lib/utils';
@@ -45,12 +45,10 @@ export function HeroCosmos({ className }: HeroCosmosProps) {
 
   return (
     <section className={cn(HERO_SECTION_ACTIVE_CLASS, className)}>
-      {/* 텍스트와 canvas 자리는 서버에서 렌더링하고 WebGL은 effect에서 초기화한다. */}
-      <HeroBackground theme={theme} reducedMotion={reducedMotion} />
+      {/* React renders the snow canvas on demand while keeping the content in HTML. */}
+      <HeroBackground theme={theme} opacity={opacity} reducedMotion={reducedMotion} />
 
       <HeroContent yTranslate={yTranslate} opacity={opacity} scale={scale} reducedMotion={reducedMotion} />
-
-      <HeroCore theme={theme} reducedMotion={reducedMotion} />
 
       <DecorativeFrame />
     </section>

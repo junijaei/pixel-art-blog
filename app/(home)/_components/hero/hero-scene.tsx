@@ -1,105 +1,62 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-
-import { createHeroAnimation } from '@/app/(home)/_components/hero/hero-animation';
-import { createHeroRenderer } from '@/app/(home)/_components/hero/hero-webgl';
+import PixelSnow from '@/app/(home)/_components/hero/pixel-snow';
+import type { MotionValue } from 'motion/react';
 
 export type ThemeMode = 'light' | 'dark';
 
 export interface HeroSceneProps {
   reducedMotion: boolean;
+  opacity: MotionValue<number>;
   theme: ThemeMode;
 }
 
-function SceneCanvas({ layer, theme, reducedMotion }: HeroSceneProps & { layer: 'background' | 'core' }) {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const settingsRef = useRef({ theme, reducedMotion });
-  const animationRef = useRef<ReturnType<typeof createHeroAnimation> | null>(null);
+/** Pixel snow fills the hero while the HTML headline and CTA stay above it. */
+export function HeroBackground({ opacity, theme, reducedMotion }: HeroSceneProps) {
+  const backgroundRef = useRef<HTMLDivElement>(null);
+  const isLight = theme === 'light';
 
   useEffect(() => {
-    settingsRef.current = { theme, reducedMotion };
-    animationRef.current?.setReducedMotion(reducedMotion);
-    animationRef.current?.invalidate();
-  }, [theme, reducedMotion]);
+    const background = backgroundRef.current;
+    if (!background) return;
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const section = canvas?.closest('section');
-    if (!canvas || !section) return;
-
-    let renderer: ReturnType<typeof createHeroRenderer> = null;
-    let visible = true;
-
-    const resize = () => {
-      // Preserve sharp core edges without drawing a second full-screen retina canvas.
-      const ratio = Math.min(window.devicePixelRatio || 1, layer === 'core' ? 1.5 : 1);
-      renderer?.resize(canvas.clientWidth, canvas.clientHeight, ratio, section.clientHeight);
-      animationRef.current?.invalidate();
+    const updateOpacity = (value: number) => {
+      background.style.opacity = String(reducedMotion ? 1 : value);
     };
 
-    const initialize = () => {
-      renderer = createHeroRenderer(canvas, layer);
-      if (!renderer) return;
-      animationRef.current = createHeroAnimation(
-        (time) => renderer?.render(time, settingsRef.current.theme),
-        settingsRef.current.reducedMotion
-      );
-      animationRef.current.setVisible(visible);
-      resize();
-    };
+    updateOpacity(opacity.get());
+    return opacity.on('change', updateOpacity);
+  }, [opacity, reducedMotion]);
 
-    const onContextLost = (event: Event) => {
-      event.preventDefault();
-      animationRef.current?.dispose();
-      animationRef.current = null;
-      renderer?.dispose();
-      renderer = null;
-    };
-
-    canvas.addEventListener('webglcontextlost', onContextLost);
-    canvas.addEventListener('webglcontextrestored', initialize);
-    initialize();
-
-    const resizeObserver = new ResizeObserver(resize);
-    resizeObserver.observe(section);
-    resizeObserver.observe(canvas);
-    const intersectionObserver = new IntersectionObserver((entries) => {
-      visible = entries.some((entry) => entry.isIntersecting);
-      animationRef.current?.setVisible(visible);
-    });
-    intersectionObserver.observe(section);
-
-    return () => {
-      resizeObserver.disconnect();
-      intersectionObserver.disconnect();
-      canvas.removeEventListener('webglcontextlost', onContextLost);
-      canvas.removeEventListener('webglcontextrestored', initialize);
-      animationRef.current?.dispose();
-      animationRef.current = null;
-      renderer?.dispose();
-    };
-  }, [layer]);
-
-  return <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none block h-full w-full" />;
-}
-
-export function HeroBackground(props: HeroSceneProps) {
   return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
-      <SceneCanvas {...props} layer="background" />
-      <div className="via-background/20 to-background pointer-events-none absolute inset-0 bg-radial-[circle_at_50%_50%] from-transparent transition-colors duration-700" />
-      <div className="from-background pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-linear-to-t to-transparent transition-colors duration-700" />
-    </div>
-  );
-}
-
-export function HeroCore(props: HeroSceneProps) {
-  return (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-20">
-      <div className="absolute top-1/2 left-1/2 aspect-square h-2/5 max-w-full -translate-x-1/2 -translate-y-1/2">
-        <SceneCanvas {...props} layer="core" />
-      </div>
+    <div
+      ref={backgroundRef}
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0 z-0"
+      style={{ opacity: 1 }}
+    >
+      <PixelSnow
+        className="absolute inset-0"
+        color={isLight ? '#5c5c5c' : '#dedede'}
+        variant="square"
+        density={0.6}
+        speed={reducedMotion ? 0.25 : 1}
+        wind={reducedMotion ? 0.05 : 0.25}
+        sway={reducedMotion ? 0.18 : 0.5}
+        flakeSize={1}
+        pixelSize={3}
+        depth={0.6}
+        brightness={1}
+        glow={0.8}
+        twinkle={reducedMotion ? 0 : 0.35}
+        accumulate
+        mouseInteraction={!reducedMotion}
+        intro={!reducedMotion}
+        fade={0}
+        opacity={1}
+        lightMode={isLight}
+      />
     </div>
   );
 }
