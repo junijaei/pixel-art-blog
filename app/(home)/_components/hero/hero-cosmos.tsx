@@ -1,27 +1,17 @@
 'use client';
 
-import { HeroBackground, HeroCore, type ThemeMode } from '@/app/(home)/_components/hero/hero-scene';
 import { useHeroReducedMotion } from '@/app/(home)/_components/hero/hero-motion';
+import { HeroBackground, HeroCore, type ThemeMode } from '@/app/(home)/_components/hero/hero-scene';
 import { FrameLink } from '@/features/link-preview/components/frame-link';
 import { cn } from '@/shared/lib/utils';
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import { useTheme } from 'next-themes';
+import { useRef } from 'react';
 
 // --- Constants ---
 
 const HERO_SECTION_ACTIVE_CLASS =
   'bg-background relative h-[calc(100dvh-60px)] min-h-150 w-full overflow-hidden transition-colors duration-700 md:h-[calc(100dvh-65px)]';
-
-const DECORATIVE_FRAME_SEGMENTS = [
-  'top-8 left-8 h-px w-16',
-  'top-8 left-8 h-16 w-px',
-  'top-8 right-8 h-px w-16',
-  'top-8 right-8 h-16 w-px',
-  'bottom-8 left-8 h-px w-16',
-  'bottom-8 left-8 h-16 w-px',
-  'bottom-8 right-8 h-px w-16',
-  'bottom-8 right-8 h-16 w-px',
-] as const;
 
 // --- Props ---
 
@@ -33,26 +23,28 @@ interface HeroCosmosProps {
 
 export function HeroCosmos({ className }: HeroCosmosProps) {
   const { resolvedTheme } = useTheme();
-  const { scrollY } = useScroll();
+  const sectionRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start 60px', 'end 60px'],
+  });
   const prefersReducedMotion = useHeroReducedMotion();
 
-  const yTranslate = useTransform(scrollY, [0, 500], [0, 100]);
-  const opacity = useTransform(scrollY, [0, 400], [1, 0]);
-  const scale = useTransform(scrollY, [0, 400], [1, 0.95]);
+  const yTranslate = useTransform(scrollYProgress, [0, 0.7], [0, 100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.7], [1, 1, 0]);
+  const scale = useTransform(scrollYProgress, [0, 0.7], [1, 0.95]);
 
   const theme: ThemeMode = resolvedTheme === 'dark' ? 'dark' : 'light';
   const reducedMotion = !!prefersReducedMotion;
 
   return (
-    <section className={cn(HERO_SECTION_ACTIVE_CLASS, className)}>
+    <section ref={sectionRef} className={cn(HERO_SECTION_ACTIVE_CLASS, className)}>
       {/* 텍스트와 canvas 자리는 서버에서 렌더링하고 WebGL은 effect에서 초기화한다. */}
       <HeroBackground theme={theme} reducedMotion={reducedMotion} />
 
       <HeroContent yTranslate={yTranslate} opacity={opacity} scale={scale} reducedMotion={reducedMotion} />
 
       <HeroCore theme={theme} reducedMotion={reducedMotion} />
-
-      <DecorativeFrame />
     </section>
   );
 }
@@ -71,44 +63,35 @@ function HeroContent({
   return (
     <div className="relative flex h-full items-center justify-center px-6">
       <motion.div
+        className="flex max-w-5xl flex-col items-center text-center md:gap-12"
         style={reducedMotion ? { opacity: 1, transform: 'none' } : { y: yTranslate, opacity, scale }}
-        className="mx-auto max-w-5xl text-center"
       >
-        <h1 className="font-mulmaru text-foreground mb-10 text-6xl leading-[1.05] tracking-tighter transition-colors duration-700 md:text-[10rem]">
+        <h1 className="font-mulmaru text-foreground mt-6 text-6xl leading-[1.05] tracking-wide transition-colors duration-700 md:mt-0 md:text-[10rem]">
           <span className="block overflow-hidden">
-            <span className="text-foreground inline-block tracking-wide motion-safe:animate-[hero-rise_0.8s_cubic-bezier(0.16,1,0.3,1)_0.2s_both] sm:leading-48">
+            <span className="inline-block motion-safe:animate-[hero-rise_0.8s_cubic-bezier(0.16,1,0.3,1)_0.2s_both] sm:leading-48">
               Bit
             </span>
           </span>
-          <span className="-mt-2 block overflow-hidden md:-mt-8">
-            <span className="text-ring inline-block tracking-wide transition-[text-stroke] duration-700 motion-safe:animate-[hero-rise_0.8s_cubic-bezier(0.16,1,0.3,1)_0.4s_both]">
+          <span className="-mt-2 block overflow-hidden md:-mt-8 md:ml-8">
+            <span className="text-ring inline-block motion-safe:animate-[hero-rise_0.8s_cubic-bezier(0.16,1,0.3,1)_0.4s_both]">
               By Bit
             </span>
           </span>
         </h1>
 
-        <div className="mx-auto mt-4 max-w-2xl motion-safe:animate-[hero-fade-up_0.6s_ease-out_0.4s_both]">
-          <p className="text-foreground/70 mt-16 mb-12 text-sm leading-relaxed tracking-wide text-balance break-keep transition-colors duration-700 sm:mt-0 md:text-base">
-            Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만들어내는 흐름을 담고 있습니다.
-            <br className="hidden sm:inline" /> 이 블로그에서는 프론트엔드를 설계하고 구현하며 쌓아온 생각과 경험을
-            기록합니다.
-          </p>
+        <p className="text-foreground/70 mt-16 text-sm leading-relaxed tracking-wide text-balance break-keep transition-colors duration-700 motion-safe:animate-[hero-fade-up_0.6s_ease-out_0.4s_both] sm:mt-0 md:text-base">
+          Bit by Bit는 작은 단위의 선택과 고민이 모여 하나의 결과를 만들어내는 흐름을 담고 있습니다.
+          <br className="hidden sm:inline" /> 이 블로그에서는 프론트엔드를 설계하고 구현하며 쌓아온 생각과 경험을
+          기록합니다.
+        </p>
 
-          <FrameLink href="/posts" className="relative z-30">
-            전체 글 보기
-          </FrameLink>
-        </div>
+        <FrameLink
+          href="/posts"
+          className="relative z-30 mt-6 motion-safe:animate-[hero-fade-up_0.6s_ease-out_0.4s_both] md:mt-0"
+        >
+          전체 글 보기
+        </FrameLink>
       </motion.div>
-    </div>
-  );
-}
-
-function DecorativeFrame() {
-  return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 z-30">
-      {DECORATIVE_FRAME_SEGMENTS.map((style, index) => (
-        <div key={index} className={cn('bg-foreground/20 absolute transition-colors duration-700', style)} />
-      ))}
     </div>
   );
 }
