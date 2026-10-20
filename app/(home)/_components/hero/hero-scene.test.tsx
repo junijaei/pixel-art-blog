@@ -86,7 +86,7 @@ describe('hero canvas lifecycle', () => {
     expect(frames.size).toBe(2);
   });
 
-  it('updates theme and reduced motion without rebuilding GPU resources', () => {
+  it('updates reduced motion without rebuilding GPU resources', () => {
     const { rerender } = render(
       <section>
         <HeroBackground theme="dark" reducedMotion={false} />
@@ -95,13 +95,13 @@ describe('hero canvas lifecycle', () => {
     flushFrame();
     rerender(
       <section>
-        <HeroBackground theme="light" reducedMotion />
+        <HeroBackground theme="dark" reducedMotion />
       </section>
     );
     flushFrame(100);
     expect(createHeroRenderer).toHaveBeenCalledTimes(1);
     expect(renderer.dispose).not.toHaveBeenCalled();
-    expect(renderer.render).toHaveBeenLastCalledWith(0, 'light');
+    expect(renderer.render).toHaveBeenLastCalledWith(0, 'dark');
     expect(frames.size).toBe(0);
   });
 
@@ -119,7 +119,7 @@ describe('hero canvas lifecycle', () => {
     expect(frames.size).toBe(0);
     rerender(
       <section>
-        <HeroCore theme="light" reducedMotion />
+        <HeroCore theme="dark" reducedMotion />
       </section>
     );
     const restored = { resize: vi.fn(), render: vi.fn(), dispose: vi.fn() };
@@ -128,7 +128,7 @@ describe('hero canvas lifecycle', () => {
     expect(createHeroRenderer).toHaveBeenCalledTimes(2);
     expect(restored.resize).toHaveBeenCalledOnce();
     flushFrame();
-    expect(restored.render).toHaveBeenCalledWith(0, 'light');
+    expect(restored.render).toHaveBeenCalledWith(0, 'dark');
     expect(frames.size).toBe(0);
   });
 
@@ -152,5 +152,50 @@ describe('hero canvas lifecycle', () => {
     });
     expect(createHeroRenderer).toHaveBeenCalledTimes(1);
     expect(frames.size).toBe(0);
+  });
+
+  it('uses a decorative chart with only the rotating core renderer in light mode', () => {
+    const { container } = render(
+      <section>
+        <HeroBackground theme="light" reducedMotion={false} />
+        <HeroCore theme="light" reducedMotion={false} />
+      </section>
+    );
+    expect(container.querySelector('svg')).toHaveAttribute('aria-hidden', 'true');
+    expect(container.querySelectorAll('canvas')).toHaveLength(1);
+    expect(createHeroRenderer).toHaveBeenCalledExactlyOnceWith(container.querySelector('canvas'), 'core');
+    flushFrame();
+    expect(renderer.render).toHaveBeenCalledWith(0, 'light');
+    expect(frames.size).toBe(1);
+  });
+
+  it('preserves the core renderer across themes while releasing the dark background', () => {
+    const scene = (theme: 'light' | 'dark') => (
+      <section>
+        <HeroBackground theme={theme} reducedMotion={false} />
+        <HeroCore theme={theme} reducedMotion={false} />
+      </section>
+    );
+    const { rerender } = render(scene('dark'));
+    flushFrame();
+    rerender(scene('light'));
+    expect(renderer.dispose).toHaveBeenCalledTimes(1);
+    expect(frames.size).toBe(1);
+    rerender(scene('dark'));
+    expect(createHeroRenderer).toHaveBeenCalledTimes(3);
+  });
+
+  it('moves both orbit points independently without tilting the orbit or drawing crosses', () => {
+    const { container, rerender } = render(<HeroBackground theme="light" reducedMotion={false} />);
+    const svg = container.querySelector('svg')!;
+    const motions = [...svg.querySelectorAll('animateMotion')];
+    expect(motions).toHaveLength(2);
+    expect(motions[0].getAttribute('dur')).not.toBe(motions[1].getAttribute('dur'));
+    expect(svg.querySelector('animateTransform')).toBeNull();
+    expect(svg.querySelectorAll('path')).toHaveLength(1);
+    expect(motions.some((motion) => motion.parentElement?.querySelectorAll('circle').length === 2)).toBe(true);
+    rerender(<HeroBackground theme="light" reducedMotion />);
+    expect(svg.querySelectorAll('animateMotion')).toHaveLength(0);
+    expect(svg.querySelectorAll('circle')).toHaveLength(3);
   });
 });

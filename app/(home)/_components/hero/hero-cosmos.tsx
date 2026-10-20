@@ -6,12 +6,16 @@ import { FrameLink } from '@/features/link-preview/components/frame-link';
 import { cn } from '@/shared/lib/utils';
 import { motion, useScroll, useTransform, type MotionValue } from 'motion/react';
 import { useTheme } from 'next-themes';
-import { useRef } from 'react';
+import { useRef, useSyncExternalStore } from 'react';
 
 // --- Constants ---
 
 const HERO_SECTION_ACTIVE_CLASS =
   'bg-background relative h-[calc(100dvh-60px)] min-h-150 w-full overflow-hidden transition-colors duration-700 md:h-[calc(100dvh-65px)]';
+
+const subscribeToHydration = () => () => {};
+const getClientHydration = () => true;
+const getServerHydration = () => false;
 
 // --- Props ---
 
@@ -23,6 +27,7 @@ interface HeroCosmosProps {
 
 export function HeroCosmos({ className }: HeroCosmosProps) {
   const { resolvedTheme } = useTheme();
+  const hydrated = useSyncExternalStore(subscribeToHydration, getClientHydration, getServerHydration);
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -34,7 +39,7 @@ export function HeroCosmos({ className }: HeroCosmosProps) {
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.7], [1, 1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.7], [1, 0.95]);
 
-  const theme: ThemeMode = resolvedTheme === 'dark' ? 'dark' : 'light';
+  const theme: ThemeMode = hydrated && resolvedTheme === 'dark' ? 'dark' : 'light';
   const reducedMotion = !!prefersReducedMotion;
 
   return (

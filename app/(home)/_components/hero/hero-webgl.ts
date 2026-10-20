@@ -280,7 +280,7 @@ export function createHeroRenderer(canvas: HTMLCanvasElement, layer: 'background
         if (surface && normals && glow) {
           gl.disable(gl.DEPTH_TEST);
           gl.depthMask(false);
-          draw(glow, gl.TRIANGLES, 6, 4);
+          if (theme === 'dark') draw(glow, gl.TRIANGLES, 6, 4);
           gl.enable(gl.DEPTH_TEST);
           gl.depthMask(true);
           gl.bindBuffer(gl.ARRAY_BUFFER, normals);

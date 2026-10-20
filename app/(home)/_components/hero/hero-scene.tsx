@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useId, useRef } from 'react';
 
 import { createHeroAnimation } from '@/app/(home)/_components/hero/hero-animation';
 import { createHeroRenderer } from '@/app/(home)/_components/hero/hero-webgl';
@@ -85,6 +85,8 @@ function SceneCanvas({ layer, theme, reducedMotion }: HeroSceneProps & { layer: 
 }
 
 export function HeroBackground(props: HeroSceneProps) {
+  if (props.theme === 'light') return <CelestialChart reducedMotion={props.reducedMotion} />;
+
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-0">
       <SceneCanvas {...props} layer="background" />
@@ -101,5 +103,57 @@ export function HeroCore(props: HeroSceneProps) {
         <SceneCanvas {...props} layer="core" />
       </div>
     </div>
+  );
+}
+
+const CHART_ORBIT = 'M 50 370 a 670 230 0 1 0 1340 0 a 670 230 0 1 0 -1340 0';
+
+function CelestialChart({ reducedMotion }: Pick<HeroSceneProps, 'reducedMotion'>) {
+  const id = useId();
+
+  return (
+    <svg
+      aria-hidden="true"
+      focusable="false"
+      viewBox="0 0 1440 840"
+      preserveAspectRatio="xMidYMid slice"
+      className="text-foreground pointer-events-none absolute inset-0 h-full w-full"
+    >
+      <defs>
+        <radialGradient id={`${id}-fade`}>
+          <stop offset="0.3" stopColor="black" />
+          <stop offset="0.85" stopColor="white" />
+        </radialGradient>
+        <mask id={`${id}-mask`}>
+          <rect width="1440" height="840" fill={`url(#${id}-fade)`} />
+        </mask>
+      </defs>
+
+      <g mask={`url(#${id}-mask)`}>
+        <g transform="rotate(-20 720 370)" fill="none" stroke="currentColor" strokeWidth="0.8">
+          <path d={CHART_ORBIT} opacity="0.25" />
+          <ellipse cx="720" cy="370" rx="790" ry="310" opacity="0.1" />
+          <g opacity="0.5" transform={reducedMotion ? 'translate(720 140)' : undefined}>
+            <circle r="3" fill="currentColor" stroke="none" />
+            <circle r="10" opacity="0.4" />
+            {!reducedMotion && <animateMotion dur="44s" begin="-10s" repeatCount="indefinite" path={CHART_ORBIT} />}
+          </g>
+          <g opacity="0.65">
+            {reducedMotion ? (
+              <circle cx="50" cy="370" r="3" fill="currentColor" stroke="none" />
+            ) : (
+              <circle r="3" fill="currentColor" stroke="none">
+                <animateMotion dur="28s" begin="-20s" repeatCount="indefinite" path={CHART_ORBIT} />
+              </circle>
+            )}
+          </g>
+        </g>
+        <g fill="currentColor" opacity="0.25">
+          <rect x="368" y="620" width="2" height="2" />
+          <rect x="1100" y="240" width="2" height="2" />
+          <rect x="190" y="430" width="2" height="2" />
+        </g>
+      </g>
+    </svg>
   );
 }
