@@ -113,6 +113,7 @@ function CelestialChart({ reducedMotion }: Pick<HeroSceneProps, 'reducedMotion'>
 
   return (
     <svg
+      data-hero-chart
       aria-hidden="true"
       focusable="false"
       viewBox="0 0 1440 840"
